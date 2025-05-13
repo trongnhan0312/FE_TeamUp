@@ -1,0 +1,317 @@
+.homepage {
+  .content_wrapper {
+   
+    align-items: center;      // Căn chỉnh nội dung giữa các cột
+    padding: 20px;
+    justify-items: center;
+    gap: 20px;                // Khoảng cách giữa 2 cột
+
+    .left_column {
+      flex: 60%;                // Cột hình ảnh sẽ chiếm 1 phần không gian
+      text-align: end;
+      margin-right: 37px;     // Căn giữa hình ảnh
+
+      .banner_image {
+        max-width: 100%; 
+        width: 583px;      // Hình ảnh chiếm toàn bộ chiều rộng của cột
+        height: auto;          // Giữ tỷ lệ cho hình ảnh
+        border-radius: 8px;    // Thêm bo góc nếu cần
+      }
+    }
+.bg{
+      width: 1074px;
+      display: flex;
+      align-items: center;
+    /* Đường viền bao quanh */
+  border-radius: 10px;        /* Bo góc cho khung */
+  padding: 20px;              /* Thêm khoảng cách bên trong khung */
+  background-color: #f1eeeef2;     /* Màu nền trắng cho khung */
+}
+    .right_column {
+      flex: 40%;                // Cột thông tin sẽ chiếm 1 phần không gian
+      padding: 20px;
+      
+      
+
+      h1 {
+        font-size: 28px;
+        font-weight: bold;
+        margin-bottom: 15px;
+      }
+
+      .rating {
+        font-size: 18px;
+        margin-bottom: 20px;
+        .star {
+          color: #ffd700;       // Màu vàng cho sao
+        }
+      }
+
+      .booking_button {
+        background-color: #8ad839;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+          background-color: #76b429;   // Đổi màu khi hover
+        }
+      }
+    }
+  
+  .search_filters {
+    display: flex;              // Sử dụng flexbox cho các trường tìm kiếm
+    gap: 20px;                  // Khoảng cách giữa các trường
+    align-items: center;        // Căn chỉnh theo chiều dọc
+
+    .filter {
+      display: flex;
+      flex-direction: column;    // Mỗi trường có nhãn trên và input dưới
+      gap: 5px;
+
+      span {
+        font-weight: bold;
+      }
+
+      select,
+      input {
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+        width: 180px;
+      }
+
+      select {
+        background-color: #fff;
+      }
+
+      input[type="date"],
+      input[type="time"] {
+        width: 100%;
+      }
+    }
+
+    .search_button {
+      background-color: #8ad839;
+      color: white;
+      padding: 12px 24px;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: #76b429; // Đổi màu khi hover
+      }
+      
+}
+}
+  }
+}
+.search_wrapper{
+  display: flex;
+      justify-content: center;
+ /* Các trường tìm kiếm */
+ .search_filters {
+  display: flex;
+      gap: 81px;
+      align-items: center;
+      margin-top: 20px;
+      padding: 17px;
+      background-color: #fff;
+      border-radius: 46px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      font-size: 17px;
+
+  .filter {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+
+    span {
+      font-weight: bold;
+    }
+
+    select,
+    input {
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      width: 180px;
+    }
+
+    select {
+      background-color: #fff;
+    }
+
+    input[type="date"],
+    input[type="time"] {
+      width: 100%;
+    }
+
+    /* Tam giác chỉ thị cho dropdown */
+    .triangle {
+      width: 0;
+      height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 5px solid #8ad839;  /* Màu xanh cho tam giác */
+      margin-left: 5px;
+      transition: transform 0.3s ease;
+    }
+
+    .triangle.open {
+      transform: rotate(180deg);  /* Đảo chiều tam giác khi mở dropdown */
+    }
+  }
+
+  .search_button {
+    background-color: #8ad839;
+    color: white;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    width: 120px;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #76b429;
+    }
+  }}}
+  .cards_section {
+    display: flex;
+    justify-content: center;
+    gap: 30px; /* Khoảng cách giữa các thẻ */
+    margin-top: 30px;
+  }
+  
+  .card {
+    display: flex; /* Sử dụng flexbox để căn chỉnh nội dung theo chiều ngang */
+    justify-content: space-between; /* Đảm bảo nội dung được căn đều */
+    width: 25%; /* Mỗi thẻ chiếm 32% chiều rộng của container */
+    height: 324px; /* Đặt chiều cao cố định cho thẻ */
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    transition: transform 0.3s ease;
+    text-decoration: none;
+    
+    &:hover {
+      transform: translateY(-10px); /* Hiệu ứng khi hover */
+    }
+  
+    .card_content {
+      display: flex;
+      flex-direction: column; /* Sắp xếp các phần tử theo chiều dọc */
+      justify-content: space-between; /* Căn chỉnh các phần tử có khoảng cách đều */
+      padding: 13px;
+      width: 60%;
+      height: 92%; /* Đảm bảo nội dung chiếm hết chiều cao của thẻ */
+  
+      h2 {
+        font-size: 32px;
+        font-weight: bold;
+        margin-bottom: 10px;
+  
+        display: flex
+        ;
+            justify-content: center;
+            padding-top: 30px;
+      }
+  
+      .card_button {
+        display: inline-flex; /* Đảm bảo icon và text nằm cùng một hàng */
+        align-items: center;  /* Căn giữa icon và chữ theo chiều dọc */
+        padding: 8px 12px;
+    
+        font-size: 14px;
+        text-decoration: none;
+        border-radius: 25px;
+        transition: background-color 0.3s ease;
+        gap: 8px; /* Khoảng cách giữa biểu tượng và chữ */
+        margin-bottom: 10px;
+        &:hover {
+          background-color: #76b429;
+        }
+      
+        svg {
+          font-size: 42px; /* Cài đặt kích thước biểu tượng */
+           /* Màu biểu tượng mặc định (có thể thay đổi theo yêu cầu) */
+        }
+      }}
+  
+    .card_image {
+      width: 52%; /* Hình ảnh chiếm 40% chiều rộng của thẻ */
+      height: 100%; /* Chiều cao của hình ảnh sẽ chiếm toàn bộ chiều cao của thẻ */
+      object-fit: cover; /* Đảm bảo hình ảnh không bị méo */
+      order: 1; /* Đảm bảo hình ảnh nằm bên phải */
+    }
+    
+  }
+    // Tùy chỉnh màu chữ và màu biểu tượng trong từng card
+/* Định nghĩa màu cho các card */
+.card-pickleball .card_content {
+  background-color: #ffffff;
+  color: #000000; /* Màu chữ cho Pickleball */
+}
+
+.card-pickleball .card_button {
+  color: #000000; /* Màu chữ cho nút Pickleball */
+  
+  svg {
+    fill: #000000; /* Màu biểu tượng cho Pickleball */
+  }
+
+  &:hover {
+    color: #ffffff; /* Màu chữ khi hover cho nút Pickleball */
+  }
+}
+
+.card-bongda .card_content {
+  background-color: #252525; 
+  color: #fff; /* Màu chữ cho Bóng đá */
+}
+
+.card-bongda .card_button {
+  color: #ffffff; /* Màu chữ cho nút Bóng đá */
+  
+  svg {
+    fill: #b0df21; /* Màu biểu tượng cho Bóng đá */
+  }
+
+  &:hover {
+    color: #000000; /* Màu chữ khi hover cho nút Bóng đá */
+  }
+}
+
+.card-caulong .card_content {
+  background-color: #b0df21;
+  color: #000000; /* Màu chữ cho Cầu lông */
+}
+
+.card-caulong .card_button {
+  color: #000000; /* Màu chữ cho nút Cầu lông */
+  
+  svg {
+    fill: #ffffff; /* Màu biểu tượng cho Cầu lông */
+  }
+
+  &:hover {
+    color: #ffffff; /* Màu chữ khi hover cho nút Cầu lông */
+  }
+}
