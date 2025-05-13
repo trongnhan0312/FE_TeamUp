@@ -1,0 +1,85 @@
+.header_top {
+    background: #202524;
+    color: white;
+    padding: 10px 0;
+
+    .header_wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header_left {
+      display: flex;
+      align-items: center;
+      .logo {
+        display: flex;
+        align-items: center;
+        font-weight: bold;
+        color: #8ad839;
+        margin-right: 30px;
+
+        .logo_img {
+            max-width: 35px;  // Tăng kích thước logo
+            height: auto;
+        }
+        .logo_text {
+            font-size: 24px;
+            margin-left: 10px;
+        }
+      }
+
+      .menu {
+        display: flex;
+        list-style: none;
+        gap: 20px;
+
+        li {
+          cursor: pointer;
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+
+    .header_right {
+      display: flex;
+      align-items: center;
+
+      .icons {
+        display: flex;
+        gap: 20px;
+        list-style: none;
+        margin-right: 20px;
+
+        li {
+          cursor: pointer;
+          font-size: 18px;
+          &:hover {
+            color: #8ad839;
+          }
+        }
+      }
+
+      .user {
+        display: flex;
+        align-items: center;
+        background: white;
+        border-radius: 20px;
+        padding: 5px 10px;
+        color: black;
+
+        .avatar {
+          width: 35px;  // Đảm bảo kích thước avatar phù hợp
+          height: 35px;
+          border-radius: 50%;
+          margin-right: 8px;
+        }
+
+        .username {
+          font-weight: 500;
+        }
+      }
+    }
+  }
