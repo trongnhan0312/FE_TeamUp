@@ -1,3 +1,11 @@
+@font-face {
+  font-family: "Debata";
+  src: url("./fonts/Debata-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+
 .header_top {
     background: #202524;
     color: white;
@@ -24,9 +32,11 @@
             height: auto;
         }
         .logo_text {
-            font-size: 24px;
-            margin-left: 10px;
+          font-family: "Debata", serif;
+          font-size: 15px;
+          margin: 5px;
         }
+        
       }
 
       .menu {
