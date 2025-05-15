@@ -1,6 +1,8 @@
 import React from "react";
 import "./style.scss";
 import logo from "../../../../assets/admin/logo.png";
+import { Link } from "react-router-dom";
+import { ROUTER } from "../../../../utils/router";
 
 const footer = () => {
   return (
@@ -15,7 +17,7 @@ const footer = () => {
             </div>
             <div className="footer_signup">
               <input type="email" placeholder="Địa chỉ email..." />
-              <button>Đăng ký</button>
+              <button><Link to={ROUTER.AUTH.REGISTER}>Đăng ký ngay</Link></button>
             </div>
           </div>
 

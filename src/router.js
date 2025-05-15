@@ -4,6 +4,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import MasterLayout from "./component/common/theme/masterLayout";
 import ProfilePage from "./pages/users/profilePage";
 import LoginPage from "./pages/auth/LoginPage";
+import SignupPage from "./pages/auth/SignupPage";
 
 const renderUserRouter = () => {
   const userRouters = [
@@ -27,22 +28,26 @@ const renderUserRouter = () => {
   );
 };
 
-const renderAuthRouter = () => {
-  const authRouters = [
-    {
-      path: ROUTER.AUTH.LOGIN,
-      component: <LoginPage />,
-    }
-  ];
+// const renderAuthRouter = () => {
+//   const authRouters = [
+//     {
+//       path: ROUTER.AUTH.LOGIN,
+//       component: <LoginPage />,
+//     },
+//     {
+//       path: ROUTER.AUTH.REGISTER,
+//       component: <SignupPage />,
+//     }
+//   ];
   
-  return (
-    <Routes>
-      {authRouters.map((item, key) => (
-        <Route key={key} path={item.path} element={item.component} />
-      ))}
-    </Routes>
-  );
-};
+//   return (
+//     <Routes>
+//       {authRouters.map((item, key) => (
+//         <Route key={key} path={item.path} element={item.component} />
+//       ))}
+//     </Routes>
+//   );
+// };
 
 const RouterCustom = () => {
   // Đây là nơi bạn có thể kiểm tra xem người dùng đã đăng nhập hay chưa
@@ -56,7 +61,8 @@ const RouterCustom = () => {
       
       {/* Route cho trang đăng nhập */}
       <Route path="/login" element={<LoginPage />} />
-      
+      <Route path="/register" element={<SignupPage />} /> // Thêm route này
+
       {/* Routes cho người dùng đã đăng nhập */}
       <Route path="/*" element={
         isLoggedIn ? (

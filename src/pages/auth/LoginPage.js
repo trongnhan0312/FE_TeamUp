@@ -3,7 +3,8 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Footer from '../../component/common/theme/footer';
 import './LoginPage.scss';
-import login from '../../assets/user/login.png';
+import loginImg from '../../assets/user/login.png';
+import { ROUTER } from '../../utils/router';
 
 
 const LoginPage = () => {
@@ -91,7 +92,7 @@ const LoginPage = () => {
             
             {/* Sign up link */}
             <div className="signup-link">
-              Người dùng mới ? <Link to="/register">Đăng ký ngay</Link>
+                Người dùng mới ? <Link to={ROUTER.AUTH.REGISTER}>Đăng ký ngay</Link>
             </div>
           </form>
           
@@ -127,7 +128,7 @@ const LoginPage = () => {
         <div className="login-image">
           <div className="image-container">
             <img
-              src={login}
+              src={loginImg}
               alt="Badminton rackets and shuttlecocks"
             />
           </div>
