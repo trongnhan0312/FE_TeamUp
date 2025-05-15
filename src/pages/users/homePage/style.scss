@@ -18,7 +18,7 @@
         border-radius: 8px;    // Thêm bo góc nếu cần
       }
     }
-.bg{
+  .bg{
       width: 1074px;
       display: flex;
       align-items: center;
@@ -112,8 +112,8 @@
         background-color: #76b429; // Đổi màu khi hover
       }
       
-}
-}
+    }
+  } 
   }
 }
 .search_wrapper{
@@ -196,6 +196,7 @@
     justify-content: center;
     gap: 30px; /* Khoảng cách giữa các thẻ */
     margin-top: 30px;
+    padding-bottom: 23px;
   }
   
   .card {
@@ -315,3 +316,253 @@
     color: #ffffff; /* Màu chữ khi hover cho nút Cầu lông */
   }
 }
+
+/* Phần chứa thông tin các trận sắp diễn ra */
+.upcoming_matches {
+  background-color: #222222;
+  padding: 30px;
+  color: white;
+  text-align: left;
+  width: 92%; /* Chiều rộng phần tử */
+  margin: 0 auto; /* Căn giữa phần tử theo chiều ngang */
+  border-top-left-radius: 20px;  /* Bo tròn góc trên bên trái */
+  border-top-right-radius: 20px; /* Bo tròn góc trên bên phải */
+  position: relative; /* Để các phần tử con với position: absolute có thể được định vị bên trong */
+
+
+  h2 {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    margin-left: 44px;
+  }
+
+  /* Các thẻ chứa hình ảnh */
+  .matches_container {
+    display: flex;
+        gap: 46px;
+        justify-content: center;
+  }
+
+  /* Định nghĩa cho mỗi thẻ chứa trận đấu */
+  .match_card {
+    position: relative;
+    width: 20%;  /* Kích thước mỗi thẻ */
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: #ffffff; /* Nền trắng cho hình ảnh */
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    height: 358px;
+    display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+    .match_image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover; /* Đảm bảo hình ảnh không bị méo */
+      display: flex;
+      align-items: center;  /* Căn giữa theo chiều dọc */
+      justify-content: center; /* Căn giữa theo chiều ngang */
+    }
+  
+    /* Lớp overlay hiển thị khi hover */
+    .card_overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4);  /* Nền mờ */
+      opacity: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      transition: opacity 0.3s ease;
+    }
+
+    /* Các nút trong overlay */
+    .card_button {
+      background-color: #8ad839;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: #76b429;
+      }
+
+      i {
+        font-size: 20px;
+      }
+    }
+
+    /* Hiển thị overlay khi hover vào thẻ */
+    &:hover .card_overlay {
+      opacity: 1;
+    }
+
+    /* Hiệu ứng hover cho thẻ */
+    &:hover {
+      transform: translateY(-10px);  /* Hiệu ứng khi hover */
+    }
+  }
+
+ 
+  
+}
+
+.card_icons {
+  position: absolute;
+  bottom: 10px;  /* Cách cạnh dưới 10px */
+  right: 10px;  /* Cách cạnh phải 10px */
+  display: flex;
+  gap: 10px;  /* Khoảng cách giữa các icon */
+
+  .icon-heart,
+  .icon-door {
+    font-size: 24px;  /* Kích thước biểu tượng */
+    color: #8ad839;  /* Màu của biểu tượng */
+  }
+
+  .icon-heart:hover,
+  .icon-door:hover {
+    color: #76b429;  /* Màu khi hover */
+  }}
+
+  .nearby_courts {
+    background-color: #f9f9f9;
+    padding: 30px;
+    color: #333;
+    text-align: left;
+    width: 92%;
+    margin: 0 auto;
+    position: relative;
+    height: 500px;  /* Căn giữa phần tử */
+    
+    h2 {
+      font-size: 33px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      margin-left: 20px;
+    }
+  
+    .matches_container {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+    }
+  
+    .court_card {
+      position: relative; /* Đảm bảo các phần tử con có thể được căn chỉnh theo vị trí tuyệt đối bên trong */
+      width: 21%;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      background-color: #ffffff;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 381px;
+      transition: transform 0.3s ease;
+  
+      /* Hình ảnh */
+      .court_image {
+        width: 100%;
+        height: 189px;
+        object-fit: cover;
+      }
+  
+      /* Tên sân */
+      h3 {
+        font-size: 27px;
+        font-weight: bold;
+        margin: 26px 0px 0px 23px;
+      }
+  
+      /* Đánh giá */
+      .rating {
+        font-size: 14px;
+        color: #ffd700;
+        margin-bottom: 10px;
+      }
+  
+      /* Overlay mờ */
+      .card_overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4);  /* Nền mờ */
+        opacity: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        transition: opacity 0.3s ease;
+        z-index: 5;
+        border-radius: 8px; /* Bo góc overlay giống thẻ */
+      }
+  
+      /* Các biểu tượng ở góc dưới bên phải */
+      .card_icons {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        display: flex;
+        gap: 10px;
+        z-index: 10;  /* Đảm bảo các biểu tượng không bị che khuất */
+      }
+  
+      .icon-heart,
+      .icon-door {
+        font-size: 20px;
+        color: #8ad839;
+        cursor: pointer;
+      }
+  
+      .icon-heart:hover,
+      .icon-door:hover {
+        color: #76b429;
+      }
+  
+      /* Hover làm overlay hiện */
+      &:hover .card_overlay {
+        opacity: 1;
+      }
+  
+      /* Hiệu ứng hover cho thẻ */
+      &:hover {
+        transform: translateY(-10px);
+      }
+    }
+  }
+  
+  /* Nút "Xem thêm" */
+  .view_more {
+    position: absolute;  /* Định vị nút một cách tuyệt đối */
+    top: 20px;  /* Cách từ phía trên 20px */
+    right: 60px;  /* Cách từ phía bên phải 60px */
+    background-color: #8ad839;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 25px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    z-index: 20;
+  
+    &:hover {
+      background-color: #76b429;
+    }
+  }
+  
