@@ -1,7 +1,7 @@
 import { memo } from "react";
 import "./style.scss";
 import { BsHeartFill } from "react-icons/bs";
-
+import { BsFillPlusCircleFill } from "react-icons/bs";
 import { BsDoorOpenFill } from "react-icons/bs";
 
 import banner from "/TeamUp/FE_TeamUp/src/assets/admin/banner.png";
@@ -143,7 +143,7 @@ const HomePage = () => {
             </div>
             <div className="card_icons">
               <BsHeartFill className="icon-heart" />
-              <BsDoorOpenFill className="icon-door" />
+              <BsFillPlusCircleFill className="icon-door" />
             </div>
           </div>
 
@@ -157,7 +157,7 @@ const HomePage = () => {
             </div>
             <div className="card_icons">
               <BsHeartFill className="icon-heart" />
-              <BsDoorOpenFill className="icon-door" />
+              <BsFillPlusCircleFill className="icon-door" />
             </div>
           </div>
 
@@ -171,7 +171,7 @@ const HomePage = () => {
             </div>
             <div className="card_icons">
               <BsHeartFill className="icon-heart" />
-              <BsDoorOpenFill className="icon-door" />
+              <BsFillPlusCircleFill className="icon-door" />
             </div>
           </div>
 
@@ -185,7 +185,7 @@ const HomePage = () => {
             </div>
             <div className="card_icons">
               <BsHeartFill className="icon-heart" />
-              <BsDoorOpenFill className="icon-door" />
+              <BsFillPlusCircleFill className="icon-door" />
             </div>
           </div>
         </div>
