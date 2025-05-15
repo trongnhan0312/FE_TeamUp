@@ -1,0 +1,252 @@
+@import '../../assets/styles/fonts';  // Import the fonts file
+
+.login-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #fff;
+}
+
+.login-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  flex: 1 0 auto; // This makes the container take up available space
+  
+  @media (min-width: 768px) {
+    flex-direction: row;
+    padding: 2rem;
+    justify-content: space-between; // Add space between form and image
+    gap: 3rem; // Add explicit gap between columns
+  }
+}
+
+.login-form-container {
+  width: 100%;
+  padding: 0 1rem;
+    overflow: auto;
+  display: flex;
+  flex-direction: column;
+  
+  @media (min-width: 768px) {
+    width: 50%;
+    padding: 0 2rem;
+    justify-content: center;
+  }
+}
+
+.login-title {
+  width: 100%;
+  @include heading-2;  // Using a predefined style from _fonts.scss
+  margin-bottom: 2rem;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem; // Increased gap for more spacing between form elements
+  max-width: 500px; // Limit the form width to make inputs shorter
+  grid-gap: 2vh;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  
+  label {
+    @include body-text;
+    margin-bottom: 0.5rem; // Increased spacing between label and input
+    font-weight: 500; // Slightly bolder labels
+  }
+  
+  input {
+    padding: 0.8rem 1rem; // Increased padding for more spacious inputs
+    border: 2px solid #000000; // Black border, increased thickness
+    border-radius: 0.25rem;
+    @include body-text;
+    
+    &:focus {
+      outline: none;
+      border-color: #acf53d; // Keep the lime color for focus state
+    }
+  }
+}
+
+.password-input {
+  position: relative;
+  
+  input {
+    width: 93%;
+  }
+  
+  .toggle-password {
+    position: absolute;
+    right: 1rem; // Adjusted to account for increased padding
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    
+    svg {
+      color: #000000; // Changed to black to match the border
+    }
+  }
+}
+
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.5rem; // Added a bit more spacing
+  
+  .remember-me {
+    display: flex;
+    align-items: center;
+    
+    input {
+      margin-right: 0.5rem;
+      border: 2px solid #000000; // Match the black border
+    }
+    
+    label {
+      font-size: 0.875rem;
+    }
+  }
+  
+  .forgot-password {
+    font-size: 0.875rem;
+    color: #ef4444;
+    text-decoration: none;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.login-button {
+  width: 100%;
+  background-color: #acf53d; // lime-500
+  color: black;
+  padding: 1rem;
+  border-radius: 0.25rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  @include button-text;
+  
+  &:hover {
+    background-color: #65a30d; // lime-600
+  }
+}
+
+.signup-link {
+  text-align: center;
+  font-size: 0.875rem;
+  margin-top: 1rem;
+  
+  a {
+    color: #84cc16;
+    text-decoration: none;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.login-divider {
+  margin-top: 2rem;
+  position: relative;
+  text-align: center;
+  max-width: 450px; // Match form width
+  
+  &:before, &:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: calc(50% - 70px);
+    height: 1px;
+    background-color: #e5e7eb;
+  }
+  
+  &:before {
+    left: 0;
+  }
+  
+  &:after {
+    right: 0;
+  }
+  
+  span {
+    display: inline-block;
+    padding: 0 1rem;
+    background-color: #fff;
+    position: relative;
+    z-index: 1;
+    font-size: 0.875rem;
+    color: #6b7280;
+  }
+}
+
+.social-login {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+  max-width: 450px; // Match form width
+}
+
+.social-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 6rem;
+  height: 2.5rem; // Slightly taller buttons
+  border: 2px solid #000000; // Black border to match inputs
+  border-radius: 0.25rem;
+  background-color: transparent;
+  cursor: pointer;
+  
+  &.google {
+    border: 2px solid #acf53d;
+  }
+  
+  &.facebook {
+    svg {
+      color: #1877f2;
+    }
+  }
+  
+  &:hover {
+    background-color: #f9fafb;
+  }
+}
+
+.login-image {
+  display: none;
+  
+  @media (min-width: 768px) {
+    display: flex;
+    width: 50%;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .image-container {
+    border-radius: 0.5rem;
+    overflow: hidden;
+    background-color: #84cc16;
+    
+    img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
+  }
+}

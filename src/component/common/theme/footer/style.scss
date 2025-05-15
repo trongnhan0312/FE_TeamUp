@@ -6,6 +6,10 @@
 }
 
 .footer {
+    flex-shrink: 0; // Prevent the footer from shrinking
+    width: 100%;
+    padding: 1.5rem 0;
+    border-top: 1px solid #e5e7eb;
     background: #202524;
     color: white;
     padding: 40px 0;

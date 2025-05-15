@@ -4,17 +4,17 @@ import { BsHeartFill } from "react-icons/bs";
 import { BsFillPlusCircleFill } from "react-icons/bs";
 import { BsDoorOpenFill } from "react-icons/bs";
 
-import banner from "/TeamUp/FE_TeamUp/src/assets/admin/banner.png";
-import bongda from "/TeamUp/FE_TeamUp/src/assets/admin/bongda.png";
-import pickleball from "/TeamUp/FE_TeamUp/src/assets/admin/pickleball.png";
-import cauLong from "/TeamUp/FE_TeamUp/src/assets/admin/caulong.png";
-import trandau1 from "/TeamUp/FE_TeamUp/src/assets/admin/trandau1.png";
-import trandau2 from "/TeamUp/FE_TeamUp/src/assets/admin/trandau2.png";
-import trandau3 from "/TeamUp/FE_TeamUp/src/assets/admin/trandau3.png";
-import trandau4 from "/TeamUp/FE_TeamUp/src/assets/admin/trandau4.png";
-import court2 from "/TeamUp/FE_TeamUp/src/assets/admin/court2.png";
-import court3 from "/TeamUp/FE_TeamUp/src/assets/admin/court3.png";
-import court4 from "/TeamUp/FE_TeamUp/src/assets/admin/court4.png";
+import banner from '../../../assets/admin/banner.png'
+import bongda from '../../../assets/admin/bongda.png'
+import pickleball from "../../../assets/admin/pickleball.png";
+import cauLong from "../../../assets/admin/caulong.png";
+import trandau1 from "../../../assets/admin/trandau1.png";
+import trandau2 from "../../../assets/admin/trandau2.png";
+import trandau3 from "../../../assets/admin/trandau3.png";
+import trandau4 from "../../../assets/admin/trandau4.png";
+import court2 from "../../../assets/admin/court2.png";
+import court3 from "../../../assets/admin/court3.png";
+import court4 from "../../../assets/admin/court4.png";
 import { BsArrowUpRightCircleFill } from "react-icons/bs";
 
 const HomePage = () => {

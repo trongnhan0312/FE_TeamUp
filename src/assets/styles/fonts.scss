@@ -1,0 +1,69 @@
+// _fonts.scss
+// Import all your fonts here
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap');
+// Add more font imports as needed
+
+// Font Family Variables
+$font-montserrat: 'Montserrat', sans-serif;
+$font-roboto: 'Roboto', sans-serif;
+$font-open-sans: 'Open Sans', sans-serif;
+// Add more font family variables as needed
+
+// Font Weight Variables
+$font-weight-light: 300;
+$font-weight-regular: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+
+// Font Size Variables (using rem for better accessibility)
+$font-size-xs: 0.75rem;    // 12px
+$font-size-sm: 0.875rem;   // 14px
+$font-size-base: 1rem;     // 16px
+$font-size-md: 1.125rem;   // 18px
+$font-size-lg: 1.25rem;    // 20px
+$font-size-xl: 1.5rem;     // 24px
+$font-size-2xl: 1.875rem;  // 30px
+$font-size-3xl: 2.25rem;   // 36px
+$font-size-4xl: 3rem;      // 48px
+
+// Font Mixins - easy to use font styles
+@mixin font($family, $size, $weight, $line-height: normal) {
+  font-family: $family;
+  font-size: $size;
+  font-weight: $weight;
+  line-height: $line-height;
+}
+
+// Example usage:
+// .element {
+//   @include font($font-montserrat, $font-size-lg, $font-weight-bold, 1.5);
+// }
+
+// Predefined Text Styles
+@mixin heading-1 {
+  @include font($font-montserrat, $font-size-3xl, $font-weight-bold, 1.2);
+}
+
+@mixin heading-2 {
+  @include font($font-montserrat, $font-size-2xl, $font-weight-bold, 1.25);
+}
+
+@mixin heading-3 {
+  @include font($font-montserrat, $font-size-xl, $font-weight-semibold, 1.3);
+}
+
+@mixin body-text {
+  @include font($font-montserrat, $font-size-base, $font-weight-regular, 1.5);
+}
+
+@mixin small-text {
+  @include font($font-roboto, $font-size-sm, $font-weight-regular, 1.4);
+}
+
+@mixin button-text {
+  @include font($font-montserrat, $font-size-base, $font-weight-medium, 1);
+  letter-spacing: 0.02em;
+}

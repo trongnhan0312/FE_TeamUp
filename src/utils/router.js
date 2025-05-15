@@ -1,6 +1,10 @@
 export const ROUTER = {
   USER: {
-    HOME: "",
-    PROFILE: "profile",
+    HOME: "/home",
+    PROFILE: "/profile",
   },
+  AUTH: {
+    LOGIN: "/login",
+    REGISTER: "/register"
+  }
 };
