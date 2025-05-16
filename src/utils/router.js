@@ -5,6 +5,9 @@ export const ROUTER = {
   },
   AUTH: {
     LOGIN: "/login",
-    REGISTER: "/register"
-  }
+    REGISTER: "/register",
+  },
+  OWNER: {
+    HOME: "/owner",
+  },
 };
