@@ -1,0 +1,99 @@
+.available-courts {
+  margin: 30px 0;
+
+  .section-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .courts-list {
+    border-top: 1px solid #eaeaea;
+  }
+  
+  .court-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 0;
+    border-bottom: 1px solid #eaeaea;
+    
+    @media (max-width: 767px) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+  }
+  
+  .court-info {
+  display: flex;
+  align-items: center;
+  
+  .court-thumbnail {
+    width: 40px;  // Đặt width cố định, không phải max-width
+    height: 40px; // Đặt height cố định, không phải max-height
+    background-color: #eaeaea;
+    border-radius: 4px;
+    margin-right: 12px;
+    flex-shrink: 0;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover; // Sử dụng cover để hình ảnh bao phủ toàn bộ vùng
+      object-position: center; // Đảm bảo hình ảnh được căn giữa
+    }
+  }
+
+  .court-name {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+  }
+}
+  
+  .court-price {
+    font-size: 18px;
+    font-weight: 700;
+    color: #333;
+    
+    @media (max-width: 767px) {
+      margin: 5px 0;
+    }
+    
+    .price-amount {
+      margin-right: 3px;
+    }
+    
+    .price-unit {
+      font-size: 14px;
+      font-weight: normal;
+      color: #666;
+    }
+  }
+  
+  .booking-button {
+    background-color: #a4d036; // Màu xanh lá cây
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 10px 25px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    
+    &:hover {
+      background-color: darken(#a4d036, 5%);
+    }
+    
+    @media (max-width: 767px) {
+      width: 100%;
+    }
+  }
+}
