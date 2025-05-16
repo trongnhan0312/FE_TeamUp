@@ -2,9 +2,9 @@ import { memo } from "react";
 import { Link } from "react-router-dom"; // Import Link
 import "./style.scss";
 import { BsChat, BsCart3, BsHeart, BsBell } from "react-icons/bs";
-import logo from "../../../../assets/admin/logo.png";
+import logo from "../../../../../assets/admin/logo.png"; // Import logo
 
-const Header = () => {
+const HeaderOwner = () => {
   return (
     <>
       <div className="header_top">
@@ -75,4 +75,4 @@ const Header = () => {
   );
 };
 
-export default memo(Header);
+export default memo(HeaderOwner);
