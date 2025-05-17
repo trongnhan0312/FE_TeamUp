@@ -1,8 +1,8 @@
-import { jwtDecode } from 'jwt-decode';
+import { jwtDecode } from "jwt-decode";
 // Constants
-const TOKEN_KEY = 'auth_token';
-const REFRESH_TOKEN_KEY = 'refresh_token';
-const USER_INFO_KEY = 'user_info';
+const TOKEN_KEY = "auth_token";
+const REFRESH_TOKEN_KEY = "refresh_token";
+const USER_INFO_KEY = "user_info";
 
 /**
  * Lưu token vào localStorage
@@ -96,7 +96,7 @@ export const isTokenValid = () => {
     // Kiểm tra xem token đã hết hạn chưa
     return decodedToken.exp > currentTime;
   } catch (error) {
-    console.error('Invalid token:', error);
+    console.error("Invalid token:", error);
     return false;
   }
 };
@@ -107,15 +107,15 @@ export const isTokenValid = () => {
  * @returns {Object|null} Thông tin đã giải mã hoặc null nếu có lỗi
  */
 export const decodeToken = (token) => {
- if (!token || typeof token !== 'string') {
-    console.error('Invalid token specified: must be a string');
+  if (!token || typeof token !== "string") {
+    console.error("Invalid token specified: must be a string");
     return null;
   }
-  
+
   try {
     return jwtDecode(token);
   } catch (error) {
-    console.error('Error decoding token:', error);
+    console.error("Error decoding token:", error);
     return null;
   }
 };
@@ -126,50 +126,41 @@ export const decodeToken = (token) => {
  * @returns {Object} Thông tin người dùng đã giải mã
  */
 export const saveAuthData = (authData) => {
-
-if (!authData || !authData.resultObj || !authData.resultObj.accessToken) {
-    console.error('Invalid auth data. Missing token.');
+  if (!authData || !authData.resultObj || !authData.resultObj.accessToken) {
+    console.error("Invalid auth data. Missing token.");
     return null;
   }
 
-  const { 
-    accessToken, 
-    refreshToken, 
-    id, 
-    email, 
-    fullName, 
-    role,
-  } = authData.resultObj;
+  const { accessToken, refreshToken, id, email, fullName, role } =
+    authData.resultObj;
 
-  
   // Lưu token
   setToken(accessToken);
-  
+
   // Lưu refresh token nếu có
   if (refreshToken) {
     setRefreshToken(refreshToken);
   }
-  
+
   try {
     // Giải mã token để lấy thông tin người dùng
     const decodedToken = decodeToken(accessToken);
-    
-      const userData = {
+
+    const userData = {
       id,
       email,
       fullName,
       role,
       // Bạn có thể thêm thông tin khác từ resultObj hoặc decodedToken
-      ...(decodedToken || {})
+      ...(decodedToken || {}),
     };
-    
+
     // Lưu thông tin người dùng
     setUserInfo(userData);
-    
-    return userData;
 
+    return userData;
   } catch (error) {
-    console.error('Error processing auth data:', error);
+    console.error("Error processing auth data:", error);
     // Xóa token nếu có lỗi xảy ra
     removeToken();
     removeRefreshToken();
@@ -200,7 +191,7 @@ export const isAuthenticated = () => {
  */
 export const getUserName = () => {
   const userInfo = getUserInfo();
-  return userInfo ? (userInfo.name || userInfo.username || '') : '';
+  return userInfo ? userInfo.name || userInfo.username || "" : "";
 };
 
 /**
@@ -209,7 +200,14 @@ export const getUserName = () => {
  */
 export const getUserRoles = () => {
   const userInfo = getUserInfo();
-  return userInfo && userInfo.roles ? userInfo.roles : [];
+  if (!userInfo) return [];
+  // Nếu có trường roles (mảng) thì dùng, còn không thì lấy role (chuỗi)
+  if (userInfo.roles && Array.isArray(userInfo.roles)) {
+    return userInfo.roles;
+  } else if (userInfo.role) {
+    return [userInfo.role]; // chuyển chuỗi role thành mảng 1 phần tử
+  }
+  return [];
 };
 
 /**

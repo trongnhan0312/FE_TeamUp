@@ -8,4 +8,7 @@ export const ROUTER = {
         REGISTER: "/register",
     },
     OTP_VERIFICATION: "/verify-otp",
+    OWNER: {
+        HOME: "/owner",
+    },
 };
