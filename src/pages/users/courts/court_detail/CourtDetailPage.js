@@ -12,7 +12,7 @@ import AvailableCourts from "./AvailableCourts";
 import CourtReviews from "./CourtReviews";
 import SimilarCourts from "./SimilarCourts.js";
 import courtService from "../../../../services/courtService.js";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { formatPrice } from "../../../../utils/formatUtils.js";
 
 const CourtDetailPage = () => {
@@ -23,6 +23,12 @@ const CourtDetailPage = () => {
     const [ownerId, setOwnerId] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
+
+    const handleBookingClick = () => {
+        if (!courtId) return;
+        navigate(`/court-schedule/${courtId}`);
+    };
 
     // Fetch court details
     useEffect(() => {
@@ -180,8 +186,13 @@ const CourtDetailPage = () => {
                         <span className="unit">/giờ</span>
                     </div>
                     <div className="booking-actions">
-                        <button className="btn-book">Đặt sân</button>
-                        <button className="btn-create-room">Tạo phòng</button>
+                        <button
+                            className="btn-book"
+                            onClick={handleBookingClick}
+                        >
+                            Đặt sân
+                        </button>
+                        {/* <button className="btn-create-room">Tạo phòng</button> */}
                     </div>
                 </div>
 

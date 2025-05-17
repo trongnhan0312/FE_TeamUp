@@ -104,7 +104,7 @@ const SimilarCourts = () => {
                                 </span>
                             </div>
 
-                            <div className="action-buttons">
+                            {/* <div className="action-buttons">
                                 <button className="action-button heart-button">
                                     <FaHeart />
                                 </button>
@@ -112,7 +112,7 @@ const SimilarCourts = () => {
                                 <button className="action-button add-button">
                                     <FaPlus />
                                 </button>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 ))}

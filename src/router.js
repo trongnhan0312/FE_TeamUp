@@ -11,6 +11,8 @@ import CourtDetailPage from "./pages/users/courts/court_detail/CourtDetailPage";
 import Owner from "./pages/owner";
 import { ROUTER } from "./utils/router";
 import OtpVerificationPage from "./pages/EmailComponentUtil/OtpVerificationPage";
+import CourtSchedule from "./pages/users/courts/court_schedule/CourtSchedule";
+import BookingConfirmation from "./pages/users/courts/BookingConfirmation";
 
 const RouterCustom = () => {
     const location = useLocation();
@@ -41,8 +43,16 @@ const RouterCustom = () => {
                     <Route path="/home" element={<HomePage />} />
                     <Route path="/profile" element={<ProfilePage />} />
                     <Route
-                        path="/courts/:courtId"
+                        path={ROUTER.USER.DETAIL_COURT}
                         element={<CourtDetailPage />}
+                    />
+                    <Route
+                        path={ROUTER.USER.SCHEDULE_COURT}
+                        element={<CourtSchedule />}
+                    />
+                    <Route
+                        path={ROUTER.USER.COURT_BOOKING_CONFIRMATION}
+                        element={<BookingConfirmation />}
                     />
                     <Route path="*" element={<Navigate to="/home" replace />} />
                 </Routes>

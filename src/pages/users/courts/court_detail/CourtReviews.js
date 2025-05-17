@@ -128,12 +128,12 @@ const CourtReviews = ({ rating = 0, totalReviews = 0, revieweeId }) => {
             <div className="court-reviews">
                 <div className="reviews-header">
                     <h2 className="section-title">Đánh giá</h2>
-                    <button
+                    {/* <button
                         className="write-review-button"
                         onClick={handleWriteReview}
                     >
                         Viết đánh giá
-                    </button>
+                    </button> */}
                 </div>
                 <div className="rating-summary">
                     <div className="rating-score">
@@ -169,12 +169,12 @@ const CourtReviews = ({ rating = 0, totalReviews = 0, revieweeId }) => {
         <div className="court-reviews">
             <div className="reviews-header">
                 <h2 className="section-title">Đánh giá</h2>
-                <button
+                {/* <button
                     className="write-review-button"
                     onClick={handleWriteReview}
                 >
                     Viết đánh giá
-                </button>
+                </button> */}
             </div>
 
             <div className="rating-summary">
