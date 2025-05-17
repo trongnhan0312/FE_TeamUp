@@ -1,54 +1,73 @@
-import React from "react";
-import { FaStar, FaFlag } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
+import { FaStar, FaFlag, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import "./CourtReviews.scss";
+import ratingService from "../../../../services/ratingService";
 
-const CourtReviews = ({ reviews, rating, totalReviews }) => {
-    // Dữ liệu mẫu nếu không có props
-    const defaultRating = rating || 4.2;
-    const defaultTotalReviews = totalReviews || 371;
+const CourtReviews = ({ rating = 0, totalReviews = 0, revieweeId }) => {
+    const [reviewsData, setReviewsData] = useState({
+        items: [],
+        totalReviews: 0,
+        averageRating: 0,
+    });
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const pageSize = 5;
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    const defaultReviews = reviews || [
-        {
-            id: 1,
-            author: "Paula",
-            rating: 5.0,
-            comment:
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-            date: new Date("2023-10-15"),
-        },
-        {
-            id: 2,
-            author: "Cristofer Ekstrom Bothman",
-            rating: 5.0,
-            comment:
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-            date: new Date("2023-10-10"),
-        },
-        {
-            id: 3,
-            author: "Johnson, White and Lang",
-            rating: 5.0,
-            comment:
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-            date: new Date("2023-10-05"),
-        },
-        {
-            id: 4,
-            author: "Erin Septimus",
-            rating: 5.0,
-            comment:
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-            date: new Date("2023-09-28"),
-        },
-        {
-            id: 5,
-            author: "Terry George",
-            rating: 5.0,
-            comment:
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-            date: new Date("2023-09-20"),
-        },
-    ];
+    // Sử dụng giá trị từ props hoặc từ API
+    const displayRating = reviewsData.averageRating || rating || 0;
+    const displayTotalReviews = reviewsData.totalReviews || totalReviews || 0;
+
+    useEffect(() => {
+        const fetchRatings = async () => {
+            if (!revieweeId) return;
+
+            try {
+                setLoading(true);
+                const response = await ratingService.getList(
+                    currentPage,
+                    pageSize,
+                    revieweeId
+                );
+
+                if (response.isSuccessed) {
+                    // Cập nhật state với dữ liệu từ API
+                    const items = response.resultObj?.items || [];
+
+                    setReviewsData({
+                        items: items,
+                        totalReviews:
+                            response.resultObj?.totalCount || totalReviews || 0,
+                        averageRating:
+                            response.resultObj?.averageRating || rating || 0,
+                    });
+
+                    setTotalPages(response.resultObj?.totalPages || 1);
+                } else {
+                    setError(
+                        response.message || "Không thể lấy danh sách đánh giá"
+                    );
+                }
+            } catch (error) {
+                console.error("Lỗi khi lấy danh sách đánh giá:", error);
+                setError("Đã xảy ra lỗi khi tải dữ liệu đánh giá");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (revieweeId) {
+            fetchRatings();
+        }
+    }, [revieweeId, currentPage, pageSize, rating, totalReviews]);
+
+    // Xử lý chuyển trang
+    const handlePageChange = (newPage) => {
+        if (newPage >= 1 && newPage <= totalPages) {
+            setCurrentPage(newPage);
+        }
+    };
 
     // Hàm xử lý khi nhấn nút viết đánh giá
     const handleWriteReview = () => {
@@ -82,6 +101,70 @@ const CourtReviews = ({ reviews, rating, totalReviews }) => {
         return `hsl(${hue}, 70%, 80%)`;
     };
 
+    // Định dạng thời gian
+    const formatDate = (dateString) => {
+        if (!dateString) return "";
+        const date = new Date(dateString);
+        return date.toLocaleDateString("vi-VN", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+        });
+    };
+
+    if (loading) {
+        return (
+            <div className="court-reviews loading">Đang tải đánh giá...</div>
+        );
+    }
+
+    if (error) {
+        return <div className="court-reviews error">{error}</div>;
+    }
+
+    // Hiển thị thông báo nếu không có đánh giá
+    if (reviewsData.items.length === 0) {
+        return (
+            <div className="court-reviews">
+                <div className="reviews-header">
+                    <h2 className="section-title">Đánh giá</h2>
+                    <button
+                        className="write-review-button"
+                        onClick={handleWriteReview}
+                    >
+                        Viết đánh giá
+                    </button>
+                </div>
+                <div className="rating-summary">
+                    <div className="rating-score">
+                        <span className="score">
+                            {displayRating.toFixed(1)}
+                        </span>
+                        <div className="rating-details">
+                            <span className="rating-text">
+                                {displayRating >= 4.5
+                                    ? "Tuyệt vời"
+                                    : displayRating >= 4.0
+                                    ? "Rất tốt"
+                                    : displayRating >= 3.5
+                                    ? "Tốt"
+                                    : displayRating >= 3.0
+                                    ? "Khá"
+                                    : "Trung bình"}
+                            </span>
+                            <span className="review-count">
+                                {displayTotalReviews} người dùng đã đánh giá
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div className="no-reviews">
+                    Chưa có đánh giá nào cho sân này.
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="court-reviews">
             <div className="reviews-header">
@@ -96,36 +179,63 @@ const CourtReviews = ({ reviews, rating, totalReviews }) => {
 
             <div className="rating-summary">
                 <div className="rating-score">
-                    <span className="score">{defaultRating}</span>
+                    <span className="score">{displayRating.toFixed(1)}</span>
                     <div className="rating-details">
-                        <span className="rating-text">Rất tốt</span>
+                        <span className="rating-text">
+                            {displayRating >= 4.5
+                                ? "Tuyệt vời"
+                                : displayRating >= 4.0
+                                ? "Rất tốt"
+                                : displayRating >= 3.5
+                                ? "Tốt"
+                                : displayRating >= 3.0
+                                ? "Khá"
+                                : "Trung bình"}
+                        </span>
                         <span className="review-count">
-                            {defaultTotalReviews} người dùng đã đánh giá
+                            {displayTotalReviews} người dùng đã đánh giá
                         </span>
                     </div>
                 </div>
             </div>
 
             <div className="reviews-list">
-                {defaultReviews.map((review) => (
-                    <div key={review.id} className="review-item">
+                {reviewsData.items.map((review, index) => (
+                    <div
+                        key={review.id || `review-${index}`}
+                        className="review-item"
+                    >
                         <div
                             className="review-avatar"
                             style={{
-                                backgroundColor: getAvatarColor(review.author),
+                                backgroundColor: getAvatarColor(
+                                    review.reviewer?.fullName || ""
+                                ),
                             }}
                         >
-                            {getInitials(review.author)}
+                            {getInitials(review.reviewer?.fullName || "")}
                         </div>
 
                         <div className="review-content">
                             <div className="review-header">
                                 <div className="review-rating">
                                     <span className="rating-value">
-                                        {review.rating.toFixed(1)} Amazing
+                                        {review.ratingValue?.toFixed(1) ||
+                                            "0.0"}
+                                        {review.ratingValue >= 4.5
+                                            ? " Tuyệt vời"
+                                            : review.ratingValue >= 4.0
+                                            ? " Rất tốt"
+                                            : review.ratingValue >= 3.5
+                                            ? " Tốt"
+                                            : review.ratingValue >= 3.0
+                                            ? " Khá"
+                                            : " Trung bình"}
                                     </span>
                                     <span className="review-author">
-                                        | {review.author}
+                                        |{" "}
+                                        {review.reviewer?.fullName ||
+                                            "Người dùng ẩn danh"}
                                     </span>
                                 </div>
 
@@ -140,11 +250,41 @@ const CourtReviews = ({ reviews, rating, totalReviews }) => {
                                 </button>
                             </div>
 
-                            <p className="review-text">{review.comment}</p>
+                            <p className="review-text">
+                                {review.comment || "Không có bình luận"}
+                            </p>
+                            <div className="review-date">
+                                {formatDate(review.createDate)}
+                            </div>
                         </div>
                     </div>
                 ))}
             </div>
+
+            {/* Phân trang - đã cập nhật để giống SimilarCourts */}
+            {totalPages > 1 && (
+                <div className="pagination">
+                    <button
+                        className="pagination-button prev"
+                        disabled={currentPage <= 1}
+                        onClick={() => handlePageChange(currentPage - 1)}
+                    >
+                        <FaChevronLeft />
+                    </button>
+
+                    <div className="page-info">
+                        {currentPage} of {totalPages}
+                    </div>
+
+                    <button
+                        className="pagination-button next"
+                        disabled={currentPage >= totalPages}
+                        onClick={() => handlePageChange(currentPage + 1)}
+                    >
+                        <FaChevronRight />
+                    </button>
+                </div>
+            )}
         </div>
     );
 };

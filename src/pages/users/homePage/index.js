@@ -22,7 +22,7 @@ const HomePage = () => {
     const navigate = useNavigate();
 
     const handleBookingClick = () => {
-        const courtId = 123;
+        const courtId = 2;
         navigate(`/courts/${courtId}`);
     };
 

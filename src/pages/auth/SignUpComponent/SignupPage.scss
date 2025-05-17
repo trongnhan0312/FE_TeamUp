@@ -1,4 +1,4 @@
-@import '../../assets/styles/fonts';  // Import the fonts file
+@import '../../../assets/styles/fonts';  // Import the fonts file
 
 .signup-page {
   display: flex;
@@ -271,5 +271,58 @@
       height: auto;
       object-fit: cover;
     }
+  }
+
+  // Thông báo lỗi
+.error-messages {
+  background-color: #ffebee;
+  color: #d32f2f;
+  padding: 12px 16px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  
+  ul {
+    margin: 0;
+    padding-left: 20px;
+    
+    li {
+      margin-bottom: 4px;
+      
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+// Thông báo lỗi
+.error-message {
+  color: #d32f2f;
+  background-color: #ffebee;
+  padding: 12px 16px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+  // Yêu cầu mật khẩu
+  .password-requirement {
+    font-size: 13px;
+    color: #666;
+    margin-top: 4px;
+    
+    &.invalid {
+      color: #d32f2f !important;
+    }
+  }
+
+  // Input không hợp lệ
+  input.invalid {
+    border-color: #d32f2f !important;
+  }
+
+  // Style cho button khi loading
+  .signup-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
   }
 }

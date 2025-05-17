@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Footer from "../../component/common/theme/footer";
 import "./SignupPage.scss";
-import signupImg from "../../assets/user/register.png";
-import authService from "../../services/authService";
-import { ROUTER } from "../../utils/router";
+import signupImg from "../../../assets/user/register.png";
+import authService from "../../../services/authService";
+import { ROUTER } from "../../../utils/router";
 
 const SignupPage = () => {
     const [fullName, setFullName] = useState("");
@@ -17,18 +16,38 @@ const SignupPage = () => {
     const [agreeTerms, setAgreeTerms] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const [isPasswordValid, setIsPasswordValid] = useState(true);
 
     const navigate = useNavigate();
 
+    // Kiểm tra mật khẩu mỗi khi người dùng thay đổi
+    useEffect(() => {
+        // Chỉ kiểm tra khi người dùng đã bắt đầu nhập mật khẩu
+        if (password.length > 0) {
+            const hasUpperCase = /[A-Z]/.test(password);
+            const hasLowerCase = /[a-z]/.test(password);
+            const hasSpecialChar = /[^A-Za-z0-9]/.test(password);
+            const isLongEnough = password.length >= 6;
+
+            setIsPasswordValid(
+                hasUpperCase && hasLowerCase && hasSpecialChar && isLongEnough
+            );
+        } else {
+            // Nếu chưa nhập, không hiển thị lỗi
+            setIsPasswordValid(true);
+        }
+    }, [password]);
+
     const validateForm = () => {
-        if (password !== confirmPassword) {
-            setError("Mật khẩu và xác nhận mật khẩu không khớp");
+        // Kiểm tra mật khẩu hợp lệ
+        if (!isPasswordValid) {
+            setError("Mật khẩu không đáp ứng yêu cầu");
             return false;
         }
 
-        // Thêm các kiểm tra khác nếu cần
-        if (password.length < 6) {
-            setError("Mật khẩu phải có ít nhất 6 ký tự");
+        // Kiểm tra mật khẩu và xác nhận mật khẩu khớp nhau
+        if (password !== confirmPassword) {
+            setError("Mật khẩu và xác nhận mật khẩu không khớp");
             return false;
         }
 
@@ -58,11 +77,19 @@ const SignupPage = () => {
             // Gọi API đăng ký
             const response = await authService.register(userData);
 
-            // Kiểm tra response thành công
-            if (!response.isSuccessed) {
-                throw new Error(response.message || "Đăng ký thất bại");
+            if (response.isSuccessed) {
+                navigate(
+                    `${ROUTER.OTP_VERIFICATION}?email=${encodeURIComponent(
+                        email
+                    )}`
+                );
+            } else {
+                setError(response.message || "Đăng ký thất bại");
             }
         } catch (error) {
+            console.error("Error during registration:", error);
+
+            // Xử lý lỗi từ API
             if (error.response && error.response.data) {
                 setError(error.response.data.message || "Đăng ký thất bại");
             } else if (error.message) {
@@ -83,6 +110,9 @@ const SignupPage = () => {
                 <div className="signup-form-container">
                     <h1 className="signup-title">Đăng ký</h1>
 
+                    {/* Thông báo lỗi */}
+                    {error && <div className="error-message">{error}</div>}
+
                     <form onSubmit={handleSubmit} className="signup-form">
                         {/* Full Name field */}
                         <div className="form-group">
@@ -90,7 +120,6 @@ const SignupPage = () => {
                             <input
                                 type="text"
                                 id="fullName"
-                                placeholder="john.doe@gmail.com"
                                 value={fullName}
                                 onChange={(e) => setFullName(e.target.value)}
                                 required
@@ -116,7 +145,7 @@ const SignupPage = () => {
                                 <input
                                     type="tel"
                                     id="phone"
-                                    placeholder="john.doe@gmail.com"
+                                    placeholder="+84"
                                     value={phone}
                                     onChange={(e) => setPhone(e.target.value)}
                                     required
@@ -137,6 +166,11 @@ const SignupPage = () => {
                                         setPassword(e.target.value)
                                     }
                                     required
+                                    className={
+                                        password.length > 0 && !isPasswordValid
+                                            ? "invalid"
+                                            : ""
+                                    }
                                 />
                                 <button
                                     type="button"
@@ -174,6 +208,16 @@ const SignupPage = () => {
                                     )}
                                 </button>
                             </div>
+                            <div
+                                className={`password-requirement ${
+                                    password.length > 0 && !isPasswordValid
+                                        ? "invalid"
+                                        : ""
+                                }`}
+                            >
+                                Mật khẩu phải có ít nhất 6 ký tự, bao gồm chữ
+                                hoa, chữ thường và ký tự đặc biệt
+                            </div>
                         </div>
 
                         {/* Confirm Password field */}
@@ -195,6 +239,12 @@ const SignupPage = () => {
                                         setConfirmPassword(e.target.value)
                                     }
                                     required
+                                    className={
+                                        confirmPassword &&
+                                        password !== confirmPassword
+                                            ? "invalid"
+                                            : ""
+                                    }
                                 />
                                 <button
                                     type="button"
@@ -263,9 +313,9 @@ const SignupPage = () => {
                         <button
                             type="submit"
                             className="signup-button"
-                            disabled={!agreeTerms}
+                            disabled={!agreeTerms || loading}
                         >
-                            Đăng ký
+                            {loading ? "Đang xử lý..." : "Đăng ký"}
                         </button>
 
                         {/* Login link */}
@@ -281,11 +331,6 @@ const SignupPage = () => {
 
                     {/* Social signup */}
                     <div className="social-signup">
-                        {/* <button className="social-button facebook">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-              </svg>
-            </button> */}
                         <button className="social-button google">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -309,11 +354,6 @@ const SignupPage = () => {
                                 />
                             </svg>
                         </button>
-                        {/* <button className="social-button apple">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <path d="M17.05 20.28c-.98.95-2.05.88-3.08.5-1.09-.4-2.08-.42-3.2 0-1.43.56-2.18.44-3.08-.5-4.64-4.75-3.84-13.14 1.74-13.3.79.01 1.34.27 1.84.27.48 0 1.4-.34 2.35-.28.4.01 1.52.16 2.25.66-1.96 1.26-1.64 4.51.32 5.32-1.27 3.96 1.07 8.14 3.08 7.85-.33.73-.74 1.44-1.17 1.99l.01-.02zm-2.21-17.42c.88-1.07.81-2.57.65-2.86-1.23.06-2.65.87-3.24 1.81-.61.84-.78 1.74-.71 2.71 1.32.04 2.7-.73 3.3-1.66z" fill="#000000" />
-              </svg>
-            </button> */}
                     </div>
                 </div>
 
@@ -327,9 +367,6 @@ const SignupPage = () => {
                     </div>
                 </div>
             </div>
-
-            {/* Footer */}
-            {/* <Footer /> */}
         </div>
     );
 };
