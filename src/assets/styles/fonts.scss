@@ -55,6 +55,14 @@ $font-size-4xl: 3rem;      // 48px
   @include font($font-montserrat, $font-size-xl, $font-weight-semibold, 1.3);
 }
 
+@mixin middle-text {
+  @include font($font-montserrat, $font-size-md, $font-weight-medium, 1.5);
+}
+
+@mixin large-text {
+  @include font($font-montserrat, $font-size-lg, $font-weight-semibold, 1.5);
+}
+
 @mixin body-text {
   @include font($font-montserrat, $font-size-base, $font-weight-regular, 1.5);
 }

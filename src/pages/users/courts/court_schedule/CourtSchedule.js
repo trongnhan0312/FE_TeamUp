@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import "./CourtSchedule.scss";
-import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import courtService from "../../../../services/courtService";
 
 const CourtSchedule = () => {
     const { courtId } = useParams();
@@ -38,8 +38,11 @@ const CourtSchedule = () => {
             setLoading(true);
             setError(null);
 
-            // Lấy ngày hiện tại
             const today = new Date();
+
+            const currentHour = today.getHours();
+            const currentMinute = today.getMinutes();
+
             today.setHours(0, 0, 0, 0);
 
             // Tìm ngày bắt đầu hợp lệ (ngày đầu tuần hoặc ngày hiện tại, tùy cái nào sau)
@@ -53,24 +56,26 @@ const CourtSchedule = () => {
 
             const startDate = formatDateForApi(startDateObj);
 
+            const currentTimeStr = `${currentHour
+                .toString()
+                .padStart(2, "0")}:${currentMinute
+                .toString()
+                .padStart(2, "0")}`;
+
+            console.log("Gọi API với thời gian hiện tại:", currentTimeStr);
+
             try {
-                const response = await axios.get(
-                    `https://localhost:7286/api/courtbooking/free-hours`,
-                    {
-                        params: {
-                            courtId,
-                            startDate,
-                        },
-                    }
+                const data = await courtService.getFreeHours(
+                    courtId,
+                    startDate,
+                    currentTimeStr
                 );
 
-                if (response.data.isSuccessed) {
-                    setScheduleData(response.data.resultObj || []);
+                if (data.isSuccessed) {
+                    setScheduleData(data.resultObj || []);
                 } else {
-                    setError(
-                        response.data.message || "Không thể lấy dữ liệu lịch"
-                    );
-                    console.error("API trả về lỗi:", response.data.message);
+                    setError(data.message || "Không thể lấy dữ liệu lịch");
+                    console.error("API trả về lỗi:", data.message);
                 }
             } catch (err) {
                 console.error("Lỗi khi gọi API:", err);
@@ -208,6 +213,11 @@ const CourtSchedule = () => {
 
     // Xử lý khi người dùng chọn một slot
     const handleSlotClick = (date, time) => {
+        // Kiểm tra xem slot có khả dụng không, nếu không thì ngừng xử lý
+        if (!isSlotAvailable(date, time)) {
+            return; // Không làm gì nếu slot đã được đặt (không khả dụng)
+        }
+
         // Nếu chưa có giờ bắt đầu hoặc đã có cả giờ bắt đầu và kết thúc, đặt lại
         if (!startTime || (startTime && endTime)) {
             setStartTime(time);
@@ -223,9 +233,23 @@ const CourtSchedule = () => {
             const selectedHour = parseInt(time.split(":")[0]);
 
             if (isSameDay && selectedHour > startHour) {
-                setEndTime(time);
-                // Tính số giờ đặt sân
-                setBookingDuration(selectedHour - startHour);
+                // Kiểm tra xem tất cả các slot giữa startTime và time có khả dụng không
+                const allSlotsAvailable = checkAllSlotsAvailable(
+                    date,
+                    startHour,
+                    selectedHour
+                );
+
+                if (allSlotsAvailable) {
+                    setEndTime(time);
+                    // Tính số giờ đặt sân
+                    setBookingDuration(selectedHour - startHour);
+                } else {
+                    // Nếu có slot nào đó giữa startTime và time không khả dụng
+                    alert(
+                        "Không thể chọn khoảng thời gian này vì có slot đã được đặt ở giữa."
+                    );
+                }
             } else {
                 // Nếu chọn ngày khác hoặc giờ trước giờ bắt đầu, đặt lại
                 setStartTime(time);
@@ -234,6 +258,18 @@ const CourtSchedule = () => {
                 setBookingDuration(0);
             }
         }
+    };
+
+    // Thêm hàm mới để kiểm tra tất cả các slot giữa startHour và endHour
+    const checkAllSlotsAvailable = (date, startHour, endHour) => {
+        // Chuyển đổi từ giờ sang chuỗi định dạng "HH:00"
+        const checkHours = [];
+        for (let hour = startHour + 1; hour < endHour; hour++) {
+            checkHours.push(`${hour.toString().padStart(2, "0")}:00`);
+        }
+
+        // Kiểm tra từng slot
+        return checkHours.every((time) => isSlotAvailable(date, time));
     };
 
     // Kiểm tra xem một slot có khả dụng không
@@ -296,7 +332,6 @@ const CourtSchedule = () => {
     const handleCheckout = () => {
         if (!startTime || !endTime || !selectedDay) return;
 
-        // Tổng hợp thông tin đặt sân
         const bookingData = {
             courtId,
             date: dateToString(selectedDay),
@@ -305,14 +340,11 @@ const CourtSchedule = () => {
             duration: bookingDuration,
         };
 
-        console.log("Dữ liệu đặt sân:", bookingData);
-
         navigate("/booking-confirmation", {
             state: { bookingData },
         });
     };
 
-    // Hiển thị trạng thái loading
     if (loading && scheduleData.length === 0) {
         return (
             <div className="loading-indicator">Đang tải lịch đặt sân...</div>

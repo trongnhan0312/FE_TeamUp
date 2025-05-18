@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import axios from "axios";
 import "./BookingConfirmation.scss";
-import { FaChevronLeft, FaMapMarkerAlt, FaStar, FaClock } from "react-icons/fa";
-import courtService from "../../../services/courtService";
+import { FaChevronLeft, FaMapMarkerAlt, FaClock } from "react-icons/fa";
+import courtService from "../../../../services/courtService";
+import { getUserInfo } from "../../../../utils/auth";
 
 const BookingConfirmation = () => {
     const navigate = useNavigate();
@@ -12,6 +12,7 @@ const BookingConfirmation = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [discount, setDiscount] = useState(0);
+    const userData = getUserInfo();
 
     // Nhận dữ liệu từ courtSchedule
     const bookingData = location.state?.bookingData;
@@ -59,44 +60,28 @@ const BookingConfirmation = () => {
         return subtotal - discountAmount;
     };
 
-    // Xử lý xác nhận đặt sân
     const handleConfirmBooking = async () => {
-        try {
-            setLoading(true);
+        setLoading(true);
 
-            const bookingRequest = {
-                courtId: bookingData.courtId,
-                date: bookingData.date,
-                startTime: bookingData.startTime,
-                endTime: bookingData.endTime,
-                totalHours: bookingData.duration,
-                totalPrice: calculateTotalPrice(),
-                discountAmount: discount,
-            };
+        const dateStr = bookingData.date;
+        const startTimeISO = `${dateStr}T${bookingData.startTime}:00`;
+        const endTimeISO = `${dateStr}T${bookingData.endTime}:00`;
 
-            // Gửi request đặt sân lên server
-            const response = await axios.post(
-                "https://localhost:7286/api/courtbooking/book",
-                bookingRequest
-            );
+        const bookingDetails = {
+            courtId: bookingData.courtId,
+            userId: userData.id,
+            startTime: startTimeISO,
+            endTime: endTimeISO,
+            date: bookingData.date,
+            totalHours: bookingData.duration,
+            totalPrice: calculateTotalPrice(),
+        };
 
-            if (response.data.isSuccessed) {
-                // Chuyển đến trang xác nhận thành công
-                navigate("/booking-success", {
-                    state: {
-                        bookingId: response.data.resultObj.id,
-                        bookingDetails: bookingRequest,
-                    },
-                });
-            } else {
-                setError(response.data.message || "Đặt sân thất bại");
-            }
-        } catch (err) {
-            console.error("Lỗi khi đặt sân:", err);
-            setError("Đã xảy ra lỗi trong quá trình đặt sân");
-        } finally {
-            setLoading(false);
-        }
+        navigate("/booking-summary", {
+            state: {
+                bookingDetails: bookingDetails,
+            },
+        });
     };
 
     // Xử lý quay lại

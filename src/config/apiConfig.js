@@ -35,6 +35,8 @@ export const ENDPOINTS = {
     COURT: {
         GET_BY_ID: "/court",
         LIST: "/court/all",
+        GET_BY_FREE_HOURS: "/courtbooking/free-hours",
+        HANDLE_BOOKING: "/courtbooking/create",
     },
     SPORT: {
         GET_BY_ID: "/sportscomplex",

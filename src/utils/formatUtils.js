@@ -1,5 +1,7 @@
 // src/utils/formatUtils.js
 
+import { FaStar, FaStarHalfAlt } from "react-icons/fa";
+
 /**
  * Định dạng số thành chuỗi tiền tệ Việt Nam
  * @param {number} price - Số tiền cần định dạng
@@ -40,4 +42,29 @@ export const formatCompactNumber = (number) => {
     } else {
         return (number / 1000000000).toFixed(1).replace(/\.0$/, "") + "B";
     }
+};
+
+export const renderRatingStars = (rating) => {
+    const stars = [];
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 >= 0.5;
+
+    for (let i = 0; i < 5; i++) {
+        if (i < fullStars) {
+            stars.push(<FaStar key={i} className="star filled" />);
+        } else if (i === fullStars && hasHalfStar) {
+            stars.push(<FaStarHalfAlt key={i} className="star filled" />);
+        } else {
+            stars.push(<FaStar key={i} className="star" />);
+        }
+    }
+    return stars;
+};
+
+export const getRatingText = (rating) => {
+    if (rating >= 4.5) return "Tuyệt vời";
+    if (rating >= 4.0) return "Rất tốt";
+    if (rating >= 3.5) return "Tốt";
+    if (rating >= 3.0) return "Khá";
+    return "Trung bình";
 };

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import {
     FaMapMarkerAlt,
     FaHeart,
@@ -13,7 +13,11 @@ import CourtReviews from "./CourtReviews";
 import SimilarCourts from "./SimilarCourts.js";
 import courtService from "../../../../services/courtService.js";
 import { useNavigate, useParams } from "react-router-dom";
-import { formatPrice } from "../../../../utils/formatUtils.js";
+import {
+    formatPrice,
+    getRatingText,
+    renderRatingStars,
+} from "../../../../utils/formatUtils.js";
 
 const CourtDetailPage = () => {
     const { courtId } = useParams();
@@ -58,33 +62,6 @@ const CourtDetailPage = () => {
 
         fetchCourtDetails();
     }, [courtId]);
-
-    // Helper function to render rating stars
-    const renderRatingStars = (rating) => {
-        const stars = [];
-        const fullStars = Math.floor(rating);
-        const hasHalfStar = rating % 1 >= 0.5;
-
-        for (let i = 0; i < 5; i++) {
-            if (i < fullStars) {
-                stars.push(<FaStar key={i} className="star filled" />);
-            } else if (i === fullStars && hasHalfStar) {
-                stars.push(<FaStarHalfAlt key={i} className="star filled" />);
-            } else {
-                stars.push(<FaStar key={i} className="star" />);
-            }
-        }
-        return stars;
-    };
-
-    // Get rating text based on rating value
-    const getRatingText = (rating) => {
-        if (rating >= 4.5) return "Tuyệt vời";
-        if (rating >= 4.0) return "Rất tốt";
-        if (rating >= 3.5) return "Tốt";
-        if (rating >= 3.0) return "Khá";
-        return "Trung bình";
-    };
 
     // Loading state
     if (loading) {
