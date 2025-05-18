@@ -55,15 +55,17 @@ const courtService = {
     getList: async (
         pageNumber = 1,
         pageSize = 4,
+        type,
         sportId,
         status = "Active"
     ) => {
         try {
             const response = await axiosInstance.get(ENDPOINTS.COURT.LIST, {
                 params: {
-                    sportId,
                     pageNumber,
                     pageSize,
+                    type,
+                    sportId,
                     status,
                 },
             });

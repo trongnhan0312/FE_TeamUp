@@ -6,6 +6,7 @@ export const ROUTER = {
         SCHEDULE_COURT: "/court-schedule/:courtId",
         COURT_BOOKING_CONFIRMATION: "/booking-confirmation",
         COURT_BOOKING_SUMMARY: "/booking-summary",
+        COURT_HOMEPAGE: "/court/:type",
     },
     AUTH: {
         LOGIN: "/login",

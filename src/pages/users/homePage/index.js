@@ -3,6 +3,8 @@ import "./style.scss";
 import { BsHeartFill } from "react-icons/bs";
 import { BsFillPlusCircleFill } from "react-icons/bs";
 import { BsDoorOpenFill } from "react-icons/bs";
+import { BsArrowUpRightCircleFill } from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
 
 import banner from "../../../assets/admin/banner.png";
 import bongda from "../../../assets/admin/bongda.png";
@@ -15,8 +17,6 @@ import trandau4 from "../../../assets/admin/trandau4.png";
 import court2 from "../../../assets/admin/court2.png";
 import court3 from "../../../assets/admin/court3.png";
 import court4 from "../../../assets/admin/court4.png";
-import { BsArrowUpRightCircleFill } from "react-icons/bs";
-import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
     const navigate = useNavigate();
@@ -24,6 +24,11 @@ const HomePage = () => {
     const handleBookingClick = () => {
         const courtId = 2;
         navigate(`/courts/${courtId}`);
+    };
+
+    const handleCourtTypeClick = (urlType) => (e) => {
+        e.preventDefault();
+        navigate(`/court/${urlType}`);
     };
 
     return (
@@ -69,9 +74,13 @@ const HomePage = () => {
                 </div>
             </div>
 
-            {/* Các môn */}
+            {/* Các môn - Đơn giản hóa, URL param dùng để điều hướng */}
             <div className="cards_section">
-                <a href="#" className="card card-pickleball">
+                <a
+                    href="/court/pickleball"
+                    className="card card-pickleball"
+                    onClick={handleCourtTypeClick("pickleball")}
+                >
                     <img
                         src={pickleball}
                         alt="Pickleball"
@@ -86,7 +95,11 @@ const HomePage = () => {
                     </div>
                 </a>
 
-                <a href="#" className="card card-bongda">
+                <a
+                    href="/court/football"
+                    className="card card-bongda"
+                    onClick={handleCourtTypeClick("football")}
+                >
                     <img src={bongda} alt="Bóng đá" className="card_image" />
                     <div className="card_content">
                         <h2>Bóng đá</h2>
@@ -97,7 +110,11 @@ const HomePage = () => {
                     </div>
                 </a>
 
-                <a href="#" className="card card-caulong">
+                <a
+                    href="/court/badminton"
+                    className="card card-caulong"
+                    onClick={handleCourtTypeClick("badminton")}
+                >
                     <img src={cauLong} alt="Cầu lông" className="card_image" />
                     <div className="card_content">
                         <h2>Cầu lông</h2>
@@ -108,7 +125,7 @@ const HomePage = () => {
                     </div>
                 </a>
             </div>
-            {/* Trần đấu sắp diễn ra */}
+            {/* Trận đấu sắp diễn ra */}
             <div className="upcoming_matches">
                 <h2>Trận sắp diễn ra</h2>
                 <div className="matches_container">
