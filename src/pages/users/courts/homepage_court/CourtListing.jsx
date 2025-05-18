@@ -74,7 +74,7 @@ const CourtListing = () => {
         if (newType !== courtType) {
             setCourtType(newType);
             setCurrentPage(1);
-            setFeaturedCourt(null); // Chỉ reset featured court khi thực sự thay đổi type
+            setFeaturedCourt(null);
 
             // Cập nhật URL
             navigate(`/court/${TYPE_TO_URL[newType]}`);

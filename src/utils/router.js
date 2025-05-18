@@ -7,6 +7,8 @@ export const ROUTER = {
         COURT_BOOKING_CONFIRMATION: "/booking-confirmation",
         COURT_BOOKING_SUMMARY: "/booking-summary",
         COURT_HOMEPAGE: "/court/:type",
+        COACH_GET_ALL: "/coaches/:type",
+        COACH_GET_ALL_DEFAULT: "/coaches",
     },
     AUTH: {
         LOGIN: "/login",

@@ -46,5 +46,9 @@ export const ENDPOINTS = {
         GET_BY_ID: "/rating",
         LIST: "/rating/all",
     },
+    EMPLOYEE: {
+        GET_COACHES_PAGINATION: "/employee/get-coaches-pagination",
+        GET_COACH_DETAIL: "/employee/coach", // giả định
+    },
     // Các endpoints khác
 };

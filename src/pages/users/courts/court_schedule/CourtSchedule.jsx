@@ -59,8 +59,8 @@ const CourtSchedule = () => {
             const currentTimeStr = `${currentHour
                 .toString()
                 .padStart(2, "0")}:${currentMinute
-                .toString()
-                .padStart(2, "0")}`;
+                    .toString()
+                    .padStart(2, "0")}`;
 
             console.log("Gọi API với thời gian hiện tại:", currentTimeStr);
 
@@ -149,10 +149,20 @@ const CourtSchedule = () => {
     }
 
     // Xử lý tháng trước/sau
+    // Xử lý tháng trước/sau
     const handlePrevMonth = () => {
         const prevMonth = new Date(currentMonth);
         prevMonth.setMonth(prevMonth.getMonth() - 1);
-        setCurrentMonth(prevMonth);
+
+        // Lấy tháng hiện tại
+        const today = new Date();
+        today.setDate(1); // Đặt về ngày đầu tiên của tháng hiện tại
+        today.setHours(0, 0, 0, 0); // Đặt giờ về 00:00:00
+
+        // Chỉ cho phép thay đổi nếu tháng trước không ở quá khứ
+        if (prevMonth >= today) {
+            setCurrentMonth(prevMonth);
+        }
     };
 
     const handleNextMonth = () => {
@@ -454,10 +464,10 @@ const CourtSchedule = () => {
                                             onClick={
                                                 isAvailable
                                                     ? () =>
-                                                          handleSlotClick(
-                                                              date,
-                                                              time
-                                                          )
+                                                        handleSlotClick(
+                                                            date,
+                                                            time
+                                                        )
                                                     : undefined
                                             }
                                         >
@@ -519,11 +529,9 @@ const CourtSchedule = () => {
                         {calendarDays.map((day, index) => (
                             <div
                                 key={`day-${index}`}
-                                className={`calendar-day ${
-                                    !day.currentMonth ? "other-month" : ""
-                                } ${day.isToday ? "today" : ""} ${
-                                    isSelectedDate(day.date) ? "selected" : ""
-                                }`}
+                                className={`calendar-day ${!day.currentMonth ? "other-month" : ""
+                                    } ${day.isToday ? "today" : ""} ${isSelectedDate(day.date) ? "selected" : ""
+                                    }`}
                                 onClick={() => {
                                     setSelectedDate(day.date);
                                     if (

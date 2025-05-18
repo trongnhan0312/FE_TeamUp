@@ -3,14 +3,12 @@ import {
     FaMapMarkerAlt,
     FaHeart,
     FaShare,
-    FaStar,
-    FaStarHalfAlt,
 } from "react-icons/fa";
 import "./CourtDetailPage.scss";
 import { memo } from "react";
-import AvailableCourts from "./AvailableCourts";
-import CourtReviews from "./CourtReviews";
-import SimilarCourts from "./SimilarCourts.js";
+import AvailableCourts from "./AvailableCourts.jsx";
+import CourtReviews from "./CourtReviews.jsx";
+import SimilarCourts from "./SimilarCourts.jsx";
 import courtService from "../../../../services/courtService.js";
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -143,9 +141,8 @@ const CourtDetailPage = () => {
                             >
                                 <img
                                     src={image}
-                                    alt={`${court.name} - Hình ảnh ${
-                                        index + 1
-                                    }`}
+                                    alt={`${court.name} - Hình ảnh ${index + 1
+                                        }`}
                                     loading="lazy"
                                 />
                             </div>

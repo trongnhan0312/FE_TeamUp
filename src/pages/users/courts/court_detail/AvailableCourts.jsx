@@ -15,15 +15,16 @@ const AvailableCourts = ({ sportId, currentCourtId }) => {
     useEffect(() => {
         const fetchAvailableCourts = async () => {
             if (!sportId) return;
-
+            console.log("SportId", sportId);
             try {
                 setLoading(true);
                 const response = await courtService.getList(
                     pageNumber,
                     pageSize,
+                    "",
                     sportId,
-                    "Active"
                 );
+                console.log("SportData", response);
 
                 if (response.isSuccessed) {
                     // Lọc ra để không hiển thị sân hiện tại

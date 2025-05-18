@@ -15,6 +15,7 @@ import CourtSchedule from "./pages/users/courts/court_schedule/CourtSchedule";
 import BookingConfirmation from "./pages/users/courts/booking_court/BookingConfirmation";
 import BookingSummary from "./pages/users/courts/booking_court/BookingSummary";
 import CourtListing from "./pages/users/courts/homepage_court/CourtListing";
+import CoachListing from "./pages/users/coach/CoachListing";
 
 const RouterCustom = () => {
     const location = useLocation();
@@ -66,6 +67,15 @@ const RouterCustom = () => {
                         path={ROUTER.USER.COURT_HOMEPAGE}
                         element={<CourtListing />}
                     />
+                    <Route
+                        path={ROUTER.USER.COACH_GET_ALL_DEFAULT}
+                        element={<CoachListing />}
+                    />
+                    <Route
+                        path={ROUTER.USER.COACH_GET_ALL}
+                        element={<CoachListing />}
+                    />
+
                     <Route path="*" element={<Navigate to="/home" replace />} />
                 </Routes>
             </MasterLayout>
