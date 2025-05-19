@@ -1,0 +1,177 @@
+/* Reset CSS */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #fff;
+}
+
+.blog-page {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+
+.main-content {
+  flex: 1;
+  min-width: 65%;
+}
+
+.sidebar {
+  width: 30%;
+  min-width: 280px;
+}
+
+/* Main Article Styles */
+.article {
+  margin-bottom: 40px;
+}
+
+.main-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #000;
+}
+
+.section-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 40px 0 20px;
+  color: #000;
+}
+
+/* Racket Comparison Section */
+.rackets-container {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin: 30px 0;
+}
+
+.racket-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.racket-image {
+  height: 400px;
+  object-fit: contain;
+}
+
+/* Clothing Section */
+.clothing-section {
+  margin-top: 60px;
+}
+
+.clothing-images {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.clothing-item {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.clothing-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+/* Sidebar Styles */
+.sidebar-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #000;
+  text-align: right;
+}
+
+.related-articles {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.related-article {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.article-content {
+  flex: 1;
+  padding-right: 10px;
+}
+
+.article-title {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.article-image {
+  width: 100px;
+  height: 80px;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.article-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+  }
+
+  .rackets-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .clothing-images {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .clothing-item {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .sidebar-title {
+    text-align: left;
+  }
+}
