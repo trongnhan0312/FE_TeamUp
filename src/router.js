@@ -17,6 +17,10 @@ import BookingSummary from "./pages/users/courts/booking_court/BookingSummary";
 import CourtListing from "./pages/users/courts/homepage_court/CourtListing";
 import CoachListing from "./pages/users/coach/CoachListing";
 import CoachProfile from "./pages/users/coach/CoachProfile";
+import PrivacyPolicy from "./pages/users/privacyPolicy";
+import AboutUs from "./pages/users/aboutUs";
+import SupportCenter from "./pages/users/supportCenter";
+import Blog from "./pages/users/blog";
 
 const RouterCustom = () => {
     const location = useLocation();
@@ -80,6 +84,26 @@ const RouterCustom = () => {
                     <Route
                         path={ROUTER.USER.COACH_GET_DETAIL}
                         element={<CoachProfile />}
+                    />
+
+                    <Route
+                        path={ROUTER.USER.PRIVACY_POLICY}
+                        element={<PrivacyPolicy />}
+                    />
+
+                    <Route
+                        path={ROUTER.USER.ABOUT_US}
+                        element={<AboutUs />}
+                    />
+
+                    <Route
+                        path={ROUTER.USER.SUPPORT_CENTER}
+                        element={<SupportCenter />}
+                    />
+
+                    <Route
+                        path={ROUTER.USER.BLOG}
+                        element={<Blog />}
                     />
 
                     <Route path="*" element={<Navigate to="/home" replace />} />

@@ -37,7 +37,7 @@ const footer = () => {
                         <div className="footer_title">Công ty</div>
                         <ul className="footer_list">
                             <li>Trang chủ</li>
-                            <li>Về chúng tôi</li>
+                            <li><Link to="/about-us">Về chúng tôi</Link></li>
                             <li>Sản phẩm</li>
                         </ul>
                     </div>
@@ -46,9 +46,9 @@ const footer = () => {
                     <div className="footer_right">
                         <div className="footer_title">Hỗ trợ khách hàng</div>
                         <ul className="footer_list">
-                            <li>Trung tâm hỗ trợ khách hàng</li>
+                            <li><Link to="/support-center">Trung tâm hỗ trợ khách hàng</Link></li>
                             <li>Hoàn tiền</li>
-                            <li>Chính sách bảo mật</li>
+                            <li><Link to="/privacy-policy">Chính sách bảo mật</Link></li>
                             <li>Terms of Use</li>
                         </ul>
                     </div>
