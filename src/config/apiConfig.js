@@ -2,7 +2,6 @@
 
 // Lấy BASE_URL từ biến môi trường nếu có, nếu không dùng giá trị mặc định
 const BASE_URL = process.env.REACT_APP_API_URL || "https://localhost:7286/api";
-const API_VERSION = "v1";
 
 export const API_CONFIG = {
     BASE_URL,
@@ -26,6 +25,7 @@ export const ENDPOINTS = {
         RESET_PASSWORD: "/auth/reset-password",
         REFRESH_TOKEN: "/auth/refresh-token",
         VERIFY_OTP: "/auth/confirm-register",
+        RESEND_OTP: "/auth/resend-otp",
     },
     USER: {
         PROFILE: "/user/profile",
@@ -48,7 +48,7 @@ export const ENDPOINTS = {
     },
     EMPLOYEE: {
         GET_COACHES_PAGINATION: "/employee/get-coaches-pagination",
-        GET_COACH_DETAIL: "/employee/coach", // giả định
+        GET_COACH_PROFILE: "/employee",
     },
     // Các endpoints khác
 };

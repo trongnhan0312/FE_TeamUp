@@ -24,7 +24,7 @@ const courtService = {
         }
     },
 
-    getFreeHours: async (courtId, startDate, currentTimeStr) => {
+    getFreeHours: async (courtId, startDate) => {
         try {
             const response = await axiosInstance.get(
                 ENDPOINTS.COURT.GET_BY_FREE_HOURS,
@@ -32,7 +32,6 @@ const courtService = {
                     params: {
                         courtId,
                         startDate,
-                        currentTimeStr,
                     },
                 }
             );

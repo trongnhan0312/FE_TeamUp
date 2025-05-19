@@ -157,7 +157,7 @@ const CoachListing = () => {
 
     // Xử lý chuyển đến trang chi tiết huấn luyện viên
     const handleCoachClick = (coachId) => {
-        navigate(`/coaches/detail/${coachId}`);
+        navigate(`/coaches/profile/${coachId}`);
     };
 
     // Kiểm tra xem type nào đang được chọn để hiển thị UI tương ứng

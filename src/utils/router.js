@@ -9,6 +9,7 @@ export const ROUTER = {
         COURT_HOMEPAGE: "/court/:type",
         COACH_GET_ALL: "/coaches/:type",
         COACH_GET_ALL_DEFAULT: "/coaches",
+        COACH_GET_DETAIL: "/coaches/profile/:coachId",
     },
     AUTH: {
         LOGIN: "/login",

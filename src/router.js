@@ -16,6 +16,7 @@ import BookingConfirmation from "./pages/users/courts/booking_court/BookingConfi
 import BookingSummary from "./pages/users/courts/booking_court/BookingSummary";
 import CourtListing from "./pages/users/courts/homepage_court/CourtListing";
 import CoachListing from "./pages/users/coach/CoachListing";
+import CoachProfile from "./pages/users/coach/CoachProfile";
 
 const RouterCustom = () => {
     const location = useLocation();
@@ -74,6 +75,11 @@ const RouterCustom = () => {
                     <Route
                         path={ROUTER.USER.COACH_GET_ALL}
                         element={<CoachListing />}
+                    />
+
+                    <Route
+                        path={ROUTER.USER.COACH_GET_DETAIL}
+                        element={<CoachProfile />}
                     />
 
                     <Route path="*" element={<Navigate to="/home" replace />} />
