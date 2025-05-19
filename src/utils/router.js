@@ -10,6 +10,10 @@ export const ROUTER = {
         COACH_GET_ALL: "/coaches/:type",
         COACH_GET_ALL_DEFAULT: "/coaches",
         COACH_GET_DETAIL: "/coaches/profile/:coachId",
+        PRIVACY_POLICY: "/privacy-policy",
+        ABOUT_US: "/about-us",
+        SUPPORT_CENTER: "/support-center",
+        BLOG: "/blog",
     },
     AUTH: {
         LOGIN: "/login",
