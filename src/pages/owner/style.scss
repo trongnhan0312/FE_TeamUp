@@ -1,0 +1,238 @@
+/* Owner.scss */
+
+.owner-page {
+    padding: 2rem;
+    background-color: #f9fafb;
+    min-height: 100vh;
+  
+    .stat-cards {
+      display: flex;
+   
+      gap: 24px;
+      margin-bottom: 32px;
+  
+      .card {
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        padding: 24px;
+        text-align: center;
+        height: 128px;
+  
+        h3 {
+          color: #6b7280;
+          font-size: px;
+          margin-bottom: 8px;
+        }
+  
+        p {
+          font-size: 28px;
+          font-weight: bold;
+          color: #111827;
+        }
+      }
+    }
+  
+    .charts {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+  
+      .chart-box {
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        padding: 24px;
+  
+        h3 {
+          font-size: 18px;
+          font-weight: 600;
+          margin-bottom: 16px;
+        }
+  
+        .chart-placeholder {
+          height: 300px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #9ca3af;
+          border: 2px dashed #e5e7eb;
+          border-radius: 8px;
+        }
+  
+        .top-label {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 16px;
+  
+          h3 {
+            font-size: 18px;
+            font-weight: 600;
+          }
+  
+          p {
+            font-size: 24px;
+            font-weight: bold;
+          }
+        }
+      }
+    }
+    .month-chart-stats-container {
+  max-width: 1000px;
+  margin: auto;
+        display: contents;
+  .monthly-bar-chart {
+    margin-bottom: 30px;
+  }
+
+  .bottom-section {
+    display: flex;
+    gap: 40px;
+
+    .pie-chart-section {
+      width: 32%;
+      justify-items: center;
+      h4 {
+        font-weight: 700;
+        font-size: 18px;
+        margin-bottom: 18px;
+        color: #333;
+      }
+
+      .recharts-wrapper {
+        margin-bottom: 18px;
+      }
+
+      .pie-legend {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        font-size: 16px;
+        font-weight: 600;
+        color: #2a2a2a;
+
+        .legend-item {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+
+          .color-box {
+            width: 20px;
+            height: 20px;
+            border-radius: 5px;
+          }
+        }
+      }
+    }
+
+    .booking-history-section {
+      flex-grow: 1;
+
+      h4 {
+        font-weight: 700;
+        font-size: 18px;
+        margin-bottom: 15px;
+        color: #333;
+      }
+
+      .search-input {
+        width: 85%;
+        padding: 8px 14px;
+        margin-bottom: 12px;
+        font-size: 15px;
+        border: 1px solid #ccc;
+        border-radius: 22px;
+        outline: none;
+
+        &:focus {
+          border-color: #a1d490;
+          box-shadow: 0 0 5px #a1d490;
+        }
+      }
+
+      .booking-table-wrapper {
+        max-height: 280px;
+        overflow-y: auto;
+
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          font-size: 15px;
+          color: #444;
+
+          thead {
+            background-color: #f7f7f7;
+            th {
+              padding: 12px 16px;
+              text-align: left;
+              font-weight: 600;
+              color: #666;
+              border-bottom: 2px solid #ddd;
+            }
+          }
+
+          tbody {
+            tr {
+              &:nth-child(even) {
+                background-color: #fafafa;
+              }
+
+              td {
+                padding: 14px 16px;
+                border-bottom: 1px solid #eee;
+              }
+            }
+          }
+        }
+      }
+
+      .newest-btn {
+        margin-top: 10px;
+        background-color: #a1d490;
+        color: white;
+        font-weight: 700;
+        border: none;
+        border-radius: 20px;
+        padding: 10px 26px;
+        cursor: pointer;
+        float: right;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+          background-color: #89c265;
+        }
+      }
+
+      .status {
+        &.confirmed {
+          color: #2f8f2f;
+          font-weight: 700;
+        }
+        &.pending {
+          color: #c19f18;
+          font-weight: 700;
+        }
+      }
+    }
+    .statusFilter {
+      border: none;
+      background-color: #94d82d;
+      color: #fff;
+      font-weight: 600;
+      border-radius: 30px;
+      height: 35px;
+      padding: 0 15px;
+      cursor: pointer;
+      outline: none;
+      font-size: 14px;
+      transition: background-color 0.2s ease;
+      &:hover {
+        background-color: #74b816;
+      }
+    }
+  }
+}
+
+  }
+  

@@ -1,0 +1,174 @@
+.booking-management {
+    padding: 20px;
+    font-family: "Poppins", sans-serif;
+    background: #fafafa;
+  
+    .tabs {
+      display: flex;
+      gap: 88px;
+      justify-content: center;
+      margin-bottom: 20px;
+  
+      .tab-item {
+        background: #222222;
+        color: #fff;
+        font-weight: 700;
+        padding: 12px 40px;
+        border: none;
+        margin: 0 6px;
+        cursor: pointer;
+        font-size: 16px;
+        border-radius: 2px;
+        transition: background-color 0.3s;
+        width: 279px;
+        height: 74px;
+        &.active {
+          background: #94d82d;
+        }
+      }
+    }
+  
+    .content {
+      display: flex;
+      gap: 40px;
+      justify-content: center;
+    }
+  
+    .schedule {
+      background: #f6f9ff;
+      padding: 20px;
+      border-radius: 8px;
+      position: relative;
+      width: 520px;
+      height: 370px;
+      box-shadow: 0 0 15px #e9f1ff;
+  
+      .header-row {
+        display: flex;
+        margin-bottom: 10px;
+  
+        .time-column-header {
+          width: 50px;
+        }
+  
+        .day-column-header {
+          width: 70px;
+          font-size: 13px;
+          color: #767676;
+          font-weight: 600;
+          text-align: center;
+  
+          .date {
+            font-weight: 700;
+            margin-top: 2px;
+          }
+        }
+      }
+  
+      .time-column {
+        position: absolute;
+        top: 75px;
+        left: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 27px;
+        font-weight: 500;
+        font-size: 13px;
+        color: #767676;
+  
+        .time-cell {
+          height: 25px;
+          line-height: 25px;
+        }
+      }
+  
+      .grid {
+        display: flex;
+        margin-left: 50px;
+  
+        .day-column {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+          width: 70px;
+          height: 250px;
+        }
+  
+        .grid-cell {
+          height: 25px;
+          border: 1px solid #e5e9ef;
+          border-radius: 6px;
+        }
+  
+        .active-block {
+          background: #b9e234;
+          border-radius: 8px;
+          width: 50px;
+          height: 50px;
+          margin: 0 auto;
+          grid-column: span 2;
+        }
+      }
+    }
+  
+    .calendar {
+      width: 320px;
+      background: #fff;
+      padding: 24px 24px 32px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px #e9f1ff;
+  
+      .month-title {
+        font-weight: 700;
+        font-size: 22px;
+        color: #707070;
+        margin-bottom: 8px;
+  
+        .date-description {
+          font-weight: 400;
+          font-size: 14px;
+          color: #c1c1c1;
+        }
+      }
+  
+      .calendar-box {
+        display: flex;
+        align-items: center;
+        margin-top: 20px;
+  
+        .nav-arrow {
+          font-weight: 700;
+          font-size: 18px;
+          color: #2c3e91;
+          cursor: pointer;
+          user-select: none;
+          width: 30px;
+          text-align: center;
+        }
+  
+        .calendar-inner {
+          flex: 1;
+          text-align: center;
+  
+          .calendar-header {
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: #555555;
+          }
+  
+          .calendar-dates {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+  
+            .calendar-date {
+              font-size: 13px;
+              color: #aaa;
+            }
+          }
+        }
+      }
+    }
+  }
+  
