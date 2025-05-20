@@ -4,6 +4,7 @@ import "./OtpVerificationPage.scss";
 import logoImg from "../../assets/user/main_logo.jpg";
 import authService from "../../services/authService";
 import { ROUTER } from "../../utils/router";
+import Swal from "sweetalert2";
 
 const OtpVerificationPage = () => {
     const [otp, setOtp] = useState(["", "", "", "", "", ""]);
@@ -84,9 +85,7 @@ const OtpVerificationPage = () => {
         }
     };
 
-    // Gửi mã OTP để xác thực
     const verifyOtp = async () => {
-        // Kiểm tra xem đã nhập đủ OTP chưa
         if (otp.some((digit) => digit === "")) {
             setError("Vui lòng nhập đầy đủ mã OTP");
             return;
@@ -98,16 +97,19 @@ const OtpVerificationPage = () => {
         try {
             const otpString = otp.join("");
 
-            // Gọi API xác thực OTP
+            console.log('email', email);
             const response = await authService.verifyOtp(email, otpString);
 
             if (response.isSuccessed) {
-                setSuccessMessage("Xác thực thành công!");
-
-                // Chuyển hướng đến trang đăng nhập sau 2 giây
-                setTimeout(() => {
+                Swal.fire({
+                    title: "Thành công!",
+                    text: "Xác thực hoàn tất - Chúc mừng bạn đăng ký thành công",
+                    icon: "success",
+                    confirmButtonText: "OK",
+                }).then(() => {
                     navigate(ROUTER.AUTH.LOGIN);
-                }, 2000);
+                });
+
             } else {
                 setError("Mã OTP không chính xác");
             }
@@ -119,6 +121,27 @@ const OtpVerificationPage = () => {
         }
     };
 
+    const resendOtp = async () => {
+
+        setLoading(true);
+        setError("");
+
+        try {
+
+            const response = await authService.resendOtp(email);
+
+            if (response.isSuccessed) {
+                setSuccessMessage("Đã gửi lại otp thành công!");
+            } else {
+                setError("Gửi lại otp không thành công");
+            }
+        } catch (error) {
+            console.error("Error resending OTP:", error);
+            setError("Đã xảy ra lỗi. Vui lòng thử lại");
+        } finally {
+            setLoading(false);
+        }
+    };
     return (
         <div className="otp-verification-page">
             <div className="otp-container">
@@ -175,7 +198,7 @@ const OtpVerificationPage = () => {
                     {canResend ? (
                         <button
                             className="resend-button"
-                            onClick={verifyOtp}
+                            onClick={resendOtp}
                             disabled={loading}
                         >
                             Gửi lại

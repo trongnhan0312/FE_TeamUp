@@ -21,6 +21,11 @@ import BookingConfirmation from "./pages/users/courts/booking_court/BookingConfi
 import BookingSummary from "./pages/users/courts/booking_court/BookingSummary";
 import CourtListing from "./pages/users/courts/homepage_court/CourtListing";
 import CoachListing from "./pages/users/coach/CoachListing";
+import CoachProfile from "./pages/users/coach/CoachProfile";
+import PrivacyPolicy from "./pages/users/privacyPolicy";
+import AboutUs from "./pages/users/aboutUs";
+import SupportCenter from "./pages/users/supportCenter";
+import Blog from "./pages/users/blog";
 
 const RouterCustom = () => {
   const location = useLocation();
@@ -51,34 +56,62 @@ const RouterCustom = () => {
   );
 
   // Routes cho user bình thường
-  const userRoutes = (
-    <MasterLayout>
-      <Routes>
-        <Route path="/home" element={<HomePage />} />
-        <Route path="/profile" element={<ProfilePage />} />
-        <Route path={ROUTER.USER.DETAIL_COURT} element={<CourtDetailPage />} />
-        <Route path={ROUTER.USER.SCHEDULE_COURT} element={<CourtSchedule />} />
-        <Route
-          path={ROUTER.USER.COURT_BOOKING_CONFIRMATION}
-          element={<BookingConfirmation />}
-        />
+  // Routes cho user bình thường
+  const userRoutes =
+    (console.log("isLoggedIn", hasRole("Owner")),
+    (
+      <MasterLayout>
+        <Routes>
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route
+            path={ROUTER.USER.DETAIL_COURT}
+            element={<CourtDetailPage />}
+          />
+          <Route
+            path={ROUTER.USER.SCHEDULE_COURT}
+            element={<CourtSchedule />}
+          />
+          <Route
+            path={ROUTER.USER.COURT_BOOKING_CONFIRMATION}
+            element={<BookingConfirmation />}
+          />
 
-        <Route
-          path={ROUTER.USER.COURT_BOOKING_SUMMARY}
-          element={<BookingSummary />}
-        />
+          <Route
+            path={ROUTER.USER.COURT_BOOKING_SUMMARY}
+            element={<BookingSummary />}
+          />
 
-        <Route path={ROUTER.USER.COURT_HOMEPAGE} element={<CourtListing />} />
-        <Route
-          path={ROUTER.USER.COACH_GET_ALL_DEFAULT}
-          element={<CoachListing />}
-        />
-        <Route path={ROUTER.USER.COACH_GET_ALL} element={<CoachListing />} />
+          <Route path={ROUTER.USER.COURT_HOMEPAGE} element={<CourtListing />} />
+          <Route
+            path={ROUTER.USER.COACH_GET_ALL_DEFAULT}
+            element={<CoachListing />}
+          />
+          <Route path={ROUTER.USER.COACH_GET_ALL} element={<CoachListing />} />
 
-        <Route path="*" element={<Navigate to="/home" replace />} />
-      </Routes>
-    </MasterLayout>
-  );
+          <Route
+            path={ROUTER.USER.COACH_GET_DETAIL}
+            element={<CoachProfile />}
+          />
+
+          <Route
+            path={ROUTER.USER.PRIVACY_POLICY}
+            element={<PrivacyPolicy />}
+          />
+
+          <Route path={ROUTER.USER.ABOUT_US} element={<AboutUs />} />
+
+          <Route
+            path={ROUTER.USER.SUPPORT_CENTER}
+            element={<SupportCenter />}
+          />
+
+          <Route path={ROUTER.USER.BLOG} element={<Blog />} />
+
+          <Route path="*" element={<Navigate to="/home" replace />} />
+        </Routes>
+      </MasterLayout>
+    ));
 
   return (
     <Routes>

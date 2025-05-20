@@ -89,6 +89,21 @@ const authService = {
             throw error.response ? error.response.data : error.message;
         }
     },
+
+    resendOtp: async (email) => {
+        try {
+            const response = await axiosInstance.post(
+                ENDPOINTS.AUTH.RESEND_OTP,
+                null,
+                {
+                    params: { email },
+                }
+            );
+            return response.data;
+        } catch (error) {
+            throw error.response ? error.response.data : error.message;
+        }
+    },
 };
 
 export default authService;

@@ -39,36 +39,45 @@ const CourtSchedule = () => {
             setError(null);
 
             const today = new Date();
-
             const currentHour = today.getHours();
             const currentMinute = today.getMinutes();
 
-            today.setHours(0, 0, 0, 0);
+            // Tạo một bản sao của ngày hiện tại với giờ đặt về 00:00:00
+            const todayStart = new Date(today);
+            todayStart.setHours(0, 0, 0, 0);
 
             // Tìm ngày bắt đầu hợp lệ (ngày đầu tuần hoặc ngày hiện tại, tùy cái nào sau)
             let startDateObj = new Date(currentWeek[0]);
 
             // So sánh xem ngày đầu tuần có trước ngày hiện tại không
-            if (startDateObj < today) {
+            if (startDateObj < todayStart) {
                 // Nếu ngày đầu tuần đã qua, sử dụng ngày hiện tại làm startDate
-                startDateObj = today;
+                startDateObj = new Date(todayStart);
             }
 
-            const startDate = formatDateForApi(startDateObj);
+            // Format ngày với giờ hiện tại nếu là ngày hôm nay, nếu không thì giờ 00:00
+            let formattedStartDate;
 
-            const currentTimeStr = `${currentHour
-                .toString()
-                .padStart(2, "0")}:${currentMinute
-                    .toString()
-                    .padStart(2, "0")}`;
+            // Kiểm tra xem startDateObj có phải là ngày hôm nay không
+            const isToday = startDateObj.getDate() === today.getDate() &&
+                startDateObj.getMonth() === today.getMonth() &&
+                startDateObj.getFullYear() === today.getFullYear();
 
-            console.log("Gọi API với thời gian hiện tại:", currentTimeStr);
+            if (isToday) {
+                // Nếu là ngày hôm nay, sử dụng giờ hiện tại
+                formattedStartDate = formatDateForApi(startDateObj, currentHour, currentMinute);
+            } else {
+                // Nếu không phải ngày hôm nay, bắt đầu từ 00:00
+                formattedStartDate = formatDateForApi(startDateObj, 0, 0);
+            }
+
+            console.log("Gọi API với ngày và giờ:", formattedStartDate);
 
             try {
+                // Không cần truyền currentTimeStr riêng nữa vì đã tích hợp vào formattedStartDate
                 const data = await courtService.getFreeHours(
                     courtId,
-                    startDate,
-                    currentTimeStr
+                    formattedStartDate
                 );
 
                 if (data.isSuccessed) {
@@ -88,12 +97,15 @@ const CourtSchedule = () => {
         fetchScheduleData();
     }, [courtId, currentWeek]);
 
-    // Format ngày YYYY-MM-DD cho API
-    const formatDateForApi = (date) => {
+    // Format ngày YYYY-MM-DD HH:mm cho API
+    const formatDateForApi = (date, hour = 0, minute = 0) => {
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, "0");
         const day = String(date.getDate()).padStart(2, "0");
-        return `${year}-${month}-${day}`;
+        const formattedHour = String(hour).padStart(2, "0");
+        const formattedMinute = String(minute).padStart(2, "0");
+
+        return `${year}-${month}-${day} ${formattedHour}:${formattedMinute}`;
     };
 
     // Hàm lấy các ngày trong tuần

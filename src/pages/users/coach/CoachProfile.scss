@@ -1,0 +1,248 @@
+.coach-profile-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: 'Roboto', sans-serif;
+}
+
+.coach-profile-card {
+  background-color: #fff;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  padding: 2rem;
+  display: flex;
+  margin-bottom: 2rem;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+}
+
+.coach-profile-left {
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-right: 2rem;
+  border-right: 1px solid #f0f0f0;
+  
+  @media (max-width: 768px) {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #f0f0f0;
+    padding-right: 0;
+    padding-bottom: 2rem;
+    margin-bottom: 2rem;
+  }
+}
+
+.coach-avatar-container {
+  width: 180px;
+  height: 180px;
+  margin-bottom: 1.5rem;
+  position: relative;
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid #FFD700;
+  }
+  
+  .avatar-circle {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #e0e0e0, #f5f5f5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 4px solid #FFD700;
+    
+    .avatar-text {
+      font-size: 60px;
+      font-weight: bold;
+      color: #666;
+    }
+  }
+}
+
+.coach-basic-info {
+  width: 100%;
+  text-align: center;
+  
+  h2 {
+    font-size: 1.8rem;
+    margin-bottom: 0.75rem;
+    font-weight: 700;
+  }
+  
+  .coach-specialty {
+    display: flex;
+    justify-content: space-evenly;
+    font-size: 1.2rem;
+    padding: 0px 50px;
+    color: #555;
+    margin-bottom: 1.5rem;
+    
+    .rating {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      
+      .star-icon {
+        color: #FFD700;
+        margin-right: 0.5rem;
+      }
+    }
+  }
+}
+
+.coach-key-details {
+  width: 100%;
+  
+  .key-detail-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    
+    .detail-icon {
+      margin-right: 0.75rem;
+      color: #666;
+      min-width: 16px;
+    }
+    
+    &.price {
+      background-color: #f0f7ff;
+      font-weight: 600;
+      
+      .detail-icon {
+        color: #4CAF50;
+      }
+    }
+  }
+}
+
+.coach-profile-right {
+  width: 70%;
+  padding-left: 2rem;
+  
+  @media (max-width: 768px) {
+    width: 100%;
+    padding-left: 0;
+  }
+}
+
+.coach-details-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-row {
+  display: flex;
+  margin-bottom: 1rem;
+  align-items: flex-start;
+  
+  .detail-icon-container {
+    font-size: 1.25rem;
+    margin-right: 1rem;
+    min-width: 24px;
+  }
+  
+  .detail-content {
+    flex: 1;
+    
+    strong {
+      font-weight: 600;
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+.training-content-section {
+  margin-top: 1.5rem;
+  
+  h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    
+    .fire-icon {
+      margin-right: 0.5rem;
+    }
+  }
+  
+  .training-list {
+    list-style-type: none;
+    padding: 0;
+    
+    .training-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      
+      .check-icon {
+        color: #b8e01a;
+        margin-right: 0.75rem;
+        min-width: 16px;
+      }
+    }
+  }
+}
+
+/* CSS cho Contact Section */
+.contact-section {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  
+  .contact-message {
+    margin-bottom: 1rem;
+    font-style: italic;
+  }
+  
+  .contact-buttons {
+    display: flex;
+    gap: 1rem; /* Khoảng cách giữa 2 nút */
+    margin-top: 0.5rem;
+    align-self: flex-end; /* Đưa cả 2 nút về bên phải */
+  }
+  
+  .contact-button {
+    background-color: #b8e01a;
+    color: #000;
+    border: none;
+    padding: 0.75rem 2rem;
+    border-radius: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    min-width: 120px; /* Đảm bảo 2 nút có kích thước tương đương */
+    
+    &:hover {
+      background-color: #9dc00e; /* darken(#b8e01a, 10%) */
+      transform: translateY(-2px);
+    }
+    
+    &:active {
+      transform: translateY(0);
+    }
+  }
+  
+  .schedule-button {
+    background-color: #1f1f1f;
+    color: #fff;
+    
+    &:hover {
+      background-color: #383838;
+    }
+  }
+}

@@ -29,10 +29,10 @@ const coachService = {
     },
 
     // Phương thức lấy chi tiết huấn luyện viên
-    getCoachDetail: async (coachId) => {
+    getCoachProfile: async (coachId) => {
         try {
             const response = await axiosInstance.get(
-                `${ENDPOINTS.EMPLOYEE.GET_COACH_DETAIL}/${coachId}`
+                `${ENDPOINTS.EMPLOYEE.GET_COACH_PROFILE}/${coachId}`
             );
             return response.data;
         } catch (error) {
