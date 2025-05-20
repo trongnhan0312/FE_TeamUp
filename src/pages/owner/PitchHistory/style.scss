@@ -1,0 +1,216 @@
+.pitchHistory {
+    display: flex;
+    gap: 30px;
+    padding: 30px;
+    font-family: "Inter", sans-serif;
+    color: #212529;
+    background: #fff;
+  
+    .summary {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+
+    }
+    .card {
+    
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      padding: 24px;
+      text-align: center;
+      height: 109px;
+      width: 93%;
+
+      h3 {
+        color: #6b7280;
+        font-size: px;
+        margin-bottom: 8px;
+      }
+
+      p {
+        font-size: 28px;
+        font-weight: bold;
+        color: #111827;
+      }
+    }
+    .summaryItem {
+      position: relative;
+      background: #fff;
+      border-radius: 15px;
+      padding: 10px 10px 10px 10px;
+      box-shadow: 0 2px 10px rgb(36 37 38 / 5%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+  
+      .summaryValue {
+        font-weight: 700;
+        font-size: 28px;
+        line-height: 35px;
+        color: #212529;
+        margin-bottom: 5px;
+      }
+      .summaryTitle {
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 20px;
+        margin-bottom: 10px;
+      }
+  
+      svg.progressCircle {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        transform: rotate(0deg);
+        circle.bg {
+          stroke: #f1f3f5;
+        }
+        circle.progress {
+          stroke: #94d82d;
+          transition: stroke-dashoffset 0.3s ease;
+          transform-origin: center;
+        }
+      }
+    }
+  
+    .historySection {
+      flex-grow: 1;
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 2px 10px rgb(36 37 38 / 5%);
+      padding: 30px;
+  
+      .header {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 25px;
+  
+        h2 {
+          font-weight: 700;
+          font-size: 24px;
+          color: #212529;
+          margin: 0;
+        }
+  
+        .filters {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+  
+          .searchInput {
+            border: 1.5px solid #94d82d;
+            border-radius: 30px;
+            height: 35px;
+            padding: 0 15px;
+            font-size: 14px;
+            outline: none;
+            width: 180px;
+            transition: border-color 0.2s ease;
+            &::placeholder {
+              font-size: 14px;
+              color: #94d82d;
+            }
+            &:focus {
+              border-color: #74b816;
+            }
+          }
+  
+          .statusFilter {
+            border: none;
+            background-color: #94d82d;
+            color: #fff;
+            font-weight: 600;
+            border-radius: 30px;
+            height: 35px;
+            padding: 0 15px;
+            cursor: pointer;
+            outline: none;
+            font-size: 14px;
+            transition: background-color 0.2s ease;
+            &:hover {
+              background-color: #74b816;
+            }
+          }
+        }
+  
+        .timeFilter {
+          display: flex;
+          gap: 12px;
+  
+          button {
+            background: #e9ecef;
+            border: none;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 14px;
+            padding: 6px 15px;
+            cursor: pointer;
+            color: #495057;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            &.active {
+              background: #212529;
+              color: #fff;
+            }
+            &:hover:not(.active) {
+              background: #ced4da;
+            }
+          }
+        }
+      }
+  
+      .tableWrapper {
+        overflow-x: auto;
+  
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          min-width: 800px;
+  
+          thead {
+            tr {
+              background: #f8f9fa;
+              border-radius: 15px 15px 0 0;
+              th {
+                text-align: left;
+                padding: 12px 20px;
+                font-weight: 600;
+                font-size: 14px;
+                color: #495057;
+                user-select: none;
+                white-space: nowrap;
+              }
+            }
+          }
+  
+          tbody {
+            tr {
+              border-bottom: 1.5px solid #e9ecef;
+              transition: background-color 0.2s ease;
+              &:hover {
+                background-color: #f1f3f5;
+              }
+              td {
+                padding: 12px 20px;
+                font-size: 14px;
+                color: #212529;
+                white-space: nowrap;
+              }
+            }
+          }
+        }
+      }
+  
+      .statusLabel {
+        font-weight: 600;
+        font-size: 13px;
+        padding: 5px 14px;
+        border-radius: 30px;
+        color: #212529;
+        display: inline-block;
+        user-select: none;
+      }
+    }
+  }
+  
