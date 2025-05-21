@@ -28,7 +28,8 @@ import PrivacyPolicy from "./pages/users/privacyPolicy";
 import AboutUs from "./pages/users/aboutUs";
 import SupportCenter from "./pages/users/supportCenter";
 import Blog from "./pages/users/blog";
-import ChatApp from "./pages/users/chat";
+import CoachChatPage from "./pages/coach/chat";
+import UserChatPage from "./pages/users/chat";
 
 const RouterCustom = () => {
   const location = useLocation();
@@ -65,7 +66,8 @@ const RouterCustom = () => {
     <CoachLayout>
       <Routes>
         <Route path="/coach" element={<Coach />} />
-        <Route path="*" element={<Navigate to="/coach" replace />} />
+        <Route path={ROUTER.COACH.CHAT} element={<CoachChatPage />} />
+        {/* <Route path="*" element={<Navigate to="/coach" replace />} /> */}
       </Routes>
     </CoachLayout>
   );
@@ -97,8 +99,8 @@ const RouterCustom = () => {
         <Route path={ROUTER.USER.ABOUT_US} element={<AboutUs />} />
         <Route path={ROUTER.USER.SUPPORT_CENTER} element={<SupportCenter />} />
         <Route path={ROUTER.USER.BLOG} element={<Blog />} />
-        <Route path={ROUTER.USER.CHAT} element={<ChatApp />} />
-        <Route path="*" element={<Navigate to="/home" replace />} />
+        <Route path={ROUTER.USER.CHAT} element={<UserChatPage />} />
+        {/* <Route path="*" element={<Navigate to="/home" replace />} /> */}
       </Routes>
     </MasterLayout>
   );
