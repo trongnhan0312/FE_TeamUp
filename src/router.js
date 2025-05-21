@@ -2,6 +2,7 @@ import HomePage from "./pages/users/homePage";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import MasterLayout from "./component/common/theme/masterLayout";
 import OwnerLayout from "./component/common/theme/OwnerLayout";
+import CoachLayout from "./component/common/theme/CoachLayout";
 import ProfilePage from "./pages/users/profilePage";
 import LoginPage from "./pages/auth/LoginPage";
 import SignupPage from "./pages/auth/SignUpComponent/SignupPage";
@@ -14,6 +15,7 @@ import PitchHistory from "./pages/owner/PitchHistory/PitchHistory";
 import BOOKINGMANAGEMENT from "./pages/owner/BookingManagement/BookingManagement";
 import CreateYard from "./pages/owner/CreateYard/CreateYard";
 import ReviewYard from "./pages/owner/ReviewYard/ReviewYard";
+import Coach from "./pages/coach";
 import { ROUTER } from "./utils/router";
 import OtpVerificationPage from "./pages/EmailComponentUtil/OtpVerificationPage";
 import CourtSchedule from "./pages/users/courts/court_schedule/CourtSchedule";
@@ -31,10 +33,12 @@ const RouterCustom = () => {
   const location = useLocation();
   const [isLoggedIn, setIsLoggedIn] = useState(isAuthenticated());
   const [isOwner, setIsOwner] = useState(false);
+  const [isCoach, setIsCoach] = useState(false);
 
   useEffect(() => {
     setIsLoggedIn(isAuthenticated());
-    setIsOwner(isAuthenticated() && hasRole("Owner")); // Kiểm tra role Owner
+    setIsOwner(isAuthenticated() && hasRole("Owner"));
+    setIsCoach(isAuthenticated() && hasRole("Coach"));
   }, [location.pathname]);
 
   // Routes cho Owner
@@ -42,7 +46,6 @@ const RouterCustom = () => {
     <OwnerLayout>
       <Routes>
         <Route path="/owner" element={<Owner />} />
-        <Route path="*" element={<Navigate to="/owner" replace />} />
         <Route path={ROUTER.OWNER.HUMANHABITS} element={<HumanHabits />} />
         <Route path={ROUTER.OWNER.PITCHHISTORY} element={<PitchHistory />} />
         <Route
@@ -51,67 +54,52 @@ const RouterCustom = () => {
         />
         <Route path={ROUTER.OWNER.CREATEYARD} element={<CreateYard />} />
         <Route path={ROUTER.OWNER.REVIEWYARD} element={<ReviewYard />} />
+        <Route path="*" element={<Navigate to="/owner" replace />} />
       </Routes>
     </OwnerLayout>
   );
 
+  // Routes cho Coach
+  const coachRoutes = (
+    <CoachLayout>
+      <Routes>
+        <Route path="/coach" element={<Coach />} />
+        <Route path="*" element={<Navigate to="/coach" replace />} />
+      </Routes>
+    </CoachLayout>
+  );
+
   // Routes cho user bình thường
-  // Routes cho user bình thường
-  const userRoutes =
-    (console.log("isLoggedIn", hasRole("Owner")),
-    (
-      <MasterLayout>
-        <Routes>
-          <Route path="/home" element={<HomePage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route
-            path={ROUTER.USER.DETAIL_COURT}
-            element={<CourtDetailPage />}
-          />
-          <Route
-            path={ROUTER.USER.SCHEDULE_COURT}
-            element={<CourtSchedule />}
-          />
-          <Route
-            path={ROUTER.USER.COURT_BOOKING_CONFIRMATION}
-            element={<BookingConfirmation />}
-          />
-
-          <Route
-            path={ROUTER.USER.COURT_BOOKING_SUMMARY}
-            element={<BookingSummary />}
-          />
-
-          <Route path={ROUTER.USER.COURT_HOMEPAGE} element={<CourtListing />} />
-          <Route
-            path={ROUTER.USER.COACH_GET_ALL_DEFAULT}
-            element={<CoachListing />}
-          />
-          <Route path={ROUTER.USER.COACH_GET_ALL} element={<CoachListing />} />
-
-          <Route
-            path={ROUTER.USER.COACH_GET_DETAIL}
-            element={<CoachProfile />}
-          />
-
-          <Route
-            path={ROUTER.USER.PRIVACY_POLICY}
-            element={<PrivacyPolicy />}
-          />
-
-          <Route path={ROUTER.USER.ABOUT_US} element={<AboutUs />} />
-
-          <Route
-            path={ROUTER.USER.SUPPORT_CENTER}
-            element={<SupportCenter />}
-          />
-
-          <Route path={ROUTER.USER.BLOG} element={<Blog />} />
-
-          <Route path="*" element={<Navigate to="/home" replace />} />
-        </Routes>
-      </MasterLayout>
-    ));
+  const userRoutes = (
+    <MasterLayout>
+      <Routes>
+        <Route path="/home" element={<HomePage />} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path={ROUTER.USER.DETAIL_COURT} element={<CourtDetailPage />} />
+        <Route path={ROUTER.USER.SCHEDULE_COURT} element={<CourtSchedule />} />
+        <Route
+          path={ROUTER.USER.COURT_BOOKING_CONFIRMATION}
+          element={<BookingConfirmation />}
+        />
+        <Route
+          path={ROUTER.USER.COURT_BOOKING_SUMMARY}
+          element={<BookingSummary />}
+        />
+        <Route path={ROUTER.USER.COURT_HOMEPAGE} element={<CourtListing />} />
+        <Route
+          path={ROUTER.USER.COACH_GET_ALL_DEFAULT}
+          element={<CoachListing />}
+        />
+        <Route path={ROUTER.USER.COACH_GET_ALL} element={<CoachListing />} />
+        <Route path={ROUTER.USER.COACH_GET_DETAIL} element={<CoachProfile />} />
+        <Route path={ROUTER.USER.PRIVACY_POLICY} element={<PrivacyPolicy />} />
+        <Route path={ROUTER.USER.ABOUT_US} element={<AboutUs />} />
+        <Route path={ROUTER.USER.SUPPORT_CENTER} element={<SupportCenter />} />
+        <Route path={ROUTER.USER.BLOG} element={<Blog />} />
+        <Route path="*" element={<Navigate to="/home" replace />} />
+      </Routes>
+    </MasterLayout>
+  );
 
   return (
     <Routes>
@@ -121,6 +109,8 @@ const RouterCustom = () => {
           isLoggedIn ? (
             isOwner ? (
               <Navigate to="/owner" replace />
+            ) : isCoach ? (
+              <Navigate to="/coach" replace />
             ) : (
               <Navigate to="/home" replace />
             )
@@ -130,24 +120,37 @@ const RouterCustom = () => {
         }
       />
 
-      {/* Route cho trang OTP Verification - có thể truy cập mà không cần đăng nhập */}
+      {/* Route OTP Verification không cần đăng nhập */}
       <Route path={ROUTER.OTP_VERIFICATION} element={<OtpVerificationPage />} />
 
       <Route
         path="/login"
         element={
           isLoggedIn ? (
-            <Navigate to={isOwner ? "/owner" : "/home"} replace />
+            isOwner ? (
+              <Navigate to="/owner" replace />
+            ) : isCoach ? (
+              <Navigate to="/coach" replace />
+            ) : (
+              <Navigate to="/home" replace />
+            )
           ) : (
             <LoginPage />
           )
         }
       />
+
       <Route
         path="/register"
         element={
           isLoggedIn ? (
-            <Navigate to={isOwner ? "/owner" : "/home"} replace />
+            isOwner ? (
+              <Navigate to="/owner" replace />
+            ) : isCoach ? (
+              <Navigate to="/coach" replace />
+            ) : (
+              <Navigate to="/home" replace />
+            )
           ) : (
             <SignupPage />
           )
@@ -160,6 +163,8 @@ const RouterCustom = () => {
           isLoggedIn ? (
             isOwner ? (
               ownerRoutes
+            ) : isCoach ? (
+              coachRoutes
             ) : (
               userRoutes
             )

@@ -28,4 +28,7 @@ export const ROUTER = {
     CREATEYARD: "/owner/createyard",
     REVIEWYARD: "/owner/reviewyard",
   },
+  COACH: {
+    HOME: "/coach",
+  },
 };
