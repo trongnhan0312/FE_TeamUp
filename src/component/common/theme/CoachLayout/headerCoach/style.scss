@@ -1,0 +1,147 @@
+@font-face {
+  font-family: "Debata";
+  src: url("./fonts/Debata-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.coach-layout{
+.header_top {
+    background: #202524;
+    color: white;
+    padding: 10px 0;
+    .search_form {
+      display: flex;
+      align-items: center;
+    }
+    
+    .search_input {
+      padding: 6px 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px 0 0 4px;
+      outline: none;
+      width: 200px;
+    }
+    
+    .search_button {
+      padding: 6px 12px;
+      border: 1px solid #ccc;
+      border-left: none;
+      border-radius: 0 4px 4px 0;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+    
+    .search_button:hover {
+      background-color: #0056b3;
+    }
+    
+    .header_wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header_left {
+      display: flex;
+      align-items: center;
+      .logo {
+        display: flex;
+        align-items: center;
+        font-weight: bold;
+        color: #B0DF21;
+        margin-right: 30px;
+        text-decoration: none;
+
+        .logo_img {
+            max-width: 35px;  // Tăng kích thước logo
+            height: auto;
+        }
+        .logo_text {
+          font-family: "Debata", serif;
+          font-size: 15px;
+          margin: 5px;
+        }
+        
+      }
+      
+
+      .menu {
+        display: flex;
+        list-style: none;
+        gap: 20px;
+
+        li {
+          cursor: pointer;
+          color: white;
+          &:hover {
+            text-decoration: none; 
+          }
+        }
+     
+      }
+      .menu a {
+        color: white;          // Đổi màu chữ thành trắng
+        text-decoration: none; // Bỏ gạch chân
+        transition: color 0.3s ease;
+      
+        &:hover {
+          color: #8ad839; 
+          text-decoration: none;      // Màu xanh khi hover (bạn có thể đổi màu khác)
+        }
+      }
+      
+    }
+
+    .header_right {
+      display: flex;
+      align-items: center;
+
+      .icons {
+        display: flex;
+        gap: 20px;
+        list-style: none;
+        margin-right: 20px;
+        
+        li {
+          cursor: pointer;
+          font-size: 18px;
+          &:hover {
+            color: #8ad839;
+          }
+        }
+        
+      }
+      
+
+      .user {
+        display: flex;
+        align-items: center;
+        background: none;
+        padding: 5px 10px;
+        color: black;
+
+        .avatar {
+          width: 35px;  // Đảm bảo kích thước avatar phù hợp
+          height: 35px;
+         
+          margin-right: 8px;
+        }
+
+        .username {
+          font-weight: 500;
+        }
+      }
+    }
+    .icon-link {
+      color: white;          /* Màu mặc định */
+      transition: color 0.3s ease;
+    }
+    
+    .icon-link:hover {
+      color: #8ad839;            /* Màu khi hover */
+    }
+    
+  }
+}

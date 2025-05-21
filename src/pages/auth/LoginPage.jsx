@@ -46,6 +46,9 @@ const LoginPage = () => {
       } else if (userData.role === "Owner") {
         console.log("Đăng nhập thành công!", userData);
         navigate(ROUTER.OWNER.HOME);
+      } else if (userData.role === "Coach") {
+        console.log("Đăng nhập thành công!", userData);
+        navigate(ROUTER.COACH.HOME);
       } else {
         // Có lỗi khi xử lý dữ liệu xác thực
         setError("Không thể xử lý thông tin đăng nhập. Vui lòng thử lại.");
