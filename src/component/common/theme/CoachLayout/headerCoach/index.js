@@ -1,5 +1,7 @@
 import { memo, useState } from "react";
 import { Link } from "react-router-dom"; // Import Link
+import { logout } from "../../../../../utils/auth"; // Import hàm logout
+import { useNavigate } from "react-router-dom";
 
 import "./style.scss";
 import {
@@ -16,8 +18,9 @@ import {
 } from "react-icons/bs";
 import logo from "../../../../../assets/admin/logo.png"; // Import logo
 
-const HeaderOwner = () => {
+const HeaderCoach = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -26,10 +29,14 @@ const HeaderOwner = () => {
     // Ví dụ: chuyển trang với từ khóa
     // navigate(`/search?query=${encodeURIComponent(searchTerm)}`);
   };
+  const handleLogout = () => {
+    logout(); // gọi hàm logout từ utils
+    navigate("/login", { replace: true }); // chuyển hướng về login
+  };
 
   return (
     <>
-      <div className="coach-layout">
+      <div className="owner-layout">
         <div className="header_top">
           <div className="container">
             <div className="header_wrapper">
@@ -126,7 +133,11 @@ const HeaderOwner = () => {
                   <li>
                     <BsGear />
                   </li>
-                  <li>
+                  <li
+                    onClick={handleLogout}
+                    style={{ cursor: "pointer" }}
+                    title="Logout"
+                  >
                     <BsBoxArrowRight />
                   </li>
                 </ul>
@@ -149,4 +160,4 @@ const HeaderOwner = () => {
   );
 };
 
-export default memo(HeaderOwner);
+export default memo(HeaderCoach);
