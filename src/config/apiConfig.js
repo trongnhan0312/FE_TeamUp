@@ -26,6 +26,7 @@ export const ENDPOINTS = {
     REFRESH_TOKEN: "/auth/refresh-token",
     VERIFY_OTP: "/auth/confirm-register",
     RESEND_OTP: "/auth/resend-otp",
+    LOGOUT: "/auth/logout",
   },
   USER: {
     PROFILE: "/user/profile",

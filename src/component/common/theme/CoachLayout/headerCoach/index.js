@@ -5,16 +5,13 @@ import { useNavigate } from "react-router-dom";
 
 import "./style.scss";
 import {
-  BsGraphUpArrow,
-  BsFileEarmark,
   BsClipboardData,
-  BsCoin,
-  BsHouseAdd,
   BsChatHeart,
   BsFillBellFill,
   BsGear,
   BsBoxArrowRight,
   BsSearch,
+  BsChat,
 } from "react-icons/bs";
 import logo from "../../../../../assets/admin/logo.png"; // Import logo
 
@@ -36,7 +33,7 @@ const HeaderCoach = () => {
 
   return (
     <>
-      <div className="owner-layout">
+      <div className="coach-layout">
         <div className="header_top">
           <div className="container">
             <div className="header_wrapper">
@@ -79,32 +76,19 @@ const HeaderCoach = () => {
                 >
                   <li>
                     <li>
-                      <Link to="/owner/humanhabits" className="icon-link">
-                        <BsGraphUpArrow />
+                      <Link to="/coach/chat" className="icon-link">
+                        <BsChat />
                       </Link>
                     </li>
                   </li>
                   <li>
-                    <Link to="/owner/pitchhistory" className="icon-link">
-                      <BsFileEarmark />
-                    </Link>
-                  </li>
-                  <li>
-                    <BsClipboardData />
-                  </li>
-                  <li>
-                    <Link to="/owner/bookingmanagement" className="icon-link">
-                      <BsCoin />
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/owner/createyard" className="icon-link">
-                      <BsHouseAdd />
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/owner/reviewyard" className="icon-link">
+                    <Link to="/coach/reviewCoach" className="icon-link">
                       <BsChatHeart />
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/coach/CoachHistory" className="icon-link">
+                      <BsClipboardData />
                     </Link>
                   </li>
                 </ul>
