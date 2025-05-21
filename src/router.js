@@ -21,6 +21,7 @@ import PrivacyPolicy from "./pages/users/privacyPolicy";
 import AboutUs from "./pages/users/aboutUs";
 import SupportCenter from "./pages/users/supportCenter";
 import Blog from "./pages/users/blog";
+import ChatApp from "./pages/users/chat";
 
 const RouterCustom = () => {
     const location = useLocation();
@@ -104,6 +105,11 @@ const RouterCustom = () => {
                     <Route
                         path={ROUTER.USER.BLOG}
                         element={<Blog />}
+                    />
+
+                    <Route
+                        path={ROUTER.USER.CHAT}
+                        element={<ChatApp />}
                     />
 
                     <Route path="*" element={<Navigate to="/home" replace />} />
