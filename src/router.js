@@ -16,6 +16,8 @@ import BOOKINGMANAGEMENT from "./pages/owner/BookingManagement/BookingManagement
 import CreateYard from "./pages/owner/CreateYard/CreateYard";
 import ReviewYard from "./pages/owner/ReviewYard/ReviewYard";
 import Coach from "./pages/coach";
+import ReviewCoach from "./pages/coach/ReviewCoach/ReviewCoach";
+import CoachHistory from "./pages/coach/CoachHistory/CoachHistory";
 import { ROUTER } from "./utils/router";
 import OtpVerificationPage from "./pages/EmailComponentUtil/OtpVerificationPage";
 import CourtSchedule from "./pages/users/courts/court_schedule/CourtSchedule";
@@ -67,6 +69,8 @@ const RouterCustom = () => {
       <Routes>
         <Route path="/coach" element={<Coach />} />
         <Route path={ROUTER.COACH.CHAT} element={<CoachChatPage />} />
+        <Route path={ROUTER.COACH.REVIEWCOACH} element={<ReviewCoach />} />
+        <Route path={ROUTER.COACH.COACHHISTORY} element={<CoachHistory />} />
         {/* <Route path="*" element={<Navigate to="/coach" replace />} /> */}
       </Routes>
     </CoachLayout>

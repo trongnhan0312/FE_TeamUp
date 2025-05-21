@@ -31,6 +31,8 @@ export const ROUTER = {
   },
   COACH: {
     HOME: "/coach",
-    CHAT: "/coach/chat"
+    CHAT: "/coach/chat",
+    REVIEWCOACH: "/coach/reviewCoach",
+    COACHHISTORY: "/coach/CoachHistory",
   },
 };

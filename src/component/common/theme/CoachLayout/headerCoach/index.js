@@ -1,23 +1,23 @@
 import { memo, useState } from "react";
 import { Link } from "react-router-dom"; // Import Link
+import { logout } from "../../../../../utils/auth"; // Import hàm logout
+import { useNavigate } from "react-router-dom";
 
 import "./style.scss";
 import {
-  BsGraphUpArrow,
-  BsFileEarmark,
   BsClipboardData,
-  BsCoin,
-  BsHouseAdd,
   BsChatHeart,
   BsFillBellFill,
   BsGear,
   BsBoxArrowRight,
   BsSearch,
+  BsChat,
 } from "react-icons/bs";
 import logo from "../../../../../assets/admin/logo.png"; // Import logo
 
-const HeaderOwner = () => {
+const HeaderCoach = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -25,6 +25,10 @@ const HeaderOwner = () => {
     console.log("Tìm kiếm từ khóa:", searchTerm);
     // Ví dụ: chuyển trang với từ khóa
     // navigate(`/search?query=${encodeURIComponent(searchTerm)}`);
+  };
+  const handleLogout = () => {
+    logout(); // gọi hàm logout từ utils
+    navigate("/login", { replace: true }); // chuyển hướng về login
   };
 
   return (
@@ -72,32 +76,19 @@ const HeaderOwner = () => {
                 >
                   <li>
                     <li>
-                      <Link to="/owner/humanhabits" className="icon-link">
-                        <BsGraphUpArrow />
+                      <Link to="/coach/chat" className="icon-link">
+                        <BsChat />
                       </Link>
                     </li>
                   </li>
                   <li>
-                    <Link to="/owner/pitchhistory" className="icon-link">
-                      <BsFileEarmark />
-                    </Link>
-                  </li>
-                  <li>
-                    <BsClipboardData />
-                  </li>
-                  <li>
-                    <Link to="/owner/bookingmanagement" className="icon-link">
-                      <BsCoin />
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/owner/createyard" className="icon-link">
-                      <BsHouseAdd />
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/owner/reviewyard" className="icon-link">
+                    <Link to="/coach/reviewCoach" className="icon-link">
                       <BsChatHeart />
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/coach/CoachHistory" className="icon-link">
+                      <BsClipboardData />
                     </Link>
                   </li>
                 </ul>
@@ -126,7 +117,11 @@ const HeaderOwner = () => {
                   <li>
                     <BsGear />
                   </li>
-                  <li>
+                  <li
+                    onClick={handleLogout}
+                    style={{ cursor: "pointer" }}
+                    title="Logout"
+                  >
                     <BsBoxArrowRight />
                   </li>
                 </ul>
@@ -149,4 +144,4 @@ const HeaderOwner = () => {
   );
 };
 
-export default memo(HeaderOwner);
+export default memo(HeaderCoach);

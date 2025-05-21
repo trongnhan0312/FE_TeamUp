@@ -1,5 +1,7 @@
 import { memo, useState } from "react";
 import { Link } from "react-router-dom"; // Import Link
+import { logout } from "../../../../../utils/auth"; // Import hàm logout
+import { useNavigate } from "react-router-dom";
 
 import "./style.scss";
 import {
@@ -18,6 +20,7 @@ import logo from "../../../../../assets/admin/logo.png"; // Import logo
 
 const HeaderOwner = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -25,6 +28,10 @@ const HeaderOwner = () => {
     console.log("Tìm kiếm từ khóa:", searchTerm);
     // Ví dụ: chuyển trang với từ khóa
     // navigate(`/search?query=${encodeURIComponent(searchTerm)}`);
+  };
+  const handleLogout = () => {
+    logout(); // gọi hàm logout từ utils
+    navigate("/login", { replace: true }); // chuyển hướng về login
   };
 
   return (
@@ -126,7 +133,11 @@ const HeaderOwner = () => {
                   <li>
                     <BsGear />
                   </li>
-                  <li>
+                  <li
+                    onClick={handleLogout}
+                    style={{ cursor: "pointer" }}
+                    title="Logout"
+                  >
                     <BsBoxArrowRight />
                   </li>
                 </ul>
