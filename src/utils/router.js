@@ -14,6 +14,7 @@ export const ROUTER = {
     ABOUT_US: "/about-us",
     SUPPORT_CENTER: "/support-center",
     BLOG: "/blog",
+    CHAT: "/chat/:coachId",
   },
   AUTH: {
     LOGIN: "/login",
@@ -30,5 +31,6 @@ export const ROUTER = {
   },
   COACH: {
     HOME: "/coach",
+    CHAT: "/coach/chat"
   },
 };

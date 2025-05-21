@@ -31,6 +31,8 @@ export const ENDPOINTS = {
         PROFILE: "/user/profile",
         UPDATE_PROFILE: "/user/profile",
         CHANGE_PASSWORD: "/user/change-password",
+        GET_USER_BY_ID: "/user",
+        GET_ALL_USER: "/user/all"
     },
     COURT: {
         GET_BY_ID: "/court",
@@ -49,6 +51,10 @@ export const ENDPOINTS = {
     EMPLOYEE: {
         GET_COACHES_PAGINATION: "/employee/get-coaches-pagination",
         GET_COACH_PROFILE: "/employee",
+    },
+    CHAT: {
+        GET_MESSAGE: "/chat/get-message",
+        SEND_MESSAGE: "/chat/send-message"
     },
     // Các endpoints khác
 };
