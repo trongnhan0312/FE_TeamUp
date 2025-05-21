@@ -2,6 +2,7 @@ import HomePage from "./pages/users/homePage";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import MasterLayout from "./component/common/theme/masterLayout";
 import OwnerLayout from "./component/common/theme/OwnerLayout";
+import CoachLayout from "./component/common/theme/CoachLayout";
 import ProfilePage from "./pages/users/profilePage";
 import LoginPage from "./pages/auth/LoginPage";
 import SignupPage from "./pages/auth/SignUpComponent/SignupPage";
@@ -9,6 +10,12 @@ import { useEffect, useState } from "react";
 import { isAuthenticated, hasRole } from "./utils/auth";
 import CourtDetailPage from "./pages/users/courts/court_detail/CourtDetailPage";
 import Owner from "./pages/owner";
+import HumanHabits from "./pages/owner/HumanHabits/HumanHabits";
+import PitchHistory from "./pages/owner/PitchHistory/PitchHistory";
+import BOOKINGMANAGEMENT from "./pages/owner/BookingManagement/BookingManagement";
+import CreateYard from "./pages/owner/CreateYard/CreateYard";
+import ReviewYard from "./pages/owner/ReviewYard/ReviewYard";
+import Coach from "./pages/coach";
 import { ROUTER } from "./utils/router";
 import OtpVerificationPage from "./pages/EmailComponentUtil/OtpVerificationPage";
 import CourtSchedule from "./pages/users/courts/court_schedule/CourtSchedule";
@@ -24,163 +31,152 @@ import Blog from "./pages/users/blog";
 import ChatApp from "./pages/users/chat";
 
 const RouterCustom = () => {
-    const location = useLocation();
-    const [isLoggedIn, setIsLoggedIn] = useState(isAuthenticated());
-    const [isOwner, setIsOwner] = useState(false);
+  const location = useLocation();
+  const [isLoggedIn, setIsLoggedIn] = useState(isAuthenticated());
+  const [isOwner, setIsOwner] = useState(false);
+  const [isCoach, setIsCoach] = useState(false);
 
-    useEffect(() => {
-        setIsLoggedIn(isAuthenticated());
-        setIsOwner(isAuthenticated() && hasRole("Owner")); // Kiểm tra role Owner
-    }, [location.pathname]);
+  useEffect(() => {
+    setIsLoggedIn(isAuthenticated());
+    setIsOwner(isAuthenticated() && hasRole("Owner"));
+    setIsCoach(isAuthenticated() && hasRole("Coach"));
+  }, [location.pathname]);
 
-    // Routes cho Owner
-    const ownerRoutes = (
-        <OwnerLayout>
-            <Routes>
-                <Route path="/owner" element={<Owner />} />
-                <Route path="*" element={<Navigate to="/owner" replace />} />
-            </Routes>
-        </OwnerLayout>
-    );
+  // Routes cho Owner
+  const ownerRoutes = (
+    <OwnerLayout>
+      <Routes>
+        <Route path="/owner" element={<Owner />} />
+        <Route path={ROUTER.OWNER.HUMANHABITS} element={<HumanHabits />} />
+        <Route path={ROUTER.OWNER.PITCHHISTORY} element={<PitchHistory />} />
+        <Route
+          path={ROUTER.OWNER.BOOKINGMANAGEMENT}
+          element={<BOOKINGMANAGEMENT />}
+        />
+        <Route path={ROUTER.OWNER.CREATEYARD} element={<CreateYard />} />
+        <Route path={ROUTER.OWNER.REVIEWYARD} element={<ReviewYard />} />
+        <Route path="*" element={<Navigate to="/owner" replace />} />
+      </Routes>
+    </OwnerLayout>
+  );
 
-    // Routes cho user bình thường
-    const userRoutes =
-        (console.log("isLoggedIn", hasRole("Owner")),
-        (
-            <MasterLayout>
-                <Routes>
-                    <Route path="/home" element={<HomePage />} />
-                    <Route path="/profile" element={<ProfilePage />} />
-                    <Route
-                        path={ROUTER.USER.DETAIL_COURT}
-                        element={<CourtDetailPage />}
-                    />
-                    <Route
-                        path={ROUTER.USER.SCHEDULE_COURT}
-                        element={<CourtSchedule />}
-                    />
-                    <Route
-                        path={ROUTER.USER.COURT_BOOKING_CONFIRMATION}
-                        element={<BookingConfirmation />}
-                    />
+  // Routes cho Coach
+  const coachRoutes = (
+    <CoachLayout>
+      <Routes>
+        <Route path="/coach" element={<Coach />} />
+        <Route path="*" element={<Navigate to="/coach" replace />} />
+      </Routes>
+    </CoachLayout>
+  );
 
-                    <Route
-                        path={ROUTER.USER.COURT_BOOKING_SUMMARY}
-                        element={<BookingSummary />}
-                    />
+  // Routes cho user bình thường
+  const userRoutes = (
+    <MasterLayout>
+      <Routes>
+        <Route path="/home" element={<HomePage />} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path={ROUTER.USER.DETAIL_COURT} element={<CourtDetailPage />} />
+        <Route path={ROUTER.USER.SCHEDULE_COURT} element={<CourtSchedule />} />
+        <Route
+          path={ROUTER.USER.COURT_BOOKING_CONFIRMATION}
+          element={<BookingConfirmation />}
+        />
+        <Route
+          path={ROUTER.USER.COURT_BOOKING_SUMMARY}
+          element={<BookingSummary />}
+        />
+        <Route path={ROUTER.USER.COURT_HOMEPAGE} element={<CourtListing />} />
+        <Route
+          path={ROUTER.USER.COACH_GET_ALL_DEFAULT}
+          element={<CoachListing />}
+        />
+        <Route path={ROUTER.USER.COACH_GET_ALL} element={<CoachListing />} />
+        <Route path={ROUTER.USER.COACH_GET_DETAIL} element={<CoachProfile />} />
+        <Route path={ROUTER.USER.PRIVACY_POLICY} element={<PrivacyPolicy />} />
+        <Route path={ROUTER.USER.ABOUT_US} element={<AboutUs />} />
+        <Route path={ROUTER.USER.SUPPORT_CENTER} element={<SupportCenter />} />
+        <Route path={ROUTER.USER.BLOG} element={<Blog />} />
+        <Route path={ROUTER.USER.CHAT} element={<ChatApp />} />
+        <Route path="*" element={<Navigate to="/home" replace />} />
+      </Routes>
+    </MasterLayout>
+  );
 
-                    <Route
-                        path={ROUTER.USER.COURT_HOMEPAGE}
-                        element={<CourtListing />}
-                    />
-                    <Route
-                        path={ROUTER.USER.COACH_GET_ALL_DEFAULT}
-                        element={<CoachListing />}
-                    />
-                    <Route
-                        path={ROUTER.USER.COACH_GET_ALL}
-                        element={<CoachListing />}
-                    />
+  return (
+    <Routes>
+      <Route
+        path="/"
+        element={
+          isLoggedIn ? (
+            isOwner ? (
+              <Navigate to="/owner" replace />
+            ) : isCoach ? (
+              <Navigate to="/coach" replace />
+            ) : (
+              <Navigate to="/home" replace />
+            )
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }
+      />
 
-                    <Route
-                        path={ROUTER.USER.COACH_GET_DETAIL}
-                        element={<CoachProfile />}
-                    />
+      {/* Route OTP Verification không cần đăng nhập */}
+      <Route path={ROUTER.OTP_VERIFICATION} element={<OtpVerificationPage />} />
 
-                    <Route
-                        path={ROUTER.USER.PRIVACY_POLICY}
-                        element={<PrivacyPolicy />}
-                    />
+      <Route
+        path="/login"
+        element={
+          isLoggedIn ? (
+            isOwner ? (
+              <Navigate to="/owner" replace />
+            ) : isCoach ? (
+              <Navigate to="/coach" replace />
+            ) : (
+              <Navigate to="/home" replace />
+            )
+          ) : (
+            <LoginPage />
+          )
+        }
+      />
 
-                    <Route
-                        path={ROUTER.USER.ABOUT_US}
-                        element={<AboutUs />}
-                    />
+      <Route
+        path="/register"
+        element={
+          isLoggedIn ? (
+            isOwner ? (
+              <Navigate to="/owner" replace />
+            ) : isCoach ? (
+              <Navigate to="/coach" replace />
+            ) : (
+              <Navigate to="/home" replace />
+            )
+          ) : (
+            <SignupPage />
+          )
+        }
+      />
 
-                    <Route
-                        path={ROUTER.USER.SUPPORT_CENTER}
-                        element={<SupportCenter />}
-                    />
-
-                    <Route
-                        path={ROUTER.USER.BLOG}
-                        element={<Blog />}
-                    />
-
-                    <Route
-                        path={ROUTER.USER.CHAT}
-                        element={<ChatApp />}
-                    />
-
-                    <Route path="*" element={<Navigate to="/home" replace />} />
-                </Routes>
-            </MasterLayout>
-        ));
-
-    return (
-        <Routes>
-            <Route
-                path="/"
-                element={
-                    isLoggedIn ? (
-                        isOwner ? (
-                            <Navigate to="/owner" replace />
-                        ) : (
-                            <Navigate to="/home" replace />
-                        )
-                    ) : (
-                        <Navigate to="/login" replace />
-                    )
-                }
-            />
-
-            {/* Route cho trang OTP Verification - có thể truy cập mà không cần đăng nhập */}
-            <Route
-                path={ROUTER.OTP_VERIFICATION}
-                element={<OtpVerificationPage />}
-            />
-
-            <Route
-                path="/login"
-                element={
-                    isLoggedIn ? (
-                        <Navigate to={isOwner ? "/owner" : "/home"} replace />
-                    ) : (
-                        <LoginPage />
-                    )
-                }
-            />
-            <Route
-                path="/register"
-                element={
-                    isLoggedIn ? (
-                        <Navigate to={isOwner ? "/owner" : "/home"} replace />
-                    ) : (
-                        <SignupPage />
-                    )
-                }
-            />
-
-            <Route
-                path="/*"
-                element={
-                    isLoggedIn ? (
-                        isOwner ? (
-                            ownerRoutes
-                        ) : (
-                            userRoutes
-                        )
-                    ) : (
-                        <Navigate
-                            to="/login"
-                            replace
-                            state={{ from: location }}
-                        />
-                    )
-                }
-            />
-        </Routes>
-    );
+      <Route
+        path="/*"
+        element={
+          isLoggedIn ? (
+            isOwner ? (
+              ownerRoutes
+            ) : isCoach ? (
+              coachRoutes
+            ) : (
+              userRoutes
+            )
+          ) : (
+            <Navigate to="/login" replace state={{ from: location }} />
+          )
+        }
+      />
+    </Routes>
+  );
 };
 
 export default RouterCustom;

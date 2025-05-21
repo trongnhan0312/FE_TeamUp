@@ -6,7 +6,7 @@ import { ROUTER } from "../../../../../utils/router";
 
 const footerOwner = () => {
   return (
-    <div className="footer_owner">
+    <div className="footer_coach">
       <div className="footer">
         <div className="container">
           <div className="footer_wrapper">

@@ -29,7 +29,7 @@ const HeaderOwner = () => {
 
   return (
     <>
-      <div className="owner-layout">
+      <div className="coach-layout">
         <div className="header_top">
           <div className="container">
             <div className="header_wrapper">
