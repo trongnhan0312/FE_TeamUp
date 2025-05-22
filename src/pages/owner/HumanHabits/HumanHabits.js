@@ -117,8 +117,8 @@ const HumanHabits = () => {
                 <XAxis dataKey="name" tickLine={false} axisLine={false} />
                 <Tooltip />
                 <Legend />
-                <Bar dataKey="thisMonth" fill="#1bd8ba" />
-                <Bar dataKey="lastMonth" fill="#8744e1 " />
+                <Bar dataKey="thisMonth" fill="#000" />
+                <Bar dataKey="lastMonth" fill="#91d931 " />
               </BarChart>
             </ResponsiveContainer>
           </div>
