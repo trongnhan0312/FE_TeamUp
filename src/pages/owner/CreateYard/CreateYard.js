@@ -1,7 +1,10 @@
 import { memo, useState } from "react";
 import "./style.scss";
+import Map from "../../../component/map";
 
 const CreateYard = () => {
+  const [selectedPosition, setSelectedPosition] = useState(null);
+  
   return (
     <div className="create-yard-container">
       {/* Header */}
@@ -24,17 +27,7 @@ const CreateYard = () => {
       <div className="description">
         <p>
           Lorem ipsum dolor sit amet consectetur. Gravida sapien facilisis
-          consectetur vitae tellus. Sed tellus elit enim suscipit penatibus eget
-          risus. Et suspendisse donec ut et mi ultricies elit eget port. Arcu
-          tellus la commodo ullamcorper tincidunt venenatis lectus dui. In dolor
-          mi. Imperdiet fermentum faucibus eget sed consequat. Risus malesuada
-          pellentesque morbi suspendisse ultricies pulvinar mollis. Massa et
-          ligula pellentesque dictum sit interdum malesuada phastra. Vivamus est
-          turpis donec facilisi placerat sed. Tristique orci diam mi orci vitae
-          id quam tellus tellus. Nunc netus tristique gravida libero morbi lorem
-          dictum. A tortor neque aenean ultrices. Sed bibendum faucibus fames
-          diam ornare at. Tristique consequat cursus tortor in mattis feugiat
-          iaculis pellentesque.
+          consectetur vitae tellus...
         </p>
       </div>
 
@@ -56,12 +49,18 @@ const CreateYard = () => {
 
       {/* Location */}
       <div className="location-section">
-        <div className="location-title">Địa điểm</div>
-        <div className="location-map placeholder"></div>
-        <div className="location-desc">
-          <i className="location-icon">📍</i>
-          <span>Lorem ipsum dolor sit amet consectetur. Lectus.</span>
-        </div>
+        {/* Bản đồ chọn vị trí */}
+        <Map selectable={true} onSelect={setSelectedPosition} />
+
+        {selectedPosition && (
+          <div className="location-desc">
+            <i className="location-icon">📍</i>
+            <span>
+              Tọa độ: {selectedPosition.latitude.toFixed(6)},{" "}
+              {selectedPosition.longitude.toFixed(6)}
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );
