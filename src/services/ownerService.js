@@ -225,3 +225,24 @@ export const fetchBookedSlotsWithCourtInfoFromOwner = async (
     throw error;
   }
 };
+
+export const updateBooking = async (bookingId, status) => {
+  try {
+    const formData = new FormData();
+    formData.append("Status", status);
+
+    const url = `${ENDPOINTS.OWNER.BOOKING_UPDATE}/${bookingId}`;
+    const response = await axiosInstance.put(url, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    if (response.data.isSuccessed) return response.data.resultObj;
+
+    throw new Error(response.data.message || "Update thất bại");
+  } catch (error) {
+    console.error("Lỗi cập nhật booking:", error);
+    throw error;
+  }
+};

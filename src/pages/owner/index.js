@@ -26,6 +26,7 @@ import CircleStat from "./CircleStat";
 
 const Owner = () => {
   const [filter, setFilter] = useState("Mới nhất");
+  const [filteredBooking, setFilteredBooking] = useState([]);
   const [courts, setCourts] = useState([]);
   const [uniquePlayerCount, setUniquePlayerCount] = useState(0);
   const [totalCourtBookings, setTotalCourtBookings] = useState(0);
@@ -34,6 +35,7 @@ const Owner = () => {
   const [bookingHistory, setBookingHistory] = useState([]);
   const [hourlyData, setHourlyData] = useState([]);
   const [todayRevenue, setTodayRevenue] = useState(0);
+  const [searchTerm, setSearchTerm] = useState("");
 
   // Hàm lọc booking theo tháng hiện tại và tháng trước, tạo dữ liệu cho BarChart
   const getMonthlyBookingData = (bookings) => {
@@ -69,6 +71,48 @@ const Owner = () => {
   };
 
   useEffect(() => {
+    let filtered = [...bookingHistory];
+
+    if (filter === "Mới nhất") {
+      // Sắp xếp ngày mới nhất trước (startTime giảm dần)
+      filtered.sort((a, b) => new Date(b.startTime) - new Date(a.startTime));
+    } else if (filter === "Cũ nhất") {
+      // Sắp xếp ngày cũ nhất trước (startTime tăng dần)
+      filtered.sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
+    } else if (filter === "Xác nhận") {
+      // Lọc booking có trạng thái là "Xác nhận" (hoặc status tương tự)
+      filtered = filtered.filter(
+        (booking) =>
+          booking.status?.toLowerCase() === "xác nhận" ||
+          booking.status?.toLowerCase() === "confirmed" // tùy theo API
+      );
+    }
+    if (searchTerm.trim() !== "") {
+      const lowerSearch = searchTerm.toLowerCase();
+
+      filtered = filtered.filter((booking) => {
+        const start = new Date(booking.startTime);
+        const end = new Date(booking.endTime);
+
+        return (
+          (booking.user?.fullName || "").toLowerCase().includes(lowerSearch) ||
+          booking.id.toString().includes(lowerSearch) ||
+          start.toLocaleDateString("vi-VN").includes(lowerSearch) ||
+          `${start.toLocaleTimeString("vi-VN", {
+            hour: "2-digit",
+            minute: "2-digit",
+          })} - ${end.toLocaleTimeString("vi-VN", {
+            hour: "2-digit",
+            minute: "2-digit",
+          })}`.includes(lowerSearch) ||
+          (booking.court?.name || "").toLowerCase().includes(lowerSearch) ||
+          (booking.totalPrice?.toString() || "").includes(lowerSearch) ||
+          (booking.status || "").toLowerCase().includes(lowerSearch)
+        );
+      });
+    }
+
+    setFilteredBooking(filtered);
     const storedOwnerId = localStorage.getItem("ownerId");
     if (!storedOwnerId) {
       console.warn("Owner ID not found");
@@ -110,6 +154,16 @@ const Owner = () => {
           return start.toDateString() === todayStr;
         });
 
+        console.log(
+          "Booking sân ngày mai:",
+          todayBookings.map((b) => ({
+            id: b.id,
+            courtName: b.court?.name,
+            startTime: b.startTime,
+            totalPrice: b.totalPrice,
+          }))
+        );
+
         const totalRevenueToday = todayBookings.reduce(
           (sum, booking) => sum + (booking.totalPrice || 0),
           0
@@ -118,21 +172,61 @@ const Owner = () => {
         setTodayRevenue(totalRevenueToday);
 
         const revenueByHour = {};
+
         todayBookings.forEach((booking) => {
           const start = new Date(booking.startTime);
           const hourKey = start.getHours().toString().padStart(2, "0") + ":00";
-          if (!revenueByHour[hourKey]) revenueByHour[hourKey] = 0;
-          revenueByHour[hourKey] += booking.totalPrice || 0;
+
+          if (!revenueByHour[hourKey]) {
+            revenueByHour[hourKey] = { value: 0, courts: new Set() };
+          }
+          revenueByHour[hourKey].value += booking.totalPrice || 0;
+          if (booking.court?.name) {
+            revenueByHour[hourKey].courts.add(booking.court.name);
+          }
         });
 
-        const hourlyDataArray = Object.entries(revenueByHour)
-          .map(([time, value]) => ({ time, value }))
-          .sort((a, b) => (a.time > b.time ? 1 : -1));
-
-        setHourlyData(hourlyDataArray);
+        // Chuyển sang mảng
+        const hourlyDataArray = Object.entries(revenueByHour).map(
+          ([time, data]) => ({
+            time,
+            value: data.value,
+            courts: Array.from(data.courts),
+          })
+        );
+        const sortedHourlyData = hourlyDataArray.sort((a, b) => {
+          const toMinutes = (t) => {
+            const [h, m] = t.split(":").map(Number);
+            return h * 60 + m;
+          };
+          return toMinutes(a.time) - toMinutes(b.time);
+        });
+        setHourlyData(sortedHourlyData);
       })
       .catch(console.error);
-  }, []);
+    setFilteredBooking(filtered);
+  }, [filter, searchTerm, bookingHistory]);
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload;
+      const courts = Array.isArray(data.courts) ? data.courts : [];
+      return (
+        <div
+          className="custom-tooltip"
+          style={{
+            backgroundColor: "#fff",
+            padding: 10,
+            border: "1px solid #ccc",
+          }}
+        >
+          <p>{`Giờ: ${label}`}</p>
+          <p>{`Doanh thu: ${data.value.toLocaleString("vi-VN")} VNĐ`}</p>
+          <p>{`Sân: ${courts.length > 0 ? courts.join(", ") : "Không có"}`}</p>
+        </div>
+      );
+    }
+    return null;
+  };
 
   const bookingDataForChart = courts.map((court) => ({
     name: court.name,
@@ -224,12 +318,12 @@ const Owner = () => {
               data={
                 hourlyData.length > 0
                   ? hourlyData
-                  : [{ time: "00:00", value: 0 }]
+                  : [{ time: "00:00", value: 0, courts: [] }]
               }
             >
               <XAxis dataKey="time" stroke="#555" />
               <YAxis stroke="#555" />
-              <Tooltip />
+              <Tooltip content={<CustomTooltip />} />
               <Line
                 type="monotone"
                 dataKey="value"
@@ -333,7 +427,10 @@ const Owner = () => {
               placeholder="Search..."
               className="search-input"
               aria-label="search booking"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
+
             <select
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
@@ -357,7 +454,7 @@ const Owner = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {bookingHistory.map((booking) => {
+                  {filteredBooking.map((booking) => {
                     const start = new Date(booking.startTime);
                     const end = new Date(booking.endTime);
                     return (

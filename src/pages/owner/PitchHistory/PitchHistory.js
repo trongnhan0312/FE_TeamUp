@@ -1,98 +1,169 @@
-import { memo, useState } from "react";
+import { memo, useState, useEffect } from "react";
 import "./style.scss";
 import CircleStat from "../CircleStat";
-
-const dataInit = [
-  {
-    name: "Elena Winston",
-    code: "QW-MN6789",
-    date: "03/03/2025",
-    time: "08:25 - 10:30",
-    field: "Cầu lông 1",
-    price: 248000,
-    status: "Confirmed",
-  },
-  {
-    name: "Elena Winston",
-    code: "QW-MN6789",
-    date: "03/03/2025",
-    time: "08:25 - 10:30",
-    field: "Cầu lông 1",
-    price: 248000,
-    status: "Pending",
-  },
-  {
-    name: "Elena Winston",
-    code: "QW-MN6789",
-    date: "03/03/2025",
-    time: "08:25 - 10:30",
-    field: "Cầu lông 1",
-    price: 248000,
-    status: "Cancelled",
-  },
-];
+import {
+  fetchBookingHistory,
+  updateBooking,
+} from "../../../services/ownerService";
 
 const statusColors = {
-  Confirmed: "#94d82d",
-  Pending: "#fcc419",
-  Cancelled: "#495057",
+  Pending: "#ff9800",
+  Confirmed: "#2196f3",
+  Completed: "#94d82d",
+  CancelledByOwner: "#f44336",
 };
 
 const PitchHistory = () => {
   const [filter, setFilter] = useState("Mới nhất");
-  const [data, setData] = useState(dataInit);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [timeFilter, setTimeFilter] = useState("Tuần"); // Thêm state timeFilter
+  const [rawData, setRawData] = useState([]);
+  const [data, setData] = useState([]);
 
-  const totalOrders = data.length;
-  const completed = data.filter((d) => d.status === "Confirmed").length;
-  const inProgress = data.filter((d) => d.status === "Pending").length;
-  const cancelled = data.filter((d) => d.status === "Cancelled").length;
+  // Lấy dữ liệu từ API khi mount hoặc timeFilter thay đổi (nếu cần lọc server theo time)
+  useEffect(() => {
+    fetchBookingHistory(1, 100, Date.now())
+      .then((items) => {
+        const formatted = items.map((item) => ({
+          id: item.id,
+          name: item.user?.fullName || "N/A",
+          code: item.id,
+          rawDate: item.startTime,
+          date: new Date(item.startTime).toLocaleDateString("vi-VN"),
+          time: `${new Date(item.startTime).toLocaleTimeString("vi-VN", {
+            hour: "2-digit",
+            minute: "2-digit",
+          })} - ${new Date(item.endTime).toLocaleTimeString("vi-VN", {
+            hour: "2-digit",
+            minute: "2-digit",
+          })}`,
+          field: item.court?.name || "N/A",
+          price: item.totalPrice || 0,
+          status: item.status || "Pending",
+        }));
+        setRawData([...formatted]);
+      })
+      .catch(console.error);
+  }, [timeFilter]); // Nếu muốn gọi lại theo timeFilter
 
-  const handleStatusChange = (index, newStatus) => {
-    const newData = [...data];
-    newData[index].status = newStatus;
-    setData(newData);
+  // Lọc, sort, tìm kiếm khi filter, searchTerm hoặc rawData thay đổi
+  useEffect(() => {
+    let filtered = [...rawData];
+
+    if (filter === "Mới nhất") {
+      filtered.sort((a, b) => new Date(b.rawDate) - new Date(a.rawDate));
+    } else if (filter === "Cũ nhất") {
+      filtered.sort((a, b) => new Date(a.rawDate) - new Date(b.rawDate));
+    } else if (filter === "Xác nhận") {
+      const acceptedStatuses = ["confirmed", "completed"];
+      filtered = filtered.filter(
+        (item) =>
+          item.status &&
+          acceptedStatuses.includes(item.status.trim().toLowerCase())
+      );
+    }
+
+    if (searchTerm.trim() !== "") {
+      const lowerSearch = searchTerm.toLowerCase();
+      filtered = filtered.filter((item) =>
+        [
+          item.name,
+          item.code,
+          item.date,
+          item.time,
+          item.field,
+          item.price.toString(),
+          item.status,
+        ]
+          .join(" ")
+          .toLowerCase()
+          .includes(lowerSearch)
+      );
+    }
+
+    setData(filtered);
+  }, [filter, searchTerm, rawData]);
+
+  // Thống kê đơn
+  const totalOrders = rawData.length;
+  const completed = rawData.filter((d) => d.status === "Completed").length;
+  const inProgress = rawData.filter((d) => d.status === "Pending").length;
+  const cancelled = rawData.filter(
+    (d) => d.status === "CancelledByOwner"
+  ).length;
+
+  // Cập nhật trạng thái booking
+  const handleStatusChange = async (bookingId, newStatus) => {
+    try {
+      await updateBooking(bookingId, newStatus);
+
+      const items = await fetchBookingHistory(1, 100, Date.now());
+
+      const formatted = items.map((item) => ({
+        id: item.id,
+        name: item.user?.fullName || "N/A",
+        code: item.id,
+        rawDate: item.startTime,
+        date: new Date(item.startTime).toLocaleDateString("vi-VN"),
+        time: `${new Date(item.startTime).toLocaleTimeString("vi-VN", {
+          hour: "2-digit",
+          minute: "2-digit",
+        })} - ${new Date(item.endTime).toLocaleTimeString("vi-VN", {
+          hour: "2-digit",
+          minute: "2-digit",
+        })}`,
+        field: item.court?.name || "N/A",
+        price: item.totalPrice || 0,
+        status: item.status || "Pending",
+      }));
+
+      setRawData([...formatted]);
+      alert("Cập nhật thành công!");
+    } catch (error) {
+      alert("Cập nhật trạng thái thất bại, vui lòng thử lại.");
+    }
   };
 
   return (
     <div className="pitchHistory">
       <div className="summary">
-        <div>
-          <CircleStat title="Tổng đơn" value={totalOrders} percentage={75} />
-        </div>
-        <div>
-          <CircleStat title="Đã hoàn thành" value={completed} percentage={75} />
-        </div>
-        <div>
-          <CircleStat
-            title="Đang thực hiện"
-            value={inProgress}
-            percentage={75}
-          />
-        </div>
-        <div>
-          <CircleStat title="Đã hủy" value={cancelled} percentage={75} />
-        </div>
+        <CircleStat title="Tổng đơn" value={totalOrders} percentage={75} />
+        <CircleStat title="Đã hoàn thành" value={completed} percentage={75} />
+        <CircleStat title="Đang thực hiện" value={inProgress} percentage={75} />
+        <CircleStat title="Đã hủy" value={cancelled} percentage={75} />
       </div>
 
       <div className="historySection">
         <div className="header">
           <h2>Lịch sử đặt sân</h2>
           <div className="filters">
-            <input type="text" placeholder="Tìm kiếm" className="searchInput" />
+            <input
+              type="text"
+              placeholder="Tìm kiếm"
+              className="searchInput"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
             <select
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
               className="statusFilter"
             >
-              <option>Mới nhất</option>
-              <option>Cũ nhất</option>
-              <option>Xác nhận</option>
+              <option value="Mới nhất">Mới nhất</option>
+              <option value="Cũ nhất">Cũ nhất</option>
+              <option value="Xác nhận">Xác nhận</option>
             </select>
           </div>
           <div className="timeFilter">
-            <button className="active">Tuần</button>
-            <button>Tháng</button>
-            <button>Năm</button>
+            {["Tuần", "Tháng", "Năm"].map((label) => (
+              <button
+                key={label}
+                className={timeFilter === label ? "active" : ""}
+                onClick={() => setTimeFilter(label)}
+              >
+                {label}
+              </button>
+            ))}
           </div>
         </div>
 
@@ -110,8 +181,8 @@ const PitchHistory = () => {
               </tr>
             </thead>
             <tbody>
-              {data.map((item, idx) => (
-                <tr key={idx}>
+              {data.map((item) => (
+                <tr key={item.id}>
                   <td>{item.name}</td>
                   <td>{item.code}</td>
                   <td>{item.date}</td>
@@ -126,9 +197,11 @@ const PitchHistory = () => {
                   <td>
                     <select
                       value={item.status}
-                      onChange={(e) => handleStatusChange(idx, e.target.value)}
+                      onChange={(e) =>
+                        handleStatusChange(item.id, e.target.value)
+                      }
                       style={{
-                        backgroundColor: statusColors[item.status],
+                        backgroundColor: statusColors[item.status] || "#888",
                         color: "white",
                         border: "none",
                         padding: "4px 8px",
@@ -136,9 +209,10 @@ const PitchHistory = () => {
                         cursor: "pointer",
                       }}
                     >
-                      <option value="Confirmed">Confirmed</option>
                       <option value="Pending">Pending</option>
-                      <option value="Cancelled">Cancelled</option>
+                      <option value="Confirmed">Confirmed</option>
+                      <option value="Completed">Completed</option>
+                      <option value="CancelledByOwner">CancelledByOwner</option>
                     </select>
                   </td>
                 </tr>
