@@ -57,5 +57,8 @@ export const ENDPOINTS = {
     GET_MESSAGE: "/chat/get-message",
     SEND_MESSAGE: "/chat/send-message",
   },
+  ROOM: {
+    GET_ALL: "/room/all"
+  }
   // Các endpoints khác
 };

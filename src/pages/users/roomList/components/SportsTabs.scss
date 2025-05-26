@@ -1,0 +1,38 @@
+.sports-tabs {
+  display: flex;
+  justify-content: space-evenly;
+
+  .tab {
+    padding: 24px 48px;
+    border: none;
+    background: #f5f5f5;
+    color: #666;
+    cursor: pointer;
+    font-size: 30px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    width: 100%;
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+
+    &:first-child {
+      border-radius: 8px 0 0 8px;
+    }
+
+    &:last-child {
+      border-radius: 0 8px 8px 0;
+    }
+
+    &.active {
+      background: #333;
+      color: white;
+    }
+
+    &:hover:not(.active) {
+      background: #e0e0e0;
+    }
+  }
+}

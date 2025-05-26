@@ -40,7 +40,7 @@ const Header = () => {
                   <Link to="/tim-san">Tìm sân</Link>
                 </li>
                 <li>
-                  <Link to="/tim-ban-choi">Tìm bạn chơi</Link>
+                  <Link to="/room">Tìm bạn chơi</Link>
                 </li>
                 <li>
                   <Link to="/ban-do">Bản đồ</Link>

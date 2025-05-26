@@ -32,6 +32,7 @@ import SupportCenter from "./pages/users/supportCenter";
 import Blog from "./pages/users/blog";
 import CoachChatPage from "./pages/coach/chat";
 import UserChatPage from "./pages/users/chat";
+import RoomList from "./pages/users/roomList";
 
 const RouterCustom = () => {
   const location = useLocation();
@@ -104,6 +105,7 @@ const RouterCustom = () => {
         <Route path={ROUTER.USER.SUPPORT_CENTER} element={<SupportCenter />} />
         <Route path={ROUTER.USER.BLOG} element={<Blog />} />
         <Route path={ROUTER.USER.CHAT} element={<UserChatPage />} />
+        <Route path={ROUTER.USER.ROOM} element={<RoomList />} />
         {/* <Route path="*" element={<Navigate to="/home" replace />} /> */}
       </Routes>
     </MasterLayout>
