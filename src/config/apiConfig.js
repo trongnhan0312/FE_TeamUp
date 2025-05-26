@@ -69,6 +69,7 @@ export const ENDPOINTS = {
     WEEKBOOKED_SLOTS: "courtbooking/weekly-booked-slots",
     MOST_BOOKED_COURTS: "courtbooking/stats/most-booked-by-owner",
     BOOKING_HISTORY: "courtbooking/all",
+    BOOKING_UPDATE: "courtbooking/update",
   },
   // Các endpoints khác
 };
