@@ -59,6 +59,9 @@ export const ENDPOINTS = {
   },
   ROOM: {
     GET_ALL: "/room/all"
+  },
+  ROOM_JOIN_REQUEST:{
+    CREATE_ROOM_JOIN_REQUEST: "/roomjoinrequest/create"
   }
   // Các endpoints khác
 };
