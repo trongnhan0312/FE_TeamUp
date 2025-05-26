@@ -1,7 +1,8 @@
 .homepage {
   .content_wrapper {
-   
+   display: flex;
     align-items: center;      // Căn chỉnh nội dung giữa các cột
+    justify-content: center;
     padding: 20px;
     justify-items: center;
     gap: 20px;                // Khoảng cách giữa 2 cột
