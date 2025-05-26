@@ -1897,6 +1897,11 @@
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.8.tgz#6b79032e760a0899cd4204710beede972a3a185f"
   integrity sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==
 
+"@react-leaflet/core@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@react-leaflet/core/-/core-3.0.0.tgz#34ccc280ce7d8ac5c09f2b3d5fffded450bdf1a2"
+  integrity sha512-3EWmekh4Nz+pGcr+xjf0KNyYfC3U2JjnkWsh0zcqaexYqmmB5ZhH37kz41JXGmKzpaMZCnPofBBm64i+YrEvGQ==
+
 "@rollup/plugin-babel@^5.2.0":
   version "5.3.1"
   resolved "https://registry.npmjs.org/@rollup/plugin-babel/-/plugin-babel-5.3.1.tgz"
@@ -6766,6 +6771,11 @@ launch-editor@^2.6.0:
     picocolors "^1.0.0"
     shell-quote "^1.8.1"
 
+leaflet@^1.9.4:
+  version "1.9.4"
+  resolved "https://registry.yarnpkg.com/leaflet/-/leaflet-1.9.4.tgz#23fae724e282fa25745aff82ca4d394748db7d8d"
+  integrity sha512-nxS1ynzJOmOlHp+iL3FyWqK89GtNL8U8rvlMOsQdTTssxZwCXh8N2NB3GDQOL+YR3XnWyZAxwQixURb+FA74PA==
+
 leven@^3.1.0:
   version "3.1.0"
   resolved "https://registry.npmjs.org/leven/-/leven-3.1.0.tgz"
@@ -8334,6 +8344,13 @@ react-is@^19.1.0:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-19.1.0.tgz#805bce321546b7e14c084989c77022351bbdd11b"
   integrity sha512-Oe56aUPnkHyyDxxkvqtd7KkdQP5uIUfHxd5XTb3wE9d/kRnZLmKbDB0GWk919tdQ+mxxPtG6EAs6RMT6i1qtHg==
 
+react-leaflet@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/react-leaflet/-/react-leaflet-5.0.0.tgz#945d40bad13b69e8606278b19446b00bab57376a"
+  integrity sha512-CWbTpr5vcHw5bt9i4zSlPEVQdTVcML390TjeDG0cK59z1ylexpqC6M1PJFjV8jD7CF+ACBFsLIDs6DRMoLEofw==
+  dependencies:
+    "@react-leaflet/core" "^3.0.0"
+
 react-refresh@^0.11.0:
   version "0.11.0"
   resolved "https://registry.npmjs.org/react-refresh/-/react-refresh-0.11.0.tgz"
@@ -9528,6 +9545,39 @@ tapable@^2.0.0, tapable@^2.1.1, tapable@^2.2.0, tapable@^2.2.1:
   version "2.2.1"
   resolved "https://registry.npmjs.org/tapable/-/tapable-2.2.1.tgz"
   integrity sha512-GNzQvQTOIP6RyTfE2Qxb8ZVlNmw0n88vp1szwWRimP02mnTsx3Wtn5qRdqY9w2XduFNUgvOwhNnQsjwCp+kqaQ==
+
+"teamup@file:.":
+  version "0.1.0"
+  dependencies:
+    "@coreui/icons" "^3.0.1"
+    "@coreui/icons-react" "^2.3.0"
+    "@fortawesome/fontawesome-svg-core" "^6.7.2"
+    "@fortawesome/free-solid-svg-icons" "^6.7.2"
+    "@fortawesome/react-fontawesome" "^0.2.2"
+    "@mui/material" "^7.1.0"
+    "@mui/x-charts" "^8.3.1"
+    "@testing-library/dom" "^10.4.0"
+    "@testing-library/jest-dom" "^6.6.3"
+    "@testing-library/react" "^16.3.0"
+    "@testing-library/user-event" "^13.5.0"
+    axios "^1.9.0"
+    jwt-decode "^4.0.0"
+    leaflet "^1.9.4"
+    pusher-js "^8.4.0"
+    react "^19.1.0"
+    react-circular-progressbar "^2.2.0"
+    react-dom "^19.1.0"
+    react-icons "^5.5.0"
+    react-leaflet "^5.0.0"
+    react-router-dom "^7.5.1"
+    react-scripts "5.0.1"
+    react-toastify "^11.0.5"
+    recharts "^2.15.3"
+    sass "^1.87.0"
+    sweetalert2 "^11.21.2"
+    tailwindcss "^4.1.7"
+    teamup "file:C:/Users/Admin/AppData/Local/Yarn/Cache/v6/npm-teamup-0.1.0-9dafebea-8653-40dd-b563-31e30002a1ae-1748244945810/node_modules/teamup"
+    web-vitals "^2.1.4"
 
 temp-dir@^2.0.0:
   version "2.0.0"

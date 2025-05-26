@@ -38,6 +38,8 @@ const LoginPage = () => {
 
       // Lưu thông tin xác thực
       const userData = saveAuthData(response);
+      const ownerId = userData.id || userData.userId;
+
       console.log("User data:", userData);
       if (userData.role === "User") {
         // Đăng nhập thành công - log thông tin và chuyển hướng
@@ -45,6 +47,7 @@ const LoginPage = () => {
         navigate(ROUTER.USER.HOME);
       } else if (userData.role === "Owner") {
         console.log("Đăng nhập thành công!", userData);
+        localStorage.setItem("ownerId", ownerId);
         navigate(ROUTER.OWNER.HOME);
       } else if (userData.role === "Coach") {
         console.log("Đăng nhập thành công!", userData);
