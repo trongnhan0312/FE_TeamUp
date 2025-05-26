@@ -58,10 +58,11 @@ const Calendar = ({ onDateSelect, selectedDate }) => {
     if (isPastDate(day)) return; // không cho chọn ngày quá khứ
 
     const clickedDate = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
-      day
-    );
+    currentDate.getFullYear(),
+    currentDate.getMonth(),
+    day,
+    12, 0, 0
+  );
 
     onDateSelect(clickedDate);
   };
