@@ -1,40 +1,41 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Slider from "rc-slider";
+import "rc-slider/assets/index.css";
 import "./FilterSection.scss";
-import { timeToTimeSpan } from "../../../../utils/timeUtils";
+import { minutesToTime, timeToMinutes } from "../../../../utils/timeUtils";
 
 const FilterSection = ({ onFiltersChange, filters }) => {
   const [localFilters, setLocalFilters] = useState({
     name: filters?.name || "",
     maxPlayers: filters?.maxPlayers || "",
     maxRoomFee: filters?.maxRoomFee || "",
-    // startTime: { hours: 5, minutes: 0 },
-    // endTime: { hours: 18, minutes: 0 },
     status: "Waiting",
+    startTime: filters?.startTime || "00:00",
+    endTime: filters?.endTime || "23:59",
     ...filters,
   });
 
+  const [timeRange, setTimeRange] = useState([
+    timeToMinutes(localFilters.startTime),
+    timeToMinutes(localFilters.endTime),
+  ]);
+
+  useEffect(() => {
+    setTimeRange([
+      timeToMinutes(localFilters.startTime),
+      timeToMinutes(localFilters.endTime),
+    ]);
+  }, [localFilters.startTime, localFilters.endTime]);
+
   const updateFilter = (key, value) => {
-    const newFilters = { ...localFilters, [key]: value };
-    setLocalFilters(newFilters);
+    setLocalFilters((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+  };
 
-    // Convert to API format
-    const apiFilters = { ...newFilters };
-
-    // Convert time to TimeSpan format
-    if (newFilters.startTime) {
-      apiFilters.startTime = timeToTimeSpan(
-        newFilters.startTime.hours,
-        newFilters.startTime.minutes
-      );
-    }
-    if (newFilters.endTime) {
-      apiFilters.endTime = timeToTimeSpan(
-        newFilters.endTime.hours,
-        newFilters.endTime.minutes
-      );
-    }
-
-    // Remove empty values
+  useEffect(() => {
+    const apiFilters = { ...localFilters };
     Object.keys(apiFilters).forEach((key) => {
       if (
         apiFilters[key] === "" ||
@@ -44,26 +45,32 @@ const FilterSection = ({ onFiltersChange, filters }) => {
         delete apiFilters[key];
       }
     });
-
     onFiltersChange(apiFilters);
-  };
+  }, [localFilters]);
 
   const resetFilters = () => {
-    const resetFilters = {
+    const reset = {
       name: "",
       maxPlayers: "",
       maxRoomFee: "",
-    //   startTime: { hours: 5, minutes: 0 },
-    //   endTime: { hours: 18, minutes: 0 },
       status: "Waiting",
+      startTime: "00:00",
+      endTime: "23:59",
     };
-    setLocalFilters(resetFilters);
+    setLocalFilters(reset);
+    setTimeRange([0, 1439]);
     onFiltersChange({});
+  };
+
+  const handleTimeRangeChange = (range) => {
+    setTimeRange(range);
+    updateFilter("startTime", minutesToTime(range[0]));
+    updateFilter("endTime", minutesToTime(range[1]));
   };
 
   return (
     <div className="filter-section">
-      {/* Search by name */}
+      {/* Tên phòng */}
       <div className="filter-group">
         <h3>Tên phòng</h3>
         <input
@@ -75,7 +82,7 @@ const FilterSection = ({ onFiltersChange, filters }) => {
         />
       </div>
 
-      {/* Max Players filter */}
+      {/* Số người tối đa */}
       <div className="filter-group">
         <h3>Số người tối đa</h3>
         <input
@@ -93,7 +100,7 @@ const FilterSection = ({ onFiltersChange, filters }) => {
         />
       </div>
 
-      {/* Max Room Fee filter */}
+      {/* Giá tối đa */}
       <div className="filter-group">
         <h3>Giá tối đa (VNĐ)</h3>
         <div className="price-input">
@@ -114,87 +121,23 @@ const FilterSection = ({ onFiltersChange, filters }) => {
         </div>
       </div>
 
-      {/* Time Range filter */}
-      {/* <div className="filter-group">
+      {/* Giờ chơi */}
+      <div className="filter-group">
         <h3>Giờ chơi</h3>
-        <div className="time-range">
-          <div className="time-display">
-            {formatTimeDisplay(
-              localFilters.startTime.hours,
-              localFilters.startTime.minutes
-            )}{" "}
-            -{" "}
-            {formatTimeDisplay(
-              localFilters.endTime.hours,
-              localFilters.endTime.minutes
-            )}
-          </div>
-
-          <div className="time-inputs">
-            <div className="time-input-group">
-              <label>Từ</label>
-              <div className="time-input">
-                <input
-                  type="number"
-                  min="0"
-                  max="23"
-                  value={localFilters.startTime.hours}
-                  onChange={(e) =>
-                    updateFilter("startTime", {
-                      ...localFilters.startTime,
-                      hours: Number.parseInt(e.target.value) || 0,
-                    })
-                  }
-                />
-                <span>:</span>
-                <input
-                  type="number"
-                  min="0"
-                  max="59"
-                  value={localFilters.startTime.minutes}
-                  onChange={(e) =>
-                    updateFilter("startTime", {
-                      ...localFilters.startTime,
-                      minutes: Number.parseInt(e.target.value) || 0,
-                    })
-                  }
-                />
-              </div>
-            </div>
-
-            <div className="time-input-group">
-              <label>Đến</label>
-              <div className="time-input">
-                <input
-                  type="number"
-                  min="0"
-                  max="23"
-                  value={localFilters.endTime.hours}
-                  onChange={(e) =>
-                    updateFilter("endTime", {
-                      ...localFilters.endTime,
-                      hours: Number.parseInt(e.target.value) || 0,
-                    })
-                  }
-                />
-                <span>:</span>
-                <input
-                  type="number"
-                  min="0"
-                  max="59"
-                  value={localFilters.endTime.minutes}
-                  onChange={(e) =>
-                    updateFilter("endTime", {
-                      ...localFilters.endTime,
-                      minutes: Number.parseInt(e.target.value) || 0,
-                    })
-                  }
-                />
-              </div>
-            </div>
-          </div>
+        <div className="time-labels">
+          <span>{minutesToTime(timeRange[0])}</span>
+          <span>{minutesToTime(timeRange[1])}</span>
         </div>
-      </div> */}
+        <Slider
+          range
+          min={0}
+          max={1439}
+          step={15}
+          allowCross={false}
+          value={timeRange}
+          onChange={handleTimeRangeChange}
+        />
+      </div>
 
       <button className="reset-filters-btn" onClick={resetFilters}>
         Đặt lại bộ lọc
