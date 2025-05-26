@@ -86,7 +86,6 @@ const MainContent = ({ filters, currentType }) => {
   return (
     <div className="main-content">
       <div className="content-header">
-        <h2>Danh sách phòng {currentType}</h2>
         <div className="results-info">
           {loading ? (
             <span>Đang tải...</span>
