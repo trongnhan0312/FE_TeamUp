@@ -18,6 +18,7 @@
     "jwt-decode": "^4.0.0",
     "leaflet": "^1.9.4",
     "pusher-js": "^8.4.0",
+    "rc-slider": "^11.1.8",
     "react": "^19.1.0",
     "react-circular-progressbar": "^2.2.0",
     "react-dom": "^19.1.0",
