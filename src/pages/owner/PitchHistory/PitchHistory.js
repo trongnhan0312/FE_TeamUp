@@ -1,7 +1,8 @@
 import { memo, useState } from "react";
 import "./style.scss";
 import CircleStat from "../CircleStat";
-const data = [
+
+const dataInit = [
   {
     name: "Elena Winston",
     code: "QW-MN6789",
@@ -29,7 +30,6 @@ const data = [
     price: 248000,
     status: "Cancelled",
   },
-  // Thêm các dòng giống mẫu, hoặc nhiều bản ghi tương tự...
 ];
 
 const statusColors = {
@@ -40,11 +40,18 @@ const statusColors = {
 
 const PitchHistory = () => {
   const [filter, setFilter] = useState("Mới nhất");
+  const [data, setData] = useState(dataInit);
 
-  const totalOrders = 346;
-  const completed = 346;
-  const inProgress = 346;
-  const cancelled = 346;
+  const totalOrders = data.length;
+  const completed = data.filter((d) => d.status === "Confirmed").length;
+  const inProgress = data.filter((d) => d.status === "Pending").length;
+  const cancelled = data.filter((d) => d.status === "Cancelled").length;
+
+  const handleStatusChange = (index, newStatus) => {
+    const newData = [...data];
+    newData[index].status = newStatus;
+    setData(newData);
+  };
 
   return (
     <div className="pitchHistory">
@@ -54,14 +61,14 @@ const PitchHistory = () => {
         </div>
         <div>
           <CircleStat title="Đã hoàn thành" value={completed} percentage={75} />
-        </div>{" "}
+        </div>
         <div>
           <CircleStat
             title="Đang thực hiện"
             value={inProgress}
             percentage={75}
           />
-        </div>{" "}
+        </div>
         <div>
           <CircleStat title="Đã hủy" value={cancelled} percentage={75} />
         </div>
@@ -117,12 +124,22 @@ const PitchHistory = () => {
                     })}
                   </td>
                   <td>
-                    <span
-                      className="statusLabel"
-                      style={{ backgroundColor: statusColors[item.status] }}
+                    <select
+                      value={item.status}
+                      onChange={(e) => handleStatusChange(idx, e.target.value)}
+                      style={{
+                        backgroundColor: statusColors[item.status],
+                        color: "white",
+                        border: "none",
+                        padding: "4px 8px",
+                        borderRadius: 4,
+                        cursor: "pointer",
+                      }}
                     >
-                      {item.status}
-                    </span>
+                      <option value="Confirmed">Confirmed</option>
+                      <option value="Pending">Pending</option>
+                      <option value="Cancelled">Cancelled</option>
+                    </select>
                   </td>
                 </tr>
               ))}

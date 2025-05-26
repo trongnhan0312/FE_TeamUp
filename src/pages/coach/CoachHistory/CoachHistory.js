@@ -47,7 +47,7 @@ const CoachHistory = () => {
   const cancelled = 346;
 
   return (
-    <div className="pitchHistory">
+    <div className="CoachhHistory">
       <div className="summary">
         <div>
           <CircleStat title="Tổng đơn" value={totalOrders} percentage={75} />

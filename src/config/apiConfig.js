@@ -58,10 +58,17 @@ export const ENDPOINTS = {
     SEND_MESSAGE: "/chat/send-message",
   },
   ROOM: {
-    GET_ALL: "/room/all"
+    GET_ALL: "/room/all",
   },
-  ROOM_JOIN_REQUEST:{
-    CREATE_ROOM_JOIN_REQUEST: "/roomjoinrequest/create"
-  }
+  ROOM_JOIN_REQUEST: {
+    CREATE_ROOM_JOIN_REQUEST: "/roomjoinrequest/create",
+  },
+  OWNER: {
+    OWNER_STATS: "courtbooking/user-court-totalprice-stats/owner",
+    COURTS: "court/all",
+    WEEKBOOKED_SLOTS: "courtbooking/weekly-booked-slots",
+    MOST_BOOKED_COURTS: "courtbooking/stats/most-booked-by-owner",
+    BOOKING_HISTORY: "courtbooking/all",
+  },
   // Các endpoints khác
 };

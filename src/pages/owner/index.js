@@ -1,5 +1,12 @@
-import { memo, useState } from "react";
+import { memo, useMemo, useState, useEffect } from "react";
+
 import "./style.scss";
+import {
+  fetchOwnerStats,
+  fetchMostBookedCourtByOwner,
+  fetchOwnerCourtsWithBookings,
+  fetchBookingHistory,
+} from "../../services/ownerService";
 import {
   BarChart,
   Bar,
@@ -16,135 +23,212 @@ import {
 } from "recharts";
 
 import CircleStat from "./CircleStat";
-const statCards = [
-  { title: "Số giờ thuê", value: 346 },
-  { title: "Số người tiếp cận", value: 346 },
-  { title: "Doanh thu hôm nay", value: 221 },
-  { title: "Tổng doanh thu", value: "xx.000.000" },
-];
 
-const data = [
-  { name: "Jan", current: 90, previous: 110 },
-  { name: "Feb", current: 55, previous: 45 },
-  { name: "Mar", current: 70, previous: 95 },
-  { name: "Apr", current: 80, previous: 100 },
-  { name: "May", current: 30, previous: 120 },
-  { name: "Jun", current: 100, previous: 50 },
-  { name: "Jul", current: 90, previous: 45 },
-  { name: "Aug", current: 50, previous: 110 },
-];
-const hourlyData = [
-  { time: "08:00", value: 20 },
-  { time: "09:00", value: 30 },
-  { time: "10:00", value: 40 },
-  { time: "11:00", value: 25 },
-  { time: "12:00", value: 35 },
-  { time: "13:00", value: 50 },
-  { time: "14:00", value: 20 },
-];
-const monthlyData = [
-  { name: "T1", lastMonth: 70, thisMonth: 90 },
-  { name: "T2", lastMonth: 50, thisMonth: 65 },
-  { name: "T3", lastMonth: 30, thisMonth: 35 },
-  { name: "T4", lastMonth: 40, thisMonth: 50 },
-  { name: "T5", lastMonth: 20, thisMonth: 25 },
-  { name: "T6", lastMonth: 60, thisMonth: 100 },
-  { name: "T7", lastMonth: 80, thisMonth: 65 },
-  { name: "T8", lastMonth: 60, thisMonth: 40 },
-  { name: "T9", lastMonth: 30, thisMonth: 20 },
-  { name: "T10", lastMonth: 20, thisMonth: 25 },
-  { name: "T11", lastMonth: 40, thisMonth: 45 },
-  { name: "T12", lastMonth: 90, thisMonth: 60 },
-];
-const bookingHistory = [
-  {
-    name: "Elena Watson",
-    code: "QW-IN4789",
-    date: "03/03/2025",
-    time: "08:25 - 10:50",
-    room: "Cửa 1",
-    revenue: "248.000VNĐ",
-    status: "Confirmed",
-  },
-  {
-    name: "Elena Watson",
-    code: "QW-IN4789",
-    date: "03/03/2025",
-    time: "08:25 - 10:50",
-    room: "Cửa 1",
-    revenue: "248.000VNĐ",
-    status: "Pending",
-  },
-  {
-    name: "Elena Watson",
-    code: "QW-IN4789",
-    date: "03/03/2025",
-    time: "08:25 - 10:50",
-    room: "Cửa 1",
-    revenue: "248.000VNĐ",
-    status: "Confirmed",
-  },
-  {
-    name: "Elena Watson",
-    code: "QW-IN4789",
-    date: "03/03/2025",
-    time: "08:25 - 10:50",
-    room: "Cửa 1",
-    revenue: "248.000VNĐ",
-    status: "Confirmed",
-  },
-];
-const productStats = [
-  { label: "Đã hoàn thành", value: 55, color: "#A3E635" },
-  { label: "Đang thực hiện", value: 30, color: "#e1d48e" },
-  { label: "Có tỷ lệ", value: 20, color: "#bba184" },
-  { label: "Chưa ọc", value: 15, color: "#7d7e79" },
-];
 const Owner = () => {
   const [filter, setFilter] = useState("Mới nhất");
+  const [courts, setCourts] = useState([]);
+  const [uniquePlayerCount, setUniquePlayerCount] = useState(0);
+  const [totalCourtBookings, setTotalCourtBookings] = useState(0);
+  const [totalRevenue, setTotalRevenue] = useState(0);
+  const [mostBookedCourt, setMostBookedCourt] = useState(null);
+  const [bookingHistory, setBookingHistory] = useState([]);
+  const [hourlyData, setHourlyData] = useState([]);
+  const [todayRevenue, setTodayRevenue] = useState(0);
+
+  // Hàm lọc booking theo tháng hiện tại và tháng trước, tạo dữ liệu cho BarChart
+  const getMonthlyBookingData = (bookings) => {
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth(); // 0-based
+    const lastMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+    const lastMonthYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+
+    const monthlyData = Array.from({ length: 12 }, (_, i) => ({
+      name: `T${i + 1}`,
+      thisMonth: 0,
+      lastMonth: 0,
+    }));
+
+    bookings.forEach((booking) => {
+      const date = new Date(booking.startTime);
+      if (
+        date.getFullYear() === currentYear &&
+        date.getMonth() === currentMonth
+      ) {
+        monthlyData[currentMonth].thisMonth += 1;
+      }
+      if (
+        date.getFullYear() === lastMonthYear &&
+        date.getMonth() === lastMonth
+      ) {
+        monthlyData[lastMonth].lastMonth += 1;
+      }
+    });
+
+    return monthlyData;
+  };
+
+  useEffect(() => {
+    const storedOwnerId = localStorage.getItem("ownerId");
+    if (!storedOwnerId) {
+      console.warn("Owner ID not found");
+      return;
+    }
+
+    fetchOwnerCourtsWithBookings(storedOwnerId)
+      .then((courtsWithBookings) => {
+        setCourts(courtsWithBookings);
+      })
+      .catch(console.error);
+
+    fetchOwnerStats(storedOwnerId)
+      .then((data) => {
+        if (data) {
+          setUniquePlayerCount(data.uniquePlayerCount);
+          setTotalCourtBookings(data.totalCourtBookings);
+          setTotalRevenue(data.totalRevenue);
+        }
+      })
+      .catch(console.error);
+
+    fetchMostBookedCourtByOwner(storedOwnerId)
+      .then((data) => {
+        if (data) setMostBookedCourt(data);
+      })
+      .catch(console.error);
+
+    fetchBookingHistory(1, 100)
+      .then((data) => {
+        console.log("Booking History:", data);
+        setBookingHistory(data);
+
+        const today = new Date();
+        const todayStr = today.toDateString();
+
+        const todayBookings = data.filter((booking) => {
+          const start = new Date(booking.startTime);
+          return start.toDateString() === todayStr;
+        });
+
+        const totalRevenueToday = todayBookings.reduce(
+          (sum, booking) => sum + (booking.totalPrice || 0),
+          0
+        );
+        console.log("Doanh thu hôm nay:", totalRevenueToday);
+        setTodayRevenue(totalRevenueToday);
+
+        const revenueByHour = {};
+        todayBookings.forEach((booking) => {
+          const start = new Date(booking.startTime);
+          const hourKey = start.getHours().toString().padStart(2, "0") + ":00";
+          if (!revenueByHour[hourKey]) revenueByHour[hourKey] = 0;
+          revenueByHour[hourKey] += booking.totalPrice || 0;
+        });
+
+        const hourlyDataArray = Object.entries(revenueByHour)
+          .map(([time, value]) => ({ time, value }))
+          .sort((a, b) => (a.time > b.time ? 1 : -1));
+
+        setHourlyData(hourlyDataArray);
+      })
+      .catch(console.error);
+  }, []);
+
+  const bookingDataForChart = courts.map((court) => ({
+    name: court.name,
+    current: court.weeklyBookingCount || 0,
+    previous: 0,
+  }));
+
+  const pieChartData = mostBookedCourt
+    ? [
+        {
+          label: mostBookedCourt.court.name,
+          value: mostBookedCourt.bookingCount,
+          color: "#A3E635",
+        },
+      ]
+    : [];
+  const getMonthlyRevenue = (bookings) => {
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth();
+
+    return bookings.reduce((sum, booking) => {
+      const start = new Date(booking.startTime);
+      if (
+        start.getFullYear() === currentYear &&
+        start.getMonth() === currentMonth
+      ) {
+        return sum + (booking.totalPrice || 0);
+      }
+      return sum;
+    }, 0);
+  };
+  const monthlyRevenue = useMemo(
+    () => getMonthlyRevenue(bookingHistory),
+    [bookingHistory]
+  );
+  const monthlyData = getMonthlyBookingData(bookingHistory);
+
   return (
     <div className="owner-page">
       <div className="stat-cards flex flex-wrap gap-6">
-        <CircleStat title="Số giờ thuê" value={346} percentage={75} />
-        <CircleStat title="Số người tiếp cận" value={346} percentage={75} />
-        <CircleStat title="Doanh thu hôm nay" value={221} percentage={60} />
-        <CircleStat title="Tổng doanh thu" value="xx.000.000" percentage={85} />
+        <CircleStat
+          title="Số người tiếp cận"
+          value={uniquePlayerCount}
+          percentage={75}
+        />
+
+        <CircleStat
+          title="Tổng đơn đặt"
+          value={totalCourtBookings}
+          percentage={75}
+        />
+        <CircleStat
+          title="Doanh Thu Tháng"
+          value={`${monthlyRevenue.toLocaleString("vi-VN")} VNĐ`}
+          percentage={75}
+        />
+        <CircleStat
+          title="Tổng doanh thu"
+          value={`${totalRevenue.toLocaleString("vi-VN")} VNĐ`}
+          percentage={85}
+        />
       </div>
 
       <div className="charts">
         <div className="chart-box">
           <h3>Đơn đặt</h3>
           <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={data}>
+            <BarChart data={bookingDataForChart}>
               <XAxis dataKey="name" />
               <YAxis />
               <Tooltip />
-              <Bar dataKey="current" fill="#000" name="Tháng này" />
-              <Bar dataKey="previous" fill="#A3E635" name="Tháng trước" />
+              <Bar dataKey="current" fill="#000" name="Tuần này" />
+              <Bar dataKey="previous" fill="#A3E635" name="Tuần trước" />
             </BarChart>
           </ResponsiveContainer>
         </div>
 
         <div className="chart-box">
           <div className="flex justify-between items-center mb-2">
-            <div
-              style={{
-                display: "flex",
-                flexWrap: "nowrap",
-                justifyContent: "space-between",
-              }}
-            >
-              <h3 className="text-lg font-semibold">Doanh thu hôm nay</h3>
-            </div>
+            <h3 className="text-lg font-semibold">Doanh thu hôm nay</h3>
             <p className="text-2xl font-bold">
-              <strong>2.000.000VNĐ</strong>
+              <strong>{todayRevenue.toLocaleString("vi-VN")} VNĐ</strong>
             </p>
           </div>
 
           <ResponsiveContainer width="100%" height={250}>
-            <LineChart data={hourlyData}>
+            <LineChart
+              data={
+                hourlyData.length > 0
+                  ? hourlyData
+                  : [{ time: "00:00", value: 0 }]
+              }
+            >
               <XAxis dataKey="time" stroke="#555" />
-              <YAxis domain={[0, 60]} stroke="#555" />
+              <YAxis stroke="#555" />
               <Tooltip />
               <Line
                 type="monotone"
@@ -157,8 +241,8 @@ const Owner = () => {
           </ResponsiveContainer>
         </div>
       </div>
+
       <div className="month-chart-stats-container">
-        {/* Biểu đồ tháng */}
         <div className="monthly-bar-chart">
           <ResponsiveContainer width="100%" height={350}>
             <BarChart data={monthlyData} margin={{ top: 15 }}>
@@ -198,44 +282,47 @@ const Owner = () => {
           </ResponsiveContainer>
         </div>
 
-        {/* Phần dưới: pie chart và bảng lịch sử */}
         <div className="bottom-section">
-          {/* Pie chart */}
           <div className="pie-chart-section">
-            <h4>Sản đặt nhiều nhất</h4>
-            <ResponsiveContainer width={140} height={140}>
-              <PieChart>
-                <Pie
-                  data={productStats}
-                  cx={70}
-                  cy={70}
-                  innerRadius={40}
-                  outerRadius={60}
-                  paddingAngle={5}
-                  dataKey="value"
-                  label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
-                  labelLine={false}
-                >
-                  {productStats.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-              </PieChart>
-            </ResponsiveContainer>
+            <h4>Sân đặt nhiều nhất</h4>
 
-            <div className="pie-legend">
-              {productStats.map(({ label, color, value }) => (
-                <div key={label} className="legend-item">
-                  <span
-                    className="color-box"
-                    style={{ backgroundColor: color }}
-                  />
-                  <span>
-                    {label}: {value}%
-                  </span>
+            {pieChartData.length > 0 && (
+              <>
+                <ResponsiveContainer width={140} height={140}>
+                  <PieChart>
+                    <Pie
+                      data={pieChartData}
+                      cx={70}
+                      cy={70}
+                      innerRadius={40}
+                      outerRadius={60}
+                      paddingAngle={5}
+                      dataKey="value"
+                      label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
+                      labelLine={false}
+                    >
+                      {pieChartData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                  </PieChart>
+                </ResponsiveContainer>
+
+                <div className="pie-legend">
+                  {pieChartData.map(({ label, color, value }) => (
+                    <div key={label} className="legend-item">
+                      <span
+                        className="color-box"
+                        style={{ backgroundColor: color }}
+                      />
+                      <span>
+                        {label}: {value}
+                      </span>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </>
+            )}
           </div>
 
           {/* Bảng lịch sử đặt sân */}
@@ -270,21 +357,39 @@ const Owner = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {bookingHistory.map((row, i) => (
-                    <tr key={i}>
-                      <td>{row.name}</td>
-                      <td>{row.code}</td>
-                      <td>{row.date}</td>
-                      <td>{row.time}</td>
-                      <td>{row.room}</td>
-                      <td>{row.revenue}</td>
-                      <td>
-                        <span className={`status ${row.status.toLowerCase()}`}>
-                          {row.status}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
+                  {bookingHistory.map((booking) => {
+                    const start = new Date(booking.startTime);
+                    const end = new Date(booking.endTime);
+                    return (
+                      <tr key={booking.id}>
+                        <td>{booking.user?.fullName || "N/A"}</td>
+                        <td>{booking.id}</td>
+                        <td>{start.toLocaleDateString("vi-VN")}</td>
+                        <td>
+                          {start.toLocaleTimeString("vi-VN", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}{" "}
+                          -{" "}
+                          {end.toLocaleTimeString("vi-VN", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </td>
+                        <td>{booking.court?.name || "N/A"}</td>
+                        <td>
+                          {booking.totalPrice?.toLocaleString("vi-VN")} VNĐ
+                        </td>
+                        <td>
+                          <span
+                            className={`status ${booking.status?.toLowerCase()}`}
+                          >
+                            {booking.status}
+                          </span>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
