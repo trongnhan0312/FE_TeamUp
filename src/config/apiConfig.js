@@ -62,6 +62,10 @@ export const ENDPOINTS = {
   },
   ROOM_JOIN_REQUEST:{
     CREATE_ROOM_JOIN_REQUEST: "/roomjoinrequest/create"
+  },
+  VOUCHER: {
+    GET_ALL: "/voucher/all",
+    GET_BY_ID: "/voucher"
   }
   // Các endpoints khác
 };
