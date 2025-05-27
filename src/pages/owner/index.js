@@ -80,13 +80,14 @@ const Owner = () => {
       // Sắp xếp ngày cũ nhất trước (startTime tăng dần)
       filtered.sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
     } else if (filter === "Xác nhận") {
-      // Lọc booking có trạng thái là "Xác nhận" (hoặc status tương tự)
+      const acceptedStatuses = ["confirmed", "completed"];
       filtered = filtered.filter(
-        (booking) =>
-          booking.status?.toLowerCase() === "xác nhận" ||
-          booking.status?.toLowerCase() === "confirmed" // tùy theo API
+        (item) =>
+          item.status &&
+          acceptedStatuses.includes(item.status.trim().toLowerCase())
       );
     }
+
     if (searchTerm.trim() !== "") {
       const lowerSearch = searchTerm.toLowerCase();
 
@@ -155,7 +156,7 @@ const Owner = () => {
         });
 
         console.log(
-          "Booking sân ngày mai:",
+          "Booking sân Hôm Nay:",
           todayBookings.map((b) => ({
             id: b.id,
             courtName: b.court?.name,
@@ -436,9 +437,9 @@ const Owner = () => {
               onChange={(e) => setFilter(e.target.value)}
               className="statusFilter"
             >
-              <option>Mới nhất</option>
-              <option>Cũ nhất</option>
-              <option>Xác nhận</option>
+              <option value="Mới nhất">Mới nhất</option>
+              <option value="Cũ nhất">Cũ nhất</option>
+              <option value="Xác nhận">Xác nhận</option>
             </select>
             <div className="booking-table-wrapper">
               <table>

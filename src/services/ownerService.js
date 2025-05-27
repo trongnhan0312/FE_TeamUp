@@ -246,3 +246,74 @@ export const updateBooking = async (bookingId, status) => {
     throw error;
   }
 };
+
+// Hàm lấy tất cả khu thể thao (sports complexes) theo ownerId
+export const fetchSportsComplexesByOwner = async (
+  ownerId,
+  pageNumber = 1,
+  pageSize = 10
+) => {
+  try {
+    const url = getApiUrl(
+      `${ENDPOINTS.OWNER.SPORTS_COMPLEXES}?pageNumber=${pageNumber}&pageSize=${pageSize}`
+    );
+    console.log("Gọi API lấy khu thể thao:", url);
+    const response = await axiosInstance.get(url);
+
+    if (
+      response.data.isSuccessed &&
+      response.data.resultObj?.items &&
+      Array.isArray(response.data.resultObj.items)
+    ) {
+      // Lọc các khu thể thao có owner.id trùng với ownerId truyền vào
+      const filtered = response.data.resultObj.items.filter(
+        (item) => item.owner?.id?.toString() === ownerId.toString()
+      );
+      console.log(
+        `Tổng số khu thể thao của ownerId=${ownerId} trên trang ${pageNumber}: ${filtered.length}`
+      );
+      return filtered;
+    }
+    return [];
+  } catch (error) {
+    console.error("Lỗi khi lấy khu thể thao theo ownerId:", error);
+    throw error;
+  }
+};
+
+// Hàm lấy sân theo SportsComplexId với phân trang
+export const fetchCourtsBySportsComplexId = async (
+  sportsComplexId,
+  pageNumber = 1,
+  pageSize = 10000
+) => {
+  try {
+    const url = getApiUrl(
+      `${ENDPOINTS.OWNER.SPORTS_COMPLEXES_DETAIL}?pageNumber=${pageNumber}&pageSize=${pageSize}`
+    );
+    console.log("Gọi API lấy sân:", url);
+    const response = await axiosInstance.get(url);
+
+    if (
+      response.data.isSuccessed &&
+      response.data.resultObj?.items &&
+      Array.isArray(response.data.resultObj.items)
+    ) {
+      // Lọc các sân thuộc sportsComplexId
+      const filteredCourts = response.data.resultObj.items.filter(
+        (court) =>
+          court.sportsComplexModelView?.id?.toString() ===
+          sportsComplexId.toString()
+      );
+      console.log(
+        `Tổng sân trong khu thể thao ${sportsComplexId}:`,
+        filteredCourts.length
+      );
+      return filteredCourts;
+    }
+    return [];
+  } catch (error) {
+    console.error("Lỗi khi lấy sân theo SportsComplexId:", error);
+    throw error;
+  }
+};

@@ -70,6 +70,8 @@ export const ENDPOINTS = {
     MOST_BOOKED_COURTS: "courtbooking/stats/most-booked-by-owner",
     BOOKING_HISTORY: "courtbooking/all",
     BOOKING_UPDATE: "courtbooking/update",
+    SPORTS_COMPLEXES: "sportscomplex/all",
+    SPORTS_COMPLEXES_DETAIL: "court/all",
   },
   // Các endpoints khác
 };

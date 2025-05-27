@@ -169,5 +169,31 @@
         }
       }
     }
+    input[type='number'] {
+      width: 150px;
+      padding: 8px 12px;
+      font-size: 1rem;
+      border: 2px solid #ccc;
+      border-radius: 6px;
+      transition: border-color 0.3s ease;
+      outline: none;
+    
+      &:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+      }
+    }
+    
+    .price {
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: #333;
+      background-color: #f1f1f1;
+      padding: 8px 14px;
+      border-radius: 6px;
+      min-width: 120px;
+      text-align: center;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
   }
   
