@@ -1,0 +1,80 @@
+.sports-complexes {
+    padding: 20px;
+    background-color: #f9f9f9;
+    font-family: Arial, sans-serif;
+    .header-with-add {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      margin-bottom: 20px;
+  
+      h2 {
+        margin: 0;
+        font-size: 1.8rem;
+        color: #2c3e50;
+      }
+  
+      .btn-add {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #b0df21;
+        transition: color 0.3s;
+  
+        &:hover {
+          color: #7fb800;
+        }
+      }
+    }
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+  
+    .complex-list {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+  
+    .complex-card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      overflow: hidden;
+      width: 280px;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
+      &:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+      }
+  
+      .complex-image {
+        width: 100%;
+        height: 160px;
+        object-fit: cover;
+        border-bottom: 1px solid #ddd;
+      }
+  
+      .complex-info {
+        padding: 15px;
+  
+        .complex-name {
+          margin: 0 0 8px 0;
+          font-size: 1.2rem;
+          color: #34495e;
+        }
+  
+        .complex-type {
+          margin: 0;
+          color: #7f8c8d;
+          font-style: italic;
+        }
+      }
+    }
+  }
+  

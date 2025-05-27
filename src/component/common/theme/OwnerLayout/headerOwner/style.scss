@@ -135,13 +135,48 @@
       }
     }
     .icon-link {
-      color: white;          /* Màu mặc định */
+      position: relative;
+      color: white;
       transition: color 0.3s ease;
-    }
     
-    .icon-link:hover {
-      color: #8ad839;            /* Màu khi hover */
-    }
+      &:hover {
+        color: #8ad839;
+      }
     
-  }
+      .tooltip-text {
+        visibility: hidden;
+        width: max-content;
+        background-color: #333;
+        color: #fff;
+        font-size: 10px;           /* nhỏ hơn */
+        text-align: center;
+        border-radius: 4px;
+        padding: 3px 6px;          /* padding nhỏ hơn */
+        position: absolute;
+        z-index: 1000;
+        top: 110%;                 /* nằm dưới icon */
+        right: 0;                  /* canh phải góc icon */
+        transform: none;           /* bỏ translate */
+        opacity: 0;
+        transition: opacity 0.3s;
+        white-space: nowrap;
+        pointer-events: none;
+    
+        &::after {
+          content: "";
+          position: absolute;
+          top: 0;                  /* mũi tên trên tooltip */
+          right: 8px;              /* căn mũi tên về phía phải */
+          border-width: 5px;
+          border-style: solid;
+          border-color: transparent transparent #333 transparent;
+        }
+      }
+    
+      &:hover .tooltip-text {
+        visibility: visible;
+        opacity: 1;
+      }
+    }
+}  
 }

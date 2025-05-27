@@ -15,6 +15,8 @@ import PitchHistory from "./pages/owner/PitchHistory/PitchHistory";
 import BOOKINGMANAGEMENT from "./pages/owner/BookingManagement/BookingManagement";
 import CreateYard from "./pages/owner/CreateYard/CreateYard";
 import ReviewYard from "./pages/owner/ReviewYard/ReviewYard";
+import SportsComplexes from "./pages/owner/SportsComplexes/SportsComplexes";
+import SportsComplexDetail from "./pages/owner/SportsComplexes/SportsComplexesDetail/SportsComplexesDetail";
 import Coach from "./pages/coach";
 import ReviewCoach from "./pages/coach/ReviewCoach/ReviewCoach";
 import CoachHistory from "./pages/coach/CoachHistory/CoachHistory";
@@ -59,6 +61,14 @@ const RouterCustom = () => {
         />
         <Route path={ROUTER.OWNER.CREATEYARD} element={<CreateYard />} />
         <Route path={ROUTER.OWNER.REVIEWYARD} element={<ReviewYard />} />
+        <Route
+          path={ROUTER.OWNER.SportsComplexes}
+          element={<SportsComplexes />}
+        />
+        <Route
+          path={ROUTER.OWNER.SportsComplexDetail}
+          element={<SportsComplexDetail />}
+        />
         <Route path="*" element={<Navigate to="/owner" replace />} />
       </Routes>
     </OwnerLayout>
