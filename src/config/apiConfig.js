@@ -73,5 +73,12 @@ export const ENDPOINTS = {
     SPORTS_COMPLEXES: "sportscomplex/all",
     SPORTS_COMPLEXES_DETAIL: "court/all",
   },
+  ROOM_JOIN_REQUEST:{
+    CREATE_ROOM_JOIN_REQUEST: "/roomjoinrequest/create"
+  },
+  VOUCHER: {
+    GET_ALL: "/voucher/all",
+    GET_BY_ID: "/voucher"
+  }
   // Các endpoints khác
 };

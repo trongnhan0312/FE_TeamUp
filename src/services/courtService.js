@@ -92,6 +92,7 @@ const courtService = {
             formData.append("UserId", Number(bookingData.userId));
             formData.append("StartTime", bookingData.startTime);
             formData.append("EndTime", bookingData.endTime);
+            formData.append("VoucherId", bookingData.voucherId);
             formData.append(
                 "PaymentMethod",
                 bookingData.paymentMethod || "Pending"
