@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight, FaTrash } from "react-icons/fa";
 import "./CourtSchedule.scss";
 import { useNavigate, useParams } from "react-router-dom";
 import courtService from "../../../../services/courtService";
 
-const CourtSchedule = () => {
+const CourtSchedule = ({ userRole = "user" }) => { // Thêm prop userRole
     const { courtId } = useParams();
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [currentWeek, setCurrentWeek] = useState(getWeekDays(new Date()));
@@ -15,11 +15,22 @@ const CourtSchedule = () => {
     const [error, setError] = useState(null);
     const navigate = useNavigate();
 
-    // Thay đổi state để lưu thời gian bắt đầu và kết thúc
+    // State cho single booking (user thường)
     const [startTime, setStartTime] = useState(null);
     const [endTime, setEndTime] = useState(null);
     const [selectedDay, setSelectedDay] = useState(null);
     const [bookingDuration, setBookingDuration] = useState(0);
+
+    // State cho multiple bookings (admin)
+    const [selectedBookings, setSelectedBookings] = useState([]);
+    const [currentSelection, setCurrentSelection] = useState({
+        startTime: null,
+        endTime: null,
+        selectedDay: null
+    });
+
+    // Kiểm tra xem user có phải admin không
+    const isAdmin = userRole === "admin";
 
     // Tạo ngày trong lịch tháng khi currentMonth thay đổi
     useEffect(() => {
@@ -42,39 +53,30 @@ const CourtSchedule = () => {
             const currentHour = today.getHours();
             const currentMinute = today.getMinutes();
 
-            // Tạo một bản sao của ngày hiện tại với giờ đặt về 00:00:00
             const todayStart = new Date(today);
             todayStart.setHours(0, 0, 0, 0);
 
-            // Tìm ngày bắt đầu hợp lệ (ngày đầu tuần hoặc ngày hiện tại, tùy cái nào sau)
             let startDateObj = new Date(currentWeek[0]);
 
-            // So sánh xem ngày đầu tuần có trước ngày hiện tại không
             if (startDateObj < todayStart) {
-                // Nếu ngày đầu tuần đã qua, sử dụng ngày hiện tại làm startDate
                 startDateObj = new Date(todayStart);
             }
 
-            // Format ngày với giờ hiện tại nếu là ngày hôm nay, nếu không thì giờ 00:00
             let formattedStartDate;
 
-            // Kiểm tra xem startDateObj có phải là ngày hôm nay không
             const isToday = startDateObj.getDate() === today.getDate() &&
                 startDateObj.getMonth() === today.getMonth() &&
                 startDateObj.getFullYear() === today.getFullYear();
 
             if (isToday) {
-                // Nếu là ngày hôm nay, sử dụng giờ hiện tại
                 formattedStartDate = formatDateForApi(startDateObj, currentHour, currentMinute);
             } else {
-                // Nếu không phải ngày hôm nay, bắt đầu từ 00:00
                 formattedStartDate = formatDateForApi(startDateObj, 0, 0);
             }
 
             console.log("Gọi API với ngày và giờ:", formattedStartDate);
 
             try {
-                // Không cần truyền currentTimeStr riêng nữa vì đã tích hợp vào formattedStartDate
                 const data = await courtService.getFreeHours(
                     courtId,
                     formattedStartDate
@@ -133,7 +135,6 @@ const CourtSchedule = () => {
         const daysInMonth = lastDayOfMonth.getDate();
         const days = [];
 
-        // Thêm ngày trong tháng hiện tại
         const today = new Date();
         for (let day = 1; day <= daysInMonth; day++) {
             const date = new Date(year, month, day);
@@ -161,17 +162,14 @@ const CourtSchedule = () => {
     }
 
     // Xử lý tháng trước/sau
-    // Xử lý tháng trước/sau
     const handlePrevMonth = () => {
         const prevMonth = new Date(currentMonth);
         prevMonth.setMonth(prevMonth.getMonth() - 1);
 
-        // Lấy tháng hiện tại
         const today = new Date();
-        today.setDate(1); // Đặt về ngày đầu tiên của tháng hiện tại
-        today.setHours(0, 0, 0, 0); // Đặt giờ về 00:00:00
+        today.setDate(1);
+        today.setHours(0, 0, 0, 0);
 
-        // Chỉ cho phép thay đổi nếu tháng trước không ở quá khứ
         if (prevMonth >= today) {
             setCurrentMonth(prevMonth);
         }
@@ -233,29 +231,23 @@ const CourtSchedule = () => {
     // Các timeslot từ 5:00 đến 24:00
     const timeSlots = getTimeSlots();
 
-    // Xử lý khi người dùng chọn một slot
-    const handleSlotClick = (date, time) => {
-        // Kiểm tra xem slot có khả dụng không, nếu không thì ngừng xử lý
+    // Hàm xử lý cho user thường (single booking)
+    const handleSingleBookingSlot = (date, time) => {
         if (!isSlotAvailable(date, time)) {
-            return; // Không làm gì nếu slot đã được đặt (không khả dụng)
+            return;
         }
 
-        // Nếu chưa có giờ bắt đầu hoặc đã có cả giờ bắt đầu và kết thúc, đặt lại
         if (!startTime || (startTime && endTime)) {
             setStartTime(time);
             setEndTime(null);
             setSelectedDay(date);
             setBookingDuration(0);
-        }
-        // Nếu đã có giờ bắt đầu nhưng chưa có giờ kết thúc
-        else if (startTime && !endTime) {
-            // Kiểm tra xem giờ kết thúc có sau giờ bắt đầu không và cùng ngày
+        } else if (startTime && !endTime) {
             const isSameDay = dateToString(selectedDay) === dateToString(date);
             const startHour = parseInt(startTime.split(":")[0]);
             const selectedHour = parseInt(time.split(":")[0]);
 
             if (isSameDay && selectedHour > startHour) {
-                // Kiểm tra xem tất cả các slot giữa startTime và time có khả dụng không
                 const allSlotsAvailable = checkAllSlotsAvailable(
                     date,
                     startHour,
@@ -264,16 +256,13 @@ const CourtSchedule = () => {
 
                 if (allSlotsAvailable) {
                     setEndTime(time);
-                    // Tính số giờ đặt sân
                     setBookingDuration(selectedHour - startHour);
                 } else {
-                    // Nếu có slot nào đó giữa startTime và time không khả dụng
                     alert(
                         "Không thể chọn khoảng thời gian này vì có slot đã được đặt ở giữa."
                     );
                 }
             } else {
-                // Nếu chọn ngày khác hoặc giờ trước giờ bắt đầu, đặt lại
                 setStartTime(time);
                 setEndTime(null);
                 setSelectedDay(date);
@@ -282,15 +271,130 @@ const CourtSchedule = () => {
         }
     };
 
+    // Hàm xử lý cho admin (multiple bookings)
+    const handleMultiBookingSlot = (date, time) => {
+        if (!isSlotAvailable(date, time)) {
+            return;
+        }
+
+        // Kiểm tra xem slot này đã được chọn trong các booking khác chưa
+        const isAlreadySelected = selectedBookings.some(booking =>
+            dateToString(booking.selectedDay) === dateToString(date) &&
+            isTimeInRange(time, booking.startTime, booking.endTime)
+        );
+
+        if (isAlreadySelected) {
+            alert("Khung giờ này đã được chọn trong một booking khác!");
+            return;
+        }
+
+        if (!currentSelection.startTime || (currentSelection.startTime && currentSelection.endTime)) {
+            setCurrentSelection({
+                startTime: time,
+                endTime: null,
+                selectedDay: date
+            });
+        } else if (currentSelection.startTime && !currentSelection.endTime) {
+            const isSameDay = dateToString(currentSelection.selectedDay) === dateToString(date);
+            const startHour = parseInt(currentSelection.startTime.split(":")[0]);
+            const selectedHour = parseInt(time.split(":")[0]);
+
+            if (isSameDay && selectedHour > startHour) {
+                const allSlotsAvailable = checkAllSlotsAvailable(
+                    date,
+                    startHour,
+                    selectedHour
+                );
+
+                if (allSlotsAvailable) {
+                    // Kiểm tra xem có conflict với booking khác không
+                    const hasConflict = selectedBookings.some(booking =>
+                        dateToString(booking.selectedDay) === dateToString(date) &&
+                        hasTimeOverlap(currentSelection.startTime, time, booking.startTime, booking.endTime)
+                    );
+
+                    if (hasConflict) {
+                        alert("Khoảng thời gian này xung đột với booking đã chọn!");
+                        return;
+                    }
+
+                    const newBooking = {
+                        startTime: currentSelection.startTime,
+                        endTime: time,
+                        selectedDay: date,
+                        duration: selectedHour - startHour,
+                        id: Date.now() // Unique ID cho booking
+                    };
+
+                    setSelectedBookings(prev => [...prev, newBooking]);
+                    setCurrentSelection({
+                        startTime: null,
+                        endTime: null,
+                        selectedDay: null
+                    });
+                } else {
+                    alert(
+                        "Không thể chọn khoảng thời gian này vì có slot đã được đặt ở giữa."
+                    );
+                }
+            } else {
+                setCurrentSelection({
+                    startTime: time,
+                    endTime: null,
+                    selectedDay: date
+                });
+            }
+        }
+    };
+
+    // Hàm chính xử lý khi click slot
+    const handleSlotClick = (date, time) => {
+        if (isAdmin) {
+            handleMultiBookingSlot(date, time);
+        } else {
+            handleSingleBookingSlot(date, time);
+        }
+    };
+
+    // Helper function để kiểm tra thời gian có nằm trong range không
+    const isTimeInRange = (time, startTime, endTime) => {
+        const timeHour = parseInt(time.split(":")[0]);
+        const startHour = parseInt(startTime.split(":")[0]);
+        const endHour = parseInt(endTime.split(":")[0]);
+        return timeHour >= startHour && timeHour < endHour;
+    };
+
+    // Helper function để kiểm tra overlap giữa 2 khoảng thời gian
+    const hasTimeOverlap = (start1, end1, start2, end2) => {
+        const start1Hour = parseInt(start1.split(":")[0]);
+        const end1Hour = parseInt(end1.split(":")[0]);
+        const start2Hour = parseInt(start2.split(":")[0]);
+        const end2Hour = parseInt(end2.split(":")[0]);
+
+        return !(end1Hour <= start2Hour || end2Hour <= start1Hour);
+    };
+
+    // Xóa một booking đã chọn (chỉ cho admin)
+    const removeBooking = (bookingId) => {
+        setSelectedBookings(prev => prev.filter(booking => booking.id !== bookingId));
+    };
+
+    // Reset current selection
+    const resetCurrentSelection = () => {
+        setCurrentSelection({
+            startTime: null,
+            endTime: null,
+            selectedDay: null
+        });
+    };
+
     // Thêm hàm mới để kiểm tra tất cả các slot giữa startHour và endHour
     const checkAllSlotsAvailable = (date, startHour, endHour) => {
-        // Chuyển đổi từ giờ sang chuỗi định dạng "HH:00"
         const checkHours = [];
         for (let hour = startHour + 1; hour < endHour; hour++) {
             checkHours.push(`${hour.toString().padStart(2, "0")}:00`);
         }
 
-        // Kiểm tra từng slot
         return checkHours.every((time) => isSlotAvailable(date, time));
     };
 
@@ -301,7 +405,6 @@ const CourtSchedule = () => {
 
         if (!dayData || !dayData.freeSlots) return false;
 
-        // Kiểm tra xem time slot có trong danh sách freeSlots không
         return dayData.freeSlots.some((slot) => {
             const slotStartHour = parseInt(slot.startTime.split(":")[0]);
             const slotEndHour = parseInt(slot.endTime.split(":")[0]);
@@ -311,31 +414,51 @@ const CourtSchedule = () => {
         });
     };
 
-    // Kiểm tra xem một slot có được chọn làm thời gian bắt đầu không
+    // Kiểm tra slot states cho single booking
     const isStartTimeSlot = (date, time) => {
-        return (
-            startTime === time &&
+        if (isAdmin) {
+            return currentSelection.startTime === time &&
+                currentSelection.selectedDay &&
+                dateToString(date) === dateToString(currentSelection.selectedDay);
+        }
+        return startTime === time &&
             selectedDay &&
-            dateToString(date) === dateToString(selectedDay)
-        );
+            dateToString(date) === dateToString(selectedDay);
     };
 
-    // Kiểm tra xem một slot có được chọn làm thời gian kết thúc không
     const isEndTimeSlot = (date, time) => {
-        return (
-            endTime === time &&
+        if (isAdmin) {
+            return currentSelection.endTime === time &&
+                currentSelection.selectedDay &&
+                dateToString(date) === dateToString(currentSelection.selectedDay);
+        }
+        return endTime === time &&
             selectedDay &&
-            dateToString(date) === dateToString(selectedDay)
-        );
+            dateToString(date) === dateToString(selectedDay);
     };
 
-    // Kiểm tra xem một slot có nằm trong khoảng đã chọn không
     const isInSelectedRange = (date, time) => {
-        if (
-            !startTime ||
-            !selectedDay ||
-            dateToString(date) !== dateToString(selectedDay)
-        ) {
+        if (isAdmin) {
+            // Kiểm tra current selection
+            if (currentSelection.startTime && currentSelection.selectedDay &&
+                dateToString(date) === dateToString(currentSelection.selectedDay)) {
+                const timeHour = parseInt(time.split(":")[0]);
+                const startHour = parseInt(currentSelection.startTime.split(":")[0]);
+
+                if (currentSelection.endTime) {
+                    const endHour = parseInt(currentSelection.endTime.split(":")[0]);
+                    return timeHour > startHour && timeHour < endHour;
+                }
+            }
+
+            // Kiểm tra các booking đã chọn
+            return selectedBookings.some(booking =>
+                dateToString(booking.selectedDay) === dateToString(date) &&
+                isTimeInRange(time, booking.startTime, booking.endTime)
+            );
+        }
+
+        if (!startTime || !selectedDay || dateToString(date) !== dateToString(selectedDay)) {
             return false;
         }
 
@@ -347,24 +470,53 @@ const CourtSchedule = () => {
         }
 
         const endHour = parseInt(endTime.split(":")[0]);
-
         return timeHour > startHour && timeHour < endHour;
     };
 
+    // Kiểm tra xem slot có phải là start/end của booking đã chọn không (cho admin)
+    const isSelectedBookingSlot = (date, time, type) => {
+        if (!isAdmin) return false;
+
+        return selectedBookings.some(booking =>
+            dateToString(booking.selectedDay) === dateToString(date) &&
+            booking[type === 'start' ? 'startTime' : 'endTime'] === time
+        );
+    };
+
     const handleCheckout = () => {
-        if (!startTime || !endTime || !selectedDay) return;
+        if (isAdmin) {
+            if (selectedBookings.length === 0) return;
 
-        const bookingData = {
-            courtId,
-            date: dateToString(selectedDay),
-            startTime,
-            endTime,
-            duration: bookingDuration,
-        };
+            const bookingData = {
+                courtId,
+                bookings: selectedBookings.map(booking => ({
+                    date: dateToString(booking.selectedDay),
+                    startTime: booking.startTime,
+                    endTime: booking.endTime,
+                    duration: booking.duration
+                })),
+                totalBookings: selectedBookings.length,
+                totalDuration: selectedBookings.reduce((sum, booking) => sum + booking.duration, 0)
+            };
 
-        navigate("/booking-confirmation", {
-            state: { bookingData },
-        });
+            navigate("/booking-confirmation", {
+                state: { bookingData, isMultiBooking: true },
+            });
+        } else {
+            if (!startTime || !endTime || !selectedDay) return;
+
+            const bookingData = {
+                courtId,
+                date: dateToString(selectedDay),
+                startTime,
+                endTime,
+                duration: bookingDuration,
+            };
+
+            navigate("/booking-confirmation", {
+                state: { bookingData },
+            });
+        }
     };
 
     if (loading && scheduleData.length === 0) {
@@ -404,6 +556,12 @@ const CourtSchedule = () => {
                             </button>
                         </div>
                     </div>
+                    {isAdmin && (
+                        <div className="admin-notice">
+                            <span className="admin-badge">ADMIN</span>
+                            <span>Chế độ đặt sân đa ngày</span>
+                        </div>
+                    )}
                 </div>
 
                 {error && <div className="error-message">{error}</div>}
@@ -440,29 +598,23 @@ const CourtSchedule = () => {
                                 </div>
 
                                 {timeSlots.map((time, timeIndex) => {
-                                    // Kiểm tra xem slot này có khả dụng không
-                                    const isAvailable = isSlotAvailable(
-                                        date,
-                                        time
-                                    );
-
-                                    // Kiểm tra các trạng thái đã chọn
+                                    const isAvailable = isSlotAvailable(date, time);
                                     const isStart = isStartTimeSlot(date, time);
                                     const isEnd = isEndTimeSlot(date, time);
-                                    const isInRange = isInSelectedRange(
-                                        date,
-                                        time
-                                    );
+                                    const isInRange = isInSelectedRange(date, time);
 
-                                    // Xác định class dựa trên trạng thái
-                                    let slotClass = "booked"; // Mặc định là đã đặt
+                                    // Cho admin: kiểm tra các slot đã chọn
+                                    const isSelectedStart = isAdmin && isSelectedBookingSlot(date, time, 'start');
+                                    const isSelectedEnd = isAdmin && isSelectedBookingSlot(date, time, 'end');
+
+                                    let slotClass = "booked";
 
                                     if (isAvailable) {
                                         slotClass = "available";
 
-                                        if (isStart) {
+                                        if (isStart || isSelectedStart) {
                                             slotClass = "start-time";
-                                        } else if (isEnd) {
+                                        } else if (isEnd || isSelectedEnd) {
                                             slotClass = "end-time";
                                         } else if (isInRange) {
                                             slotClass = "in-range";
@@ -475,20 +627,16 @@ const CourtSchedule = () => {
                                             className={`time-slot ${slotClass}`}
                                             onClick={
                                                 isAvailable
-                                                    ? () =>
-                                                        handleSlotClick(
-                                                            date,
-                                                            time
-                                                        )
+                                                    ? () => handleSlotClick(date, time)
                                                     : undefined
                                             }
                                         >
-                                            {isStart && (
+                                            {(isStart || isSelectedStart) && (
                                                 <div className="slot-label">
                                                     BẮT ĐẦU
                                                 </div>
                                             )}
-                                            {isEnd && (
+                                            {(isEnd || isSelectedEnd) && (
                                                 <div className="slot-label">
                                                     KẾT THÚC
                                                 </div>
@@ -583,61 +731,151 @@ const CourtSchedule = () => {
                     </div>
                 </div>
 
-                <div className="booking-info">
-                    <h3>Thông tin đặt sân</h3>
-                    <div className="booking-detail">
-                        <div className="label">Ngày:</div>
-                        <div className="value">
-                            {selectedDay
-                                ? selectedDay.toLocaleDateString("vi-VN")
-                                : "--/--/----"}
+                {/* Thông tin booking cho user thường */}
+                {!isAdmin && (
+                    <div className="booking-info">
+                        <h3>Thông tin đặt sân</h3>
+                        <div className="booking-detail">
+                            <div className="label">Ngày:</div>
+                            <div className="value">
+                                {selectedDay
+                                    ? selectedDay.toLocaleDateString("vi-VN")
+                                    : "--/--/----"}
+                            </div>
+                        </div>
+                        <div className="booking-detail">
+                            <div className="label">Giờ bắt đầu:</div>
+                            <div className="value">
+                                {formatDisplayTime(startTime) || "--:--"}
+                            </div>
+                        </div>
+                        <div className="booking-detail">
+                            <div className="label">Giờ kết thúc:</div>
+                            <div className="value">
+                                {formatDisplayTime(endTime) || "--:--"}
+                            </div>
+                        </div>
+                        <div className="booking-detail">
+                            <div className="label">Tổng thời gian:</div>
+                            <div className="value">
+                                {bookingDuration > 0
+                                    ? `${bookingDuration} giờ`
+                                    : "--"}
+                            </div>
                         </div>
                     </div>
-                    <div className="booking-detail">
-                        <div className="label">Giờ bắt đầu:</div>
-                        <div className="value">
-                            {formatDisplayTime(startTime) || "--:--"}
+                )}
+
+                {/* Thông tin booking cho admin */}
+                {isAdmin && (
+                    <div className="booking-info admin-booking-info">
+                        <h3>Danh sách đặt sân ({selectedBookings.length})</h3>
+
+                        {/* Current selection */}
+                        {currentSelection.startTime && (
+                            <div className="current-selection">
+                                <h4>Đang chọn:</h4>
+                                <div className="booking-detail">
+                                    <div className="label">Giờ bắt đầu:</div>
+                                    <div className="value">
+                                        {formatDisplayTime(currentSelection.startTime)}
+                                    </div>
+                                </div>
+                                <div className="booking-detail">
+                                    <div className="label">Giờ kết thúc:</div>
+                                    <div className="value">
+                                        {formatDisplayTime(currentSelection.endTime) || "Chưa chọn"}
+                                    </div>
+                                </div>
+                                <button
+                                    className="reset-selection-btn"
+                                    onClick={resetCurrentSelection}
+                                >
+                                    Hủy lựa chọn hiện tại
+                                </button>
+                            </div>
+                        )}
+
+                        {/* Selected bookings list */}
+                        <div className="selected-bookings-list">
+                            {selectedBookings.length === 0 ? (
+                                <p className="no-bookings">Chưa có đặt sân nào được chọn</p>
+                            ) : (
+                                selectedBookings.map((booking, index) => (
+                                    <div key={booking.id} className="booking-item">
+                                        <div className="booking-info-row">
+                                            <span className="booking-number">#{index + 1}</span>
+                                            <div className="booking-details">
+                                                <div className="booking-date">
+                                                    {booking.selectedDay.toLocaleDateString("vi-VN")}
+                                                </div>
+                                                <div className="booking-time">
+                                                    {booking.startTime} - {booking.endTime} ({booking.duration}h)
+                                                </div>
+                                            </div>
+                                            <button
+                                                className="remove-booking-btn"
+                                                onClick={() => removeBooking(booking.id)}
+                                                title="Xóa booking này"
+                                            >
+                                                <FaTrash />
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))
+                            )}
                         </div>
+
+                        {/* Summary for admin */}
+                        {selectedBookings.length > 0 && (
+                            <div className="booking-summary">
+                                <div className="summary-row">
+                                    <span className="label">Tổng số booking:</span>
+                                    <span className="value">{selectedBookings.length}</span>
+                                </div>
+                                <div className="summary-row">
+                                    <span className="label">Tổng thời gian:</span>
+                                    <span className="value">
+                                        {selectedBookings.reduce((sum, booking) => sum + booking.duration, 0)} giờ
+                                    </span>
+                                </div>
+                            </div>
+                        )}
                     </div>
-                    <div className="booking-detail">
-                        <div className="label">Giờ kết thúc:</div>
-                        <div className="value">
-                            {formatDisplayTime(endTime) || "--:--"}
-                        </div>
-                    </div>
-                    <div className="booking-detail">
-                        <div className="label">Tổng thời gian:</div>
-                        <div className="value">
-                            {bookingDuration > 0
-                                ? `${bookingDuration} giờ`
-                                : "--"}
-                        </div>
-                    </div>
-                </div>
+                )}
 
                 <div className="time-selection-guide">
-                    <p>Cách đặt sân:</p>
-                    <ol>
-                        <li>Chọn ngày trên lịch hoặc ô ngày</li>
-                        <li>
-                            Chọn một ô xanh lá để đặt{" "}
-                            <strong>giờ bắt đầu</strong>
-                        </li>
-                        <li>
-                            Chọn một ô xanh lá khác để đặt{" "}
-                            <strong>giờ kết thúc</strong>
-                        </li>
-                    </ol>
+                    <p>{isAdmin ? "Cách đặt sân (Admin):" : "Cách đặt sân:"}</p>
+                    {isAdmin ? (
+                        <ol>
+                            <li>Chọn ngày trên lịch hoặc ô ngày</li>
+                            <li>Chọn một ô xanh lá để đặt <strong>giờ bắt đầu</strong> cho booking đầu tiên</li>
+                            <li>Chọn một ô xanh lá khác để đặt <strong>giờ kết thúc</strong> cho booking đó</li>
+                            <li>Có thể tiếp tục chọn <strong>nhiều khung giờ khác</strong> trên cùng ngày hoặc <strong>ngày khác</strong></li>
+                            <li>Sử dụng nút <strong>Xóa</strong> để bỏ bất kỳ booking nào không mong muốn</li>
+                        </ol>
+                    ) : (
+                        <ol>
+                            <li>Chọn ngày trên lịch hoặc ô ngày</li>
+                            <li>Chọn một ô xanh lá để đặt <strong>giờ bắt đầu</strong></li>
+                            <li>Chọn một ô xanh lá khác để đặt <strong>giờ kết thúc</strong></li>
+                        </ol>
+                    )}
                 </div>
 
                 <button
                     className="continue-button"
-                    disabled={!startTime || !endTime}
+                    disabled={isAdmin ? selectedBookings.length === 0 : (!startTime || !endTime)}
                     onClick={handleCheckout}
                 >
-                    {!startTime || !endTime
-                        ? "Vui lòng chọn thời gian đặt sân"
-                        : `Tiếp tục với ${bookingDuration} giờ đã chọn`}
+                    {isAdmin
+                        ? (selectedBookings.length === 0
+                            ? "Vui lòng chọn ít nhất một khung giờ"
+                            : `Tiếp tục với ${selectedBookings.length} booking đã chọn`)
+                        : (!startTime || !endTime
+                            ? "Vui lòng chọn thời gian đặt sân"
+                            : `Tiếp tục với ${bookingDuration} giờ đã chọn`)
+                    }
                 </button>
             </div>
         </div>
