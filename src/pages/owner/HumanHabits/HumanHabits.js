@@ -1,6 +1,12 @@
-import { memo } from "react";
+import { memo, useState, useEffect } from "react";
 import "./style.scss";
 import CircleStat from "../CircleStat";
+import {
+  fetchOwnerStats,
+  fetchMostBookedCourtByOwner,
+  fetchOwnerCourtsWithBookings,
+  fetchBookingHistory,
+} from "../../../services/ownerService"; // import service
 import {
   PieChart,
   Pie,
@@ -80,13 +86,76 @@ const players = [
 ];
 
 const HumanHabits = () => {
+  const [uniquePlayerCount, setUniquePlayerCount] = useState(0);
+  const [players, setPlayers] = useState([]);
+
+  useEffect(() => {
+    const storedOwnerId = localStorage.getItem("ownerId");
+    if (!storedOwnerId) {
+      console.warn("Owner ID not found");
+      return;
+    }
+
+    fetchOwnerStats(storedOwnerId)
+      .then((data) => {
+        if (data) {
+          setUniquePlayerCount(data.uniquePlayerCount);
+        }
+      })
+      .catch(console.error);
+
+    fetchBookingHistory(1, 100)
+      .then((bookings) => {
+        // Nhóm booking theo người chơi
+        const playerMap = new Map();
+
+        bookings.forEach((b) => {
+          const userId = b.user?.id;
+          if (!userId) return;
+
+          const existing = playerMap.get(userId) || {
+            id: userId,
+            name: b.user.fullName || "N/A",
+            avatar: b.user.avatarUrl || `https://i.pravatar.cc/40?u=${userId}`, // fallback avatar
+            lastBooking: null,
+            bookingCount: 0,
+            habit: "",
+          };
+
+          existing.bookingCount++;
+          const bookingDate = new Date(b.startTime);
+          if (
+            !existing.lastBooking ||
+            bookingDate > new Date(existing.lastBooking)
+          ) {
+            existing.lastBooking = bookingDate.toLocaleDateString("vi-VN");
+          }
+
+          // Đơn giản: tạm lấy thói quen theo ngày đặt (vd: sáng/chiều/tối)
+          const hour = bookingDate.getHours();
+          if (hour < 12) existing.habit = "Sáng";
+          else if (hour < 18) existing.habit = "Chiều";
+          else existing.habit = "Tối";
+
+          playerMap.set(userId, existing);
+        });
+
+        // Chuyển Map thành mảng và sắp xếp theo bookingCount giảm dần
+        const playerList = Array.from(playerMap.values()).sort(
+          (a, b) => b.bookingCount - a.bookingCount
+        );
+
+        setPlayers(playerList);
+      })
+      .catch(console.error);
+  }, []);
   return (
     <div className="humanhabits-container">
       <div className="summary-cards">
         <div className="card">
           <CircleStat
             title="Tổng số người đặt sân"
-            value={346}
+            value={uniquePlayerCount}
             percentage={75}
           />
         </div>
@@ -152,6 +221,7 @@ const HumanHabits = () => {
           </table>
         </div>
       </div>
+
       <table className="players-table">
         <thead>
           <tr>
@@ -164,7 +234,7 @@ const HumanHabits = () => {
         </thead>
         <tbody>
           {players.map((p, i) => (
-            <tr key={i}>
+            <tr key={p.id || i}>
               <td className="player-name">
                 <img src={p.avatar} alt={p.name} />
                 {p.name}
@@ -185,4 +255,5 @@ const HumanHabits = () => {
     </div>
   );
 };
+
 export default memo(HumanHabits);

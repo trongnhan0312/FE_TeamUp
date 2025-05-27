@@ -15,7 +15,7 @@ export const ROUTER = {
     SUPPORT_CENTER: "/support-center",
     BLOG: "/blog",
     CHAT: "/chat/:coachId",
-    ROOM: "/room"
+    ROOM: "/room",
   },
   AUTH: {
     LOGIN: "/login",
@@ -29,6 +29,8 @@ export const ROUTER = {
     BOOKINGMANAGEMENT: "/owner/bookingmanagement",
     CREATEYARD: "/owner/createyard",
     REVIEWYARD: "/owner/reviewyard",
+    SportsComplexes: "/owner/sportscomplexes",
+    SportsComplexDetail: "/owner/sportscomplexes/:id",
   },
   COACH: {
     HOME: "/coach",

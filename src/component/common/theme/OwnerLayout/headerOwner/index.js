@@ -15,6 +15,7 @@ import {
   BsGear,
   BsBoxArrowRight,
   BsSearch,
+  BsHouses,
 } from "react-icons/bs";
 import logo from "../../../../../assets/admin/logo.png"; // Import logo
 
@@ -79,18 +80,23 @@ const HeaderOwner = () => {
                 >
                   <li>
                     <li>
-                      <Link to="/owner/humanhabits" className="icon-link">
+                      <Link to="/owner/" className="icon-link">
                         <BsGraphUpArrow />
+                        <div className="tooltip-text">Thống kê tăng trưởng</div>
                       </Link>
                     </li>
                   </li>
                   <li>
                     <Link to="/owner/pitchhistory" className="icon-link">
+                      <div className="tooltip-text">Lịch Sử Đặt Sân</div>
                       <BsFileEarmark />
                     </Link>
                   </li>
                   <li>
-                    <BsClipboardData />
+                    <Link to="/owner/humanhabits" className="icon-link">
+                      <BsClipboardData />
+                      <div className="tooltip-text">Thói Quen Người Dùng</div>
+                    </Link>
                   </li>
                   <li>
                     <Link to="/owner/bookingmanagement" className="icon-link">
@@ -100,11 +106,19 @@ const HeaderOwner = () => {
                   <li>
                     <Link to="/owner/createyard" className="icon-link">
                       <BsHouseAdd />
+                      <div className="tooltip-text">Tạo Sân Thể Thao</div>
                     </Link>
                   </li>
                   <li>
                     <Link to="/owner/reviewyard" className="icon-link">
                       <BsChatHeart />
+                      <div className="tooltip-text">Đánh Giá</div>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/owner/sportscomplexes" className="icon-link">
+                      <BsHouses />
+                      <div className="tooltip-text">Quản Lí Khu Thể Thao</div>
                     </Link>
                   </li>
                 </ul>
