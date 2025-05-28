@@ -81,7 +81,13 @@ export const ENDPOINTS = {
     GET_BY_ID: "/voucher"
   },
   COACH_BOOKING: {
-    CREATE_COACH_BOOKING: "/coachbooking/create"
+    CREATE_COACH_BOOKING: "/coachbooking/create",
+    GET_COACH_STATS: "/coachbooking/user-coach-totalprice-stats",
+    GET_PLAYER_LIST: "/coachbooking/players",
+    GET_MONTHLY_TOTAL: "/coachbooking/monthly-total",
+    GET_WEEKLY_BOOKED_SLOTS: "/coachbooking/weekly-booked-slots",
+    GET_ALL: "/coachbooking/all",
+    GET_TOTAL_PRICE: "/coachbooking/total-price/coach"
   },
   // Các endpoints khác
 };

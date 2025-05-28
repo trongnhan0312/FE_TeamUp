@@ -17,7 +17,7 @@ const coachBookingService = {
 
             return response.data;
         } catch (error) {
-            console.error("Error create room join request:", error);
+            console.error("Error create coach booking:", error);
             if (error.response && error.response.data) {
                 throw {
                     response: error.response,
@@ -28,6 +28,138 @@ const coachBookingService = {
             throw error.response ? error.response.data : error.message;
         }
     },
+    getCoachTotalPriceStats: async (coachId) => {
+        try {
+            const response = await axiosInstance.get(
+                `${ENDPOINTS.COACH_BOOKING.GET_COACH_STATS}/${coachId}`
+            );
+
+            return response.data;
+        } catch (error) {
+            console.error("Error get coach stats:", error);
+            if (error.response && error.response.data) {
+                throw {
+                    response: error.response,
+                    message:
+                        error.response.data.message,
+                };
+            }
+            throw error.response ? error.response.data : error.message;
+        }
+    },
+    getPlayerList: async (coachId) => {
+        try {
+            const response = await axiosInstance.get(
+                `${ENDPOINTS.COACH_BOOKING.GET_PLAYER_LIST}/${coachId}`
+            );
+
+            return response.data;
+        } catch (error) {
+            console.error("Error get player list:", error);
+            if (error.response && error.response.data) {
+                throw {
+                    response: error.response,
+                    message:
+                        error.response.data.message,
+                };
+            }
+            throw error.response ? error.response.data : error.message;
+        }
+    },
+    getMonthlyTotal: async (coachId) => {
+        try {
+            const response = await axiosInstance.get(
+                `${ENDPOINTS.COACH_BOOKING.GET_MONTHLY_TOTAL}/${coachId}`
+            );
+
+            return response.data;
+        } catch (error) {
+            console.error("Error get coachboooking monthly total:", error);
+            if (error.response && error.response.data) {
+                throw {
+                    response: error.response,
+                    message:
+                        error.response.data.message,
+                };
+            }
+            throw error.response ? error.response.data : error.message;
+        }
+    },
+    getWeeklyBookedSlots: async (coachId) => {
+        try {
+            const response = await axiosInstance.get(
+                `${ENDPOINTS.COACH_BOOKING.GET_WEEKLY_BOOKED_SLOTS}/${coachId}`
+            );
+
+            return response.data;
+        } catch (error) {
+            console.error("Error get coachboooking weekly booked slots:", error);
+            if (error.response && error.response.data) {
+                throw {
+                    response: error.response,
+                    message:
+                        error.response.data.message,
+                };
+            }
+            throw error.response ? error.response.data : error.message;
+        }
+    },
+    getAllByCoachId: async (coachId, pageNumber = 1, pageSize = 10) => {
+        try {
+            const response = await axiosInstance.get(
+                ENDPOINTS.COACH_BOOKING.GET_ALL, {
+                params: {
+                    coachId,
+                    pageNumber,
+                    pageSize
+                },
+            });
+
+            return response.data;
+        } catch (error) {
+            console.error("Error get coachboooking weekly booked slots:", error);
+            if (error.response && error.response.data) {
+                throw {
+                    response: error.response,
+                    message:
+                        error.response.data.message,
+                };
+            }
+            throw error.response ? error.response.data : error.message;
+        }
+    },
+    getTotalPriceThisMonth: async (coachId, paymentMethod = "PayOS") => {
+        try {
+            const now = new Date();
+            const month = now.getMonth() + 1;
+            const year = now.getFullYear();
+
+            const response = await axiosInstance.get(
+                ENDPOINTS.COACH_BOOKING.GET_TOTAL_PRICE,
+                {
+                    params: {
+                        coachId,
+                        paymentMethod,
+                        month,
+                        year
+                    }
+                }
+            );
+
+            return response.data;
+        } catch (error) {
+            console.error("Error get coachboooking weekly booked slots:", error);
+            if (error.response && error.response.data) {
+                throw {
+                    response: error.response,
+                    message:
+                        error.response.data.message,
+                };
+            }
+            throw error.response ? error.response.data : error.message;
+        }
+    },
+
 }
 
 export default coachBookingService;
