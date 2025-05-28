@@ -37,7 +37,7 @@ const Header = () => {
                   <Link to="/">Trang chủ</Link>
                 </li>
                 <li>
-                  <Link to="/tim-san">Tìm sân</Link>
+                  <Link to="/court/football">Tìm sân</Link>
                 </li>
                 <li>
                   <Link to="/room">Tìm bạn chơi</Link>
