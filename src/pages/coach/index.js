@@ -1,11 +1,8 @@
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import "./style.scss";
-const scheduleData = [
-  { day: 2, timeSlots: ["09:00", "11:00"] },
-  { day: 2, timeSlots: ["13:00", "14:00"] },
-  { day: 4, timeSlots: ["10:00"] },
-  { day: 5, timeSlots: ["12:00", "14:00"] },
-];
+import { getUserInfo } from "../../utils/auth";
+import coachBookingService from "../../services/coachBookingService";
+import { formatPrice } from "../../utils/formatUtils";
 
 const paymentHistory = [
   {
@@ -50,13 +47,6 @@ const paymentHistory = [
   },
 ];
 
-const students = [
-  { name: "Nguyễn Thị Linh", avatar: "/avatar1.jpg" },
-  { name: "Tăng Mai Phương", avatar: "/avatar1.jpg" },
-  { name: "Trần Anh Nhân", avatar: "/avatar1.jpg" },
-  { name: "Vũ Hoài", avatar: "/avatar1.jpg" },
-];
-
 const daysOfWeek = [
   { label: "THỨ 2", num: 2 },
   { label: "THỨ 3", num: 3 },
@@ -67,7 +57,15 @@ const daysOfWeek = [
   { label: "CHỦ NHẬT", num: 8 },
 ];
 
-const times = ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00"];
+const dayLabelToNum = {
+  "Thứ Hai": 2,
+  "Thứ Ba": 3,
+  "Thứ Tư": 4,
+  "Thứ Năm": 5,
+  "Thứ Sáu": 6,
+  "Thứ Bảy": 7,
+  "Chủ Nhật": 8,
+};
 
 const statusColors = {
   Confirmed: "#8bc34a",
@@ -122,34 +120,137 @@ const Coach = () => {
     return sortNewest ? dateB - dateA : dateA - dateB;
   });
 
+  const coachId = getUserInfo().id;
+
+  const [coachStatsData, setCoachStatsData] = useState(null);
+  const [playerListData, setPlayerListData] = useState([]);
+  const [coachMonthlyTotal, setCoachMonthlyTotal] = useState(null);
+  const [weeklyBookedSlots, setWeeklyBookedSlots] = useState([]);
+  const [coachBookingData, setCoachBookingData] = useState(null);
+  const [revenueInMonth, setRevenueInMonth] = useState(0)
+  const [page, setPage] = useState(1);
+  const pageSize = 10;
+
+  useEffect(() => {
+    const fetchCoachTotalPriceStats = async () => {
+      try {
+        const data = await coachBookingService.getCoachTotalPriceStats(coachId);
+        setCoachStatsData(data.resultObj);
+      } catch (error) {
+        console.error("Lỗi khi lấy thông tin coach booking:", error);
+      }
+    };
+
+    const fetchPlayerList = async () => {
+      try {
+        const data = await coachBookingService.getPlayerList(coachId);
+        setPlayerListData(data.resultObj);
+      } catch (error) {
+        console.error("Lỗi khi lấy thông tin coach booking:", error);
+      }
+    };
+
+    const fetchMonthlyTotal = async () => {
+      try {
+        const data = await coachBookingService.getMonthlyTotal(coachId);
+        setCoachMonthlyTotal(data.resultObj);
+      } catch (error) {
+        console.error("Lỗi khi lấy thông tin coach booking:", error);
+      }
+    };
+
+    const fetchWeeklyBookedSlots = async () => {
+      try {
+        const data = await coachBookingService.getWeeklyBookedSlots(coachId);
+        setWeeklyBookedSlots(data.resultObj);
+      } catch (error) {
+        console.error("Lỗi khi lấy thông tin coach booking:", error);
+      }
+    };
+
+    const fetchTotalPriceInMonth = async () => {
+      try {
+        const data = await coachBookingService.getTotalPriceThisMonth(coachId);
+        setRevenueInMonth(data.resultObj.totalPrice);
+      } catch (error) {
+        console.error("Lỗi khi lấy thông tin coach booking:", error);
+      }
+    }
+
+    fetchCoachTotalPriceStats();
+    fetchPlayerList();
+    fetchMonthlyTotal();
+    fetchWeeklyBookedSlots();
+    fetchTotalPriceInMonth();
+  }, [coachId])
+
+  useEffect(() => {
+    const fetchCoachBooking = async () => {
+      try {
+        const data = await coachBookingService.getAllByCoachId(coachId, page, pageSize);
+        setCoachBookingData(data.resultObj);
+      } catch (error) {
+        console.error("Lỗi khi lấy thông tin coach booking:", error);
+      }
+    }
+    fetchCoachBooking();
+  }, [coachId, page])
+
+  function getTimeSlotsFromRange(range) {
+    const [start, end] = range.split(" - ");
+    const slots = [];
+    let current = start;
+
+    while (current < end) {
+      slots.push(current);
+      const [h, m] = current.split(":").map(Number);
+      const nextH = h + 1;
+      current = `${nextH < 10 ? "0" : ""}${nextH}:${m < 10 ? "0" : ""}${m}`;
+    }
+
+    return slots;
+  }
+
+  const allTimeSlots = Array.from(
+    new Set(
+      weeklyBookedSlots.flatMap((item) => getTimeSlotsFromRange(item.bookedSlot))
+    )
+  ).sort();
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= coachBookingData.totalPages) {
+      setPage(newPage);
+    }
+  };
+
   return (
     <div className="coach-container">
       {/* Top Stats */}
       <div className="stats-top">
         <div className="stat-card">
           <div className="stat-title">Số giờ thuê</div>
-          <div className="stat-value">346</div>
+          <div className="stat-value">{coachStatsData?.totalBookings}</div>
           <div className="stat-progress">
             <CircleProgress percentage={75} />
           </div>
         </div>
         <div className="stat-card">
           <div className="stat-title">Số học viên</div>
-          <div className="stat-value">08</div>
+          <div className="stat-value">{coachStatsData?.uniqueStudents}</div>
           <div className="stat-progress">
             <CircleProgress percentage={75} />
           </div>
         </div>
         <div className="stat-card">
-          <div className="stat-title">Doanh thu hôm nay</div>
-          <div className="stat-value">221</div>
+          <div className="stat-title">Doanh thu trong tháng</div>
+          <div className="stat-value">{revenueInMonth}</div>
           <div className="stat-progress">
             <CircleProgress percentage={75} />
           </div>
         </div>
         <div className="stat-card no-progress">
           <div className="stat-title">Tổng doanh thu</div>
-          <div className="stat-value">xx.000.000</div>
+          <div className="stat-value">{coachStatsData?.totalRevenue}</div>
         </div>
       </div>
 
@@ -157,7 +258,7 @@ const Coach = () => {
       <div className="mid-section">
         <div className="left-panel">
           <div className="total-week-container">
-            <div className="total-week-text">Tổng số đơn tuần này</div>
+            <div className="total-week-text">Tổng số đơn tháng này</div>
             <div className="total-week-circle">
               <svg
                 width="110"
@@ -186,7 +287,7 @@ const Coach = () => {
                   strokeDasharray="65 100"
                 />
               </svg>
-              <div className="total-week-number">65</div>
+              <div className="total-week-number">{coachMonthlyTotal?.totalBookings}</div>
             </div>
           </div>
 
@@ -211,67 +312,69 @@ const Coach = () => {
 
         <div className="right-panel">
           <div className="schedule">
-            <div className="schedule-header">
-              <div className="time-column">
-                {times.map((time) => (
-                  <div key={time} className="time-cell">
-                    {time}
-                  </div>
-                ))}
-              </div>
-              <div className="days-column">
-                {daysOfWeek.map((day) => (
-                  <div key={day.num} className="day-cell">
-                    <div className="day-label">{day.label}</div>
-                    <div className="day-num">
-                      {day.num < 10 ? `0${day.num}` : day.num}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="schedule-body">
-              {/* Left time labels */}
-              <div className="time-labels">
-                {times.map((time) => (
-                  <div key={time} className="time-label">
-                    {time}
-                  </div>
-                ))}
-              </div>
-
+            <div className="schedule-grid-wrapper">
               <div className="schedule-grid">
-                {times.map((time, i) => (
-                  <div key={time} className="row">
-                    {daysOfWeek.map((day) => {
-                      // Check if slot is active (simplified)
-                      let active = false;
-                      let tall = false;
+                <div className="cell header time-header" />
+                {daysOfWeek.map((day) => (
+                  <div key={day.num} className="cell header day-header">
+                    <div className="day-label">{day.label}</div>
+                  </div>
+                ))}
 
-                      // hardcode for example for Thu 2 (2), Thu 4 (4), Thu 5 (5)
-                      if (
-                        (day.num === 2 &&
-                          (time === "09:00" || time === "13:00")) ||
-                        (day.num === 4 && time === "10:00") ||
-                        (day.num === 5 &&
-                          (time === "12:00" || time === "13:00"))
-                      ) {
-                        active = true;
-                        if (day.num === 5 && time === "12:00") tall = true;
+                {allTimeSlots.map((time, rowIndex) => {
+                  const startHour = time;
+                  const [h, m] = time.split(":").map(Number);
+                  const endHour = `${(h + 1).toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}`;
+
+                  const rowCells = [
+                    <div key={`label-${time}`} className="cell time-label sticky-left">
+                      {startHour} - {endHour}
+                    </div>,
+                  ];
+
+                  daysOfWeek.forEach((day) => {
+                    const dayNum = day.num;
+                    const matchedSchedule = weeklyBookedSlots.find((item) => {
+                      const itemDayNum = dayLabelToNum[item.weekDay];
+                      if (itemDayNum !== dayNum) return false;
+                      const slots = getTimeSlotsFromRange(item.bookedSlot);
+                      return slots.includes(time);
+                    });
+
+                    const key = `${dayNum}-${time}`;
+
+                    if (matchedSchedule) {
+                      const slots = getTimeSlotsFromRange(matchedSchedule.bookedSlot);
+                      const firstSlot = slots[0];
+
+                      if (time === firstSlot) {
+                        // slot đầu tiên => render cell với rowSpan
+                        rowCells.push(
+                          <div
+                            key={key}
+                            className="cell schedule-cell active"
+                            title="Đã được huấn luyện viên đặt"
+                            style={{ gridRow: `span ${slots.length}` }}
+                          />
+                        );
+                      } else {
+                        // slot nằm giữa block => bỏ qua (đã merge rồi)
+                        rowCells.push(<div key={key} style={{ display: "none" }} />);
                       }
-
-                      return (
+                    } else {
+                      rowCells.push(
                         <div
-                          key={day.num}
-                          className={`cell ${active ? "active" : ""} ${
-                            tall ? "tall" : ""
-                          }`}
+                          key={key}
+                          className="cell schedule-cell"
+                          title="Chưa đặt"
                         />
                       );
-                    })}
-                  </div>
-                ))}
+                    }
+                  });
+
+                  return rowCells;
+                })}
+
               </div>
             </div>
           </div>
@@ -312,24 +415,20 @@ const Coach = () => {
               <tr>
                 <th>Người dùng</th>
                 <th>Mã đơn</th>
-                <th>Ngày</th>
-                <th>Thời gian</th>
                 <th>Thu nhập</th>
                 <th>Trạng thái</th>
               </tr>
             </thead>
             <tbody>
-              {sortedPayments
+              {coachBookingData?.items
                 .filter((p) =>
-                  p.user.toLowerCase().includes(search.toLowerCase())
+                  p?.player.fullName.toLowerCase().includes(search.toLowerCase())
                 )
                 .map((item, i) => (
                   <tr key={i}>
-                    <td>{item.user}</td>
-                    <td>{item.orderId}</td>
-                    <td>{item.date}</td>
-                    <td>{item.time}</td>
-                    <td>{item.income}</td>
+                    <td>{item?.player.fullName}</td>
+                    <td>{item.id}</td>
+                    <td>{formatPrice(item.totalPrice, true)}</td>
                     <td>
                       <span
                         className="status-label"
@@ -342,16 +441,34 @@ const Coach = () => {
                 ))}
             </tbody>
           </table>
+
+          {coachBookingData?.totalPages > 1 && (
+            <div className="pagination">
+              <button
+                onClick={() => handlePageChange(page - 1)}
+                disabled={!coachBookingData.hasPreviousPage}
+              >
+                &laquo;
+              </button>
+              <span>{page} / {coachBookingData.totalPages}</span>
+              <button
+                onClick={() => handlePageChange(page + 1)}
+                disabled={!coachBookingData.hasNextPage}
+              >
+                &raquo;
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="students-list">
           <strong className="payment-history-title">
             <p>Học Viên</p>
           </strong>
-          {students.map((student, idx) => (
+          {playerListData.map((student, idx) => (
             <div key={idx} className="student-item">
-              <img src={student.avatar} alt={student.name} />
-              <div className="student-name">{student.name}</div>
+              <img src={student.avaterUrl} alt={student.fullName} />
+              <div className="student-name">{student.fullName}</div>
             </div>
           ))}
         </div>
