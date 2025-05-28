@@ -149,6 +149,8 @@ const HumanHabits = () => {
       })
       .catch(console.error);
   }, []);
+  const targetPlayerCount = 1000; // Mục tiêu tổng số người đặt sân
+  const playerPercentage = (uniquePlayerCount / targetPlayerCount) * 100;
   return (
     <div className="humanhabits-container">
       <div className="summary-cards">
@@ -156,7 +158,7 @@ const HumanHabits = () => {
           <CircleStat
             title="Tổng số người đặt sân"
             value={uniquePlayerCount}
-            percentage={75}
+            percentage={Math.min(playerPercentage, 100)} // Giới hạn phần trăm không quá 100%
           />
         </div>
         <div className="card">

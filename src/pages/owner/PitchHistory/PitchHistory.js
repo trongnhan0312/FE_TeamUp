@@ -123,14 +123,35 @@ const PitchHistory = () => {
       alert("Cập nhật trạng thái thất bại, vui lòng thử lại.");
     }
   };
-
+  const completedPercentage = (completed / totalOrders) * 100;
+  const inProgressPercentage = (inProgress / totalOrders) * 100;
+  const cancelledPercentage = (cancelled / totalOrders) * 100;
   return (
     <div className="pitchHistory">
       <div className="summary">
-        <CircleStat title="Tổng đơn" value={totalOrders} percentage={75} />
-        <CircleStat title="Đã hoàn thành" value={completed} percentage={75} />
-        <CircleStat title="Đang thực hiện" value={inProgress} percentage={75} />
-        <CircleStat title="Đã hủy" value={cancelled} percentage={75} />
+        <CircleStat
+          title="Tổng đơn"
+          value={totalOrders}
+          percentage={100} // Tổng đơn luôn bằng 100%
+        />
+
+        <CircleStat
+          title="Đã hoàn thành"
+          value={completed}
+          percentage={Math.min(completedPercentage, 100)} // Giới hạn phần trăm không quá 100%
+        />
+
+        <CircleStat
+          title="Đang thực hiện"
+          value={inProgress}
+          percentage={Math.min(inProgressPercentage, 100)} // Giới hạn phần trăm không quá 100%
+        />
+
+        <CircleStat
+          title="Đã hủy"
+          value={cancelled}
+          percentage={Math.min(cancelledPercentage, 100)} // Giới hạn phần trăm không quá 100%
+        />
       </div>
 
       <div className="historySection">

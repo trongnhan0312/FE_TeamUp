@@ -1,0 +1,175 @@
+@import '../../../../assets/styles/fonts';
+
+.booking-summary {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  
+  // Court header with image and info
+  .court-header {
+    display: flex;
+    margin-bottom: 24px;
+
+    .court-image {
+      width: 150px;
+      height: 150px;
+      border-radius: 8px;
+      object-fit: cover;
+      margin-right: 16px;
+    }
+    
+    .court-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      
+      .court-name-container {
+        .court-venue {
+            @include heading-3;
+          color: #666;
+          margin-bottom: 4px;
+        }
+        
+        .court-type {
+          @include heading-2;
+          font-weight: 600;
+          margin: 0;
+          color: #333;
+        }
+      }
+      
+      .court-rating {
+        display: flex;
+        align-items: center;
+        margin-top: 12px;
+        
+        .rating-score {
+            @include body-text;
+          background-color: #4664e1;
+          color: white;
+          padding: 4px 10px;
+          border-radius: 4px;
+          margin-right: 8px;
+        }
+        
+        .rating-text {
+            @include middle-text;
+          color: #666;
+        }
+      }
+    }
+  }
+  
+  // Separator line
+  .separator {
+    height: 1px;
+    background-color: #eee;
+    margin: 20px 0;
+  }
+  
+  // Price details section
+  .price-details {
+    .section-title {
+        @include heading-3;
+      font-weight: 600;
+      margin: 0 0 16px 0;
+      color: #333;
+    }
+    
+    .price-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      
+      .price-label {
+            @include large-text;
+        color: #666;
+      }
+      
+      .price-value {
+            @include large-text;
+        color: #333;
+        font-weight: 500;
+        text-align: right;
+      }
+      
+      &.discount {
+        .price-value {
+          color: #3D9140;
+        }
+      }
+      
+      &.total {
+        margin-top: 16px;
+        
+        .price-label {
+
+            @include heading-2;
+          font-weight: 600;
+          color: #333;
+        }
+        
+        .price-value {
+                        @include heading-2;
+
+          font-weight: 700;
+          color: #333;
+        }
+      }
+    }
+  }
+  
+  // Confirm button
+  .confirm-button {
+    display: block;
+    width: 100%;
+    padding: 22px;
+    margin-top: 30px;
+    background-color: #b9e255;
+    border: none;
+    border-radius: 8px;
+    color: #333;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    
+    &:hover {
+      background-color: darken(#88ba09, 5%);
+    }
+  }
+  
+  // Error and loading states
+  .loading-indicator {
+    text-align: center;
+    padding: 50px;
+    font-size: 18px;
+    color: #666;
+  }
+  
+  .error-container {
+    padding: 30px;
+    text-align: center;
+    
+    .error-message {
+      color: #E74C3C;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+    
+    .back-button {
+      padding: 10px 20px;
+      background-color: #4664e1;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      
+      &:hover {
+        background-color: darken(#4664e1, 5%);
+      }
+    }
+  }
+}
