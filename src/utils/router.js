@@ -32,6 +32,7 @@ export const ROUTER = {
     REVIEWYARD: "/owner/reviewyard",
     SportsComplexes: "/owner/sportscomplexes",
     SportsComplexDetail: "/owner/sportscomplexes/:id",
+    CourtDetailOwner: "/owner/CourtDetailOwner/:courtId",
   },
   COACH: {
     HOME: "/coach",

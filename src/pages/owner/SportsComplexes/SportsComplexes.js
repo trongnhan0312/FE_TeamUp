@@ -42,6 +42,7 @@ const SportsComplexes = () => {
       <div className="complex-list">
         {complexes.map(({ id, name, type, imageUrls }) => (
           <Link
+            style={{ textDecoration: "none" }} // Để bỏ gạch chân
             key={id}
             to={`/owner/sportscomplexes/${id}`} // Trùng chính xác với route trên
             className="complex-card"

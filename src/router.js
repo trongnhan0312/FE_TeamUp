@@ -17,6 +17,8 @@ import CreateYard from "./pages/owner/CreateYard/CreateYard";
 import ReviewYard from "./pages/owner/ReviewYard/ReviewYard";
 import SportsComplexes from "./pages/owner/SportsComplexes/SportsComplexes";
 import SportsComplexDetail from "./pages/owner/SportsComplexes/SportsComplexesDetail/SportsComplexesDetail";
+import CourtDetailOwner from "./pages/owner/SportsComplexes/SportsComplexesDetail/CourtDetailOwner/court_detail/CourtDetailPage";
+
 import Coach from "./pages/coach";
 import ReviewCoach from "./pages/coach/ReviewCoach/ReviewCoach";
 import CoachHistory from "./pages/coach/CoachHistory/CoachHistory";
@@ -69,6 +71,13 @@ const RouterCustom = () => {
         <Route
           path={ROUTER.OWNER.SportsComplexDetail}
           element={<SportsComplexDetail />}
+        />
+        <Route
+          path={ROUTER.OWNER.CourtDetailOwner}
+          element={
+            // import đúng component CourtDetailOwner
+            <CourtDetailOwner />
+          }
         />
         <Route path="*" element={<Navigate to="/owner" replace />} />
       </Routes>

@@ -1,0 +1,310 @@
+@import '../../../../../../assets/styles/fonts.scss';
+
+.court-detail-container {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+.court-detail-page {
+  padding: 20px 0 50px;
+  background-color: #f8f9fa;
+  
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 15px;
+  }
+  
+  // Court header with title and stars
+  .court-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    
+    @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+  
+  .court-title {
+    @include heading-2;
+    margin: 0;
+    margin-right: 15px;
+    color: #333;
+  }
+  
+  .rating-container {
+    display: flex;
+    align-items: center;
+    
+    .star {
+      color: #ddd;
+      margin-right: 3px;
+      font-size: 22px;
+      
+      &.filled {
+        color: #FFD700;
+      }
+    }
+  }
+  
+  // Court address
+  .court-address {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    font-size: 16px;
+    color: #555;
+    
+    .icon-marker {
+      color: #666;
+      margin-right: 8px;
+      font-size: 18px;
+    }
+  }
+  
+  // Rating score section
+  .rating-score-section {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    
+    .rating-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-weight: bold;
+      font-size: 18px;
+      color: #333;
+    }
+    
+    .rating-text {
+      margin-left: 12px;
+      font-size: 15px;
+      color: #555;
+    }
+    
+    .action-buttons {
+      margin-left: auto;
+      display: flex;
+      
+      .btn-like, .btn-share {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #fff;
+        cursor: pointer;
+        margin-left: 10px;
+        color: #666;
+        font-size: 16px;
+        transition: all 0.2s;
+        
+        &:hover {
+          background-color: #f5f5f5;
+        }
+        
+        &.liked {
+          color: #e74c3c;
+          border-color: #e74c3c;
+        }
+      }
+    }
+  }
+  
+  // Court gallery
+  .court-gallery {
+  position: relative;
+  margin-bottom: 30px;
+  display: flex;
+  gap: 10px;
+    
+    .main-image {
+    max-height: 564px;
+    width: 100%;
+    flex: 0 0 60%; // Chiếm 60% chiều rộng
+          overflow: hidden;
+      border-radius: 8px;
+      
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+    
+    .gallery-grid {
+    flex: 0 0 40%; // Chiếm 40% chiều rộng
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); // 2 cột
+    grid-template-rows: repeat(2, 1fr); // 2 hàng
+      grid-gap: 10px;
+      
+      @media (max-width: 768px) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .gallery-item {
+        max-height: 277px;
+        overflow: hidden;
+        border-radius: 8px;
+        
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.3s;
+          
+          &:hover {
+            transform: scale(1.05);
+          }
+        }
+      }
+    }
+    
+    .btn-view-more {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 8px 16px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.9);
+      }
+    }
+  }
+  
+  // Price section
+  .price-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    padding: 15px 0;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    
+    @media (max-width: 576px) {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .price {
+      .amount {
+       @include heading-2;
+        color: #333;
+      }
+      
+      .unit {
+        font-size: 16px;
+        color: #666;
+      }
+    }
+    
+    .booking-actions {
+      display: flex;
+      
+      @media (max-width: 576px) {
+        margin-top: 15px;
+        width: 100%;
+      }
+      
+      .btn-book, .btn-create-room {
+        padding: 18px 56px;
+        border: none;
+        border-radius: 30px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        
+        @media (max-width: 576px) {
+          flex: 1;
+        }
+      }
+      
+      .btn-book {
+        background-color: #a4d036; // Lime green color
+        color: white;
+        margin-right: 10px;
+        
+        &:hover {
+          background-color: darken(#a4d036, 5%);
+        }
+      }
+      
+      .btn-create-room {
+        background-color: #f0f0f0;
+        color: #333;
+        
+        &:hover {
+          background-color: darken(#f0f0f0, 5%);
+        }
+      }
+    }
+  }
+  
+  // Court description
+  .court-description {
+    border-bottom: 1px solid #eee;
+    margin-bottom: 30px;
+    h2 {
+      font-size: 22px;
+      margin-bottom: 15px;
+      font-weight: 600;
+      color: #333;
+    }
+    
+    .description-content {
+      color: #555;
+      line-height: 1.6;
+      
+      p {
+        margin-bottom: 10px;
+      }
+      
+      ul {
+        padding-left: 20px;
+        
+        li {
+          margin-bottom: 8px;
+          position: relative;
+          
+          &::before {
+            content: "•";
+            position: absolute;
+            left: -15px;
+            color: #a4d036;
+          }
+        }
+      }
+    }
+  }
+
+    .similar-courts-section {
+    margin: 30px 0;
+    padding: 10px 15px;
+
+    .section-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 20px;
+    }
+  }
+}
