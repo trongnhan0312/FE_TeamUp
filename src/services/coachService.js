@@ -39,6 +39,25 @@ const coachService = {
             throw error.response ? error.response.data : error.message;
         }
     },
+
+    getCoachRatings: async (revieweeId, pageNumber = 1, pageSize = 5) => {
+        try {
+            const response = await axiosInstance.get(
+                `${ENDPOINTS.RATING.LIST}?revieweeId=${revieweeId}&pageNumber=${pageNumber}&pageSize=${pageSize}`
+            );
+            return response.data;
+        } catch (error) {
+            if (error.response && error.response.data) {
+                throw {
+                    response: error.response,
+                    message:
+                        error.response.data.message ||
+                        "Không thể lấy danh sách đánh giá",
+                };
+            }
+            throw error.response ? error.response.data : error.message;
+        }
+    },
 };
 
 export default coachService;
