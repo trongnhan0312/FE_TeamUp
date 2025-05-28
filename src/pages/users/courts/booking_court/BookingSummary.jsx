@@ -4,6 +4,7 @@ import Swal from "sweetalert2";
 import "./BookingSummary.scss";
 import courtService from "../../../../services/courtService";
 import voucherService from "../../../../services/voucherService";
+import coachBookingService from "../../../../services/coachBookingService";
 import { getRatingText } from "../../../../utils/formatUtils";
 
 const BookingSummary = () => {
@@ -15,18 +16,11 @@ const BookingSummary = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const bookingData = location.state?.bookingDetails || {
-    courtId: 1,
-    date: "2025-05-18",
-    startTime: "8:00",
-    endTime: "10:00",
-    totalHours: 2,
-    userId: null,
-    voucherId: null,
-  };
+  const { bookingDetails } = location.state;
+  
 
   useEffect(() => {
-    if (!bookingData) {
+    if (!bookingDetails) {
       setError("Không tìm thấy thông tin đặt sân");
       setLoading(false);
       return;
@@ -34,9 +28,10 @@ const BookingSummary = () => {
 
     const fetchData = async () => {
       try {
+        
         const [courtRes, voucherRes] = await Promise.all([
-          courtService.getById(bookingData.courtId),
-          bookingData.voucherId ? voucherService.getVoucherById(bookingData.voucherId) : null,
+          courtService.getById(bookingDetails.courtId),
+          bookingDetails.voucherId ? voucherService.getVoucherById(bookingDetails.voucherId) : null,
         ]);
 
         if (courtRes.isSuccessed) {
@@ -57,52 +52,71 @@ const BookingSummary = () => {
     };
 
     fetchData();
-  }, [bookingData]);
+  }, [bookingDetails]);
 
   const calculateDiscount = () => {
     if (!courtData || !voucherData) return 0;
-    const subtotal = courtData.pricePerHour * bookingData.totalHours;
+    const subtotal = courtData.pricePerHour * bookingDetails.totalHours;
     return Math.floor((subtotal * voucherData.discountPercent) / 100);
   };
 
   const calculateTotalPrice = () => {
     if (!courtData) return 0;
-    const subtotal = courtData.pricePerHour * bookingData.totalHours;
+    const subtotal = courtData.pricePerHour * bookingDetails.totalHours;
     return subtotal - calculateDiscount();
   };
 
   const handleConfirmBooking = async () => {
     try {
-      if (!bookingData?.courtId || !bookingData?.userId) {
-        setError("Thiếu thông tin cần thiết để đặt sân.");
-        return;
-      }
-
       setLoading(true);
 
-      const bookingRequest = {
-        courtId: Number(bookingData.courtId),
-        userId: Number(bookingData.userId),
-        startTime: bookingData.startTime,
-        endTime: bookingData.endTime,
-        paymentMethod: "Pending",
-        voucherId: bookingData.voucherId || null,
-      };
+      if (bookingDetails.isMultiBooking) {
+        const response = await coachBookingService.create(
+          Number(bookingDetails.coachId),
+          Number(bookingDetails.playerId),
+          Number(bookingDetails.courtId),
+          bookingDetails.slots,
+          "Pending",
+          bookingDetails.voucherId || null
+        );
 
-      console.log(bookingRequest);
-      
-
-      const data = await courtService.handleBooking(bookingRequest);
-
-      if (data.isSuccessed) {
-        Swal.fire({
-          title: "Thành công!",
-          text: "Đặt sân thành công",
-          icon: "success",
-          confirmButtonText: "OK",
-        }).then(() => navigate("/home"));
+        if (response?.isSuccessed) {
+          Swal.fire({
+            title: "Thành công!",
+            text: "Đặt lịch huấn luyện thành công",
+            icon: "success",
+            confirmButtonText: "OK",
+          }).then(() => navigate("/home"));
+        } else {
+          throw new Error(response.message || "Không thể tạo booking huấn luyện");
+        }
       } else {
-        setError(data.message || "Không thể tạo booking");
+        if (!bookingDetails?.courtId || !bookingDetails?.userId) {
+          setError("Thiếu thông tin cần thiết để đặt sân.");
+          return;
+        }
+
+        const bookingRequest = {
+          courtId: Number(bookingDetails.courtId),
+          userId: Number(bookingDetails.userId),
+          startTime: bookingDetails.startTime,
+          endTime: bookingDetails.endTime,
+          paymentMethod: "Pending",
+          voucherId: bookingDetails.voucherId || null,
+        };
+
+        const data = await courtService.handleBooking(bookingRequest);
+
+        if (data.isSuccessed) {
+          Swal.fire({
+            title: "Thành công!",
+            text: "Đặt sân thành công",
+            icon: "success",
+            confirmButtonText: "OK",
+          }).then(() => navigate("/home"));
+        } else {
+          setError(data.message || "Không thể tạo booking");
+        }
       }
     } catch (err) {
       console.error("Lỗi đặt sân:", err);
@@ -169,7 +183,7 @@ const BookingSummary = () => {
 
         <div className="price-row">
           <div className="price-label">Số giờ</div>
-          <div className="price-value">{bookingData.totalHours}</div>
+          <div className="price-value">{bookingDetails.totalHours}</div>
         </div>
 
         {voucherData && (

@@ -27,6 +27,10 @@ const CoachProfile = () => {
   const handleContract = () => {
     navigate(`/chat/${coachId}`);
   };
+
+  const handleBooking = () => {
+    navigate(`/coach-booking/${coachId}/court-selector/${coach.type}`);
+  };
   // Gọi API để lấy thông tin coach dựa trên coachId
   useEffect(() => {
     const fetchCoachData = async () => {
@@ -228,7 +232,7 @@ const CoachProfile = () => {
               </p>
               <div className="contact-buttons">
                 <button onClick={handleContract} className="contact-button">Liên hệ</button>
-                <button className="contact-button schedule-button">
+                <button onClick={handleBooking} className="contact-button schedule-button">
                   Đặt lịch
                 </button>
               </div>
