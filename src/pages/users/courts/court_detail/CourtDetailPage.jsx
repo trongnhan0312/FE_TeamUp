@@ -26,7 +26,9 @@ const CourtDetailPage = () => {
 
   const handleBookingClick = () => {
     if (!courtId) return;
-    navigate(`/court-schedule/${courtId}`);
+    navigate(`/court-schedule/${courtId}`, {
+      state: { isMultiBooking: false },
+    });
   };
 
   // Fetch court details

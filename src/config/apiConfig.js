@@ -79,6 +79,9 @@ export const ENDPOINTS = {
   VOUCHER: {
     GET_ALL: "/voucher/all",
     GET_BY_ID: "/voucher"
-  }
+  },
+  COACH_BOOKING: {
+    CREATE_COACH_BOOKING: "/coachbooking/create"
+  },
   // Các endpoints khác
 };
