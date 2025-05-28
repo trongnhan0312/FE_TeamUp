@@ -266,29 +266,40 @@ const Owner = () => {
   );
   const monthlyData = getMonthlyBookingData(bookingHistory);
 
+  const targetPlayerCount = 1000; // Mục tiêu số người tiếp cận
+  const targetCourtBookings = 500; // Mục tiêu tổng đơn đặt
+  const targetRevenue = 10000000; // Mục tiêu doanh thu (10 triệu VNĐ)
+  const percentage = (monthlyRevenue / targetRevenue) * 100; // Tính phần trăm
+  const playerPercentage = (uniquePlayerCount / targetPlayerCount) * 100;
+  const courtBookingPercentage =
+    (totalCourtBookings / targetCourtBookings) * 100;
+  const revenuePercentage = (monthlyRevenue / targetRevenue) * 100;
+  const dailyRevenuePercentage = (todayRevenue / targetRevenue) * 100;
   return (
     <div className="owner-page">
       <div className="stat-cards flex flex-wrap gap-6">
         <CircleStat
           title="Số người tiếp cận"
           value={uniquePlayerCount}
-          percentage={75}
+          percentage={Math.min(playerPercentage, 100)} // Giới hạn phần trăm không quá 100%
         />
 
         <CircleStat
           title="Tổng đơn đặt"
           value={totalCourtBookings}
-          percentage={75}
+          percentage={Math.min(courtBookingPercentage, 100)} // Giới hạn phần trăm không quá 100%
         />
+
         <CircleStat
           title="Doanh Thu Tháng"
           value={`${monthlyRevenue.toLocaleString("vi-VN")} VNĐ`}
-          percentage={75}
+          percentage={Math.min(revenuePercentage, 100)} // Giới hạn phần trăm không quá 100%
         />
+
         <CircleStat
-          title="Tổng doanh thu"
-          value={`${totalRevenue.toLocaleString("vi-VN")} VNĐ`}
-          percentage={85}
+          title="Doanh thu hôm nay"
+          value={`${todayRevenue.toLocaleString("vi-VN")} VNĐ`}
+          percentage={Math.min(dailyRevenuePercentage, 100)} // Giới hạn phần trăm không quá 100%
         />
       </div>
 
