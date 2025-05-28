@@ -6,6 +6,37 @@
   padding: 20px;
   background-color: #fff;
   
+  .go-back-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    
+    .back-button {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+      color: #333;
+      
+      &:hover {
+        color: #4664e1;
+      }
+    }
+    
+    h1 {
+      font-size: 24px;
+      font-weight: 600;
+      margin: 0;
+      color: #333;
+      flex-grow: 1;
+    }
+  }
+
   // Court header with image and info
   .court-header {
     display: flex;

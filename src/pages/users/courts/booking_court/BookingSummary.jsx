@@ -6,6 +6,7 @@ import courtService from "../../../../services/courtService";
 import voucherService from "../../../../services/voucherService";
 import coachBookingService from "../../../../services/coachBookingService";
 import { getRatingText } from "../../../../utils/formatUtils";
+import { FaChevronLeft } from "react-icons/fa";
 
 const BookingSummary = () => {
   const navigate = useNavigate();
@@ -17,7 +18,6 @@ const BookingSummary = () => {
   const [error, setError] = useState(null);
 
   const { bookingDetails } = location.state;
-  
 
   useEffect(() => {
     if (!bookingDetails) {
@@ -28,10 +28,11 @@ const BookingSummary = () => {
 
     const fetchData = async () => {
       try {
-        
         const [courtRes, voucherRes] = await Promise.all([
           courtService.getById(bookingDetails.courtId),
-          bookingDetails.voucherId ? voucherService.getVoucherById(bookingDetails.voucherId) : null,
+          bookingDetails.voucherId
+            ? voucherService.getVoucherById(bookingDetails.voucherId)
+            : null,
         ]);
 
         if (courtRes.isSuccessed) {
@@ -88,7 +89,9 @@ const BookingSummary = () => {
             confirmButtonText: "OK",
           }).then(() => navigate("/home"));
         } else {
-          throw new Error(response.message || "Không thể tạo booking huấn luyện");
+          throw new Error(
+            response.message || "Không thể tạo booking huấn luyện"
+          );
         }
       } else {
         if (!bookingDetails?.courtId || !bookingDetails?.userId) {
@@ -115,11 +118,21 @@ const BookingSummary = () => {
             confirmButtonText: "OK",
           }).then(() => navigate("/home"));
         } else {
-          setError(data.message || "Không thể tạo booking");
+          Swal.fire({
+            title: data.message,
+            icon: "error",
+            confirmButtonText: "OK",
+          });
         }
       }
     } catch (err) {
       console.error("Lỗi đặt sân:", err);
+      Swal.fire({
+        title: "Thất bại",
+        text: err.message,
+        icon: "error",
+        confirmButtonText: "OK",
+      });
       setError(err.message || "Đã xảy ra lỗi trong quá trình đặt sân");
     } finally {
       setLoading(false);
@@ -144,8 +157,16 @@ const BookingSummary = () => {
     );
   }
 
+  const handleGoBack = () => navigate(-1);
+
   return (
     <div className="booking-summary">
+      <div className="go-back-header">
+        <button className="back-button" onClick={handleGoBack}>
+          <FaChevronLeft />
+        </button>
+        <h1>Xác nhận đặt lịch</h1>
+      </div>
       <div className="court-header">
         <img
           src={courtData?.imageUrls?.[0] || "https://via.placeholder.com/150"}
@@ -155,15 +176,19 @@ const BookingSummary = () => {
         <div className="court-info">
           <div className="court-name-container">
             <div className="court-venue">{courtData?.name}</div>
-            <h1 className="court-type">Sân {courtData.sportsComplexModelView?.type}</h1>
+            <h1 className="court-type">
+              Sân {courtData.sportsComplexModelView?.type}
+            </h1>
           </div>
           <div className="court-rating">
             <div className="rating-score">
-              {courtData?.ratingSummaryModelView?.averageRating?.toFixed(1) || 4.2}
+              {courtData?.ratingSummaryModelView?.averageRating?.toFixed(1) ||
+                4.2}
             </div>
             <div className="rating-text">
-              {getRatingText(courtData?.ratingSummaryModelView?.averageRating)} |{" "}
-              {courtData?.ratingSummaryModelView?.totalReviewerCount || 54} reviews
+              {getRatingText(courtData?.ratingSummaryModelView?.averageRating)}{" "}
+              | {courtData?.ratingSummaryModelView?.totalReviewerCount || 54}{" "}
+              reviews
             </div>
           </div>
         </div>
@@ -189,7 +214,9 @@ const BookingSummary = () => {
         {voucherData && (
           <div className="price-row discount">
             <div className="price-label">Khuyến mãi</div>
-            <div className="price-value">-{formatCurrency(calculateDiscount())} VNĐ</div>
+            <div className="price-value">
+              -{formatCurrency(calculateDiscount())} VNĐ
+            </div>
           </div>
         )}
 
@@ -197,11 +224,17 @@ const BookingSummary = () => {
 
         <div className="price-row total">
           <div className="price-label">Tổng tiền</div>
-          <div className="price-value">{formatCurrency(calculateTotalPrice())} VNĐ</div>
+          <div className="price-value">
+            {formatCurrency(calculateTotalPrice())} VNĐ
+          </div>
         </div>
       </div>
 
-      <button className="confirm-button" onClick={handleConfirmBooking} disabled={loading}>
+      <button
+        className="confirm-button"
+        onClick={handleConfirmBooking}
+        disabled={loading}
+      >
         {loading ? "Đang xử lý..." : "Thanh toán"}
       </button>
     </div>

@@ -89,5 +89,8 @@ export const ENDPOINTS = {
     GET_ALL: "/coachbooking/all",
     GET_TOTAL_PRICE: "/coachbooking/total-price/coach"
   },
+  AI_WEBSITE:{
+    GET_RESPONSE: "/ai-web/get-website-response"
+  }
   // Các endpoints khác
 };
