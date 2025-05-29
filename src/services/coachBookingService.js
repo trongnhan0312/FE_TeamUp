@@ -4,15 +4,23 @@ import axiosInstance from "../config/axiosConfig";
 const coachBookingService = {
     create: async (coachId, playerId, courtId, slots, paymentMethod, voucherId = null) => {
         try {
-            const response = await axiosInstance.post(
-                ENDPOINTS.COACH_BOOKING.CREATE_COACH_BOOKING, {
+            // Tạo request object chỉ với các field bắt buộc
+            const requestBody = {
                 coachId,
                 playerId,
                 courtId,
                 slots,
                 paymentMethod,
-                voucherId
-            },
+            };
+
+            // Chỉ thêm voucherId nếu có giá trị (khác null hoặc undefined)
+            if (voucherId != null) {
+                requestBody.voucherId = voucherId;
+            }
+
+            const response = await axiosInstance.post(
+                ENDPOINTS.COACH_BOOKING.CREATE_COACH_BOOKING,
+                requestBody
             );
 
             return response.data;
@@ -21,13 +29,13 @@ const coachBookingService = {
             if (error.response && error.response.data) {
                 throw {
                     response: error.response,
-                    message:
-                        error.response.data.message,
+                    message: error.response.data.message,
                 };
             }
             throw error.response ? error.response.data : error.message;
         }
     },
+
     getCoachTotalPriceStats: async (coachId) => {
         try {
             const response = await axiosInstance.get(
