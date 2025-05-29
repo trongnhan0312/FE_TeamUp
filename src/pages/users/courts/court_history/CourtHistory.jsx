@@ -2,6 +2,7 @@ import { memo, useState, useEffect } from "react";
 import "./CourtHistory.scss";
 import courtBookingService from "../../../../services/courtBookingService";
 import { getUserInfo } from "../../../../utils/auth";
+import Swal from "sweetalert2";
 
 const statusColors = {
   Pending: "#ff9800",
@@ -19,19 +20,20 @@ const CourtHistory = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
 
+  const fetchData = async () => {
+    const response = await courtBookingService.getCourtBookingList(
+      getUserInfo().id,
+      currentPage,
+      pageSize
+    );
+    const result = response.resultObj;
+    setBookingHistory(result);
+    setData(result.items);
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      const response = await courtBookingService.getCourtBookingList(
-        getUserInfo().id,
-        currentPage,
-        pageSize
-      );
-      const result = response.resultObj;
-      setBookingHistory(result);
-      setData(result.items);
-    };
     fetchData();
-  }, [currentPage]);
+  }, []);
 
   const handleFilterChange = (e) => {
     setFilter(e.target.value);
@@ -65,6 +67,53 @@ const CourtHistory = () => {
       minute: "2-digit",
     });
     return `${s} - ${e}`;
+  };
+
+  // Chưa handle cho nút tạo phòng
+  const handleCreateRoom = (id) => {
+    console.log("Tạo phòng chơi cho booking", id);
+  };
+
+  const handleComplete = async (id) => {
+    const result = await Swal.fire({
+      title: "Xác nhận hoàn thành?",
+      text: "Bạn có chắc muốn đánh dấu đơn này là đã hoàn thành?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Hoàn thành",
+      cancelButtonText: "Hủy",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await courtBookingService.updateStatus(id, "Completed");
+        Swal.fire("Thành công", "Đơn đã được đánh dấu hoàn thành", "success");
+        await fetchData();
+      } catch (error) {
+        Swal.fire("Lỗi", "Không thể cập nhật trạng thái", "error");
+      }
+    }
+  };
+
+  const handleCancel = async (id) => {
+    const result = await Swal.fire({
+      title: "Xác nhận hủy?",
+      text: "Bạn có chắc muốn hủy đơn đặt sân này?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Hủy đơn",
+      cancelButtonText: "Quay lại",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await courtBookingService.updateStatus(id, "CancelledByUser");
+        Swal.fire("Đã hủy", "Đơn đặt sân đã được hủy", "success");
+        await fetchData();
+      } catch (error) {
+        Swal.fire("Lỗi", "Không thể hủy đơn", "error");
+      }
+    }
   };
 
   return (
@@ -114,6 +163,7 @@ const CourtHistory = () => {
                 <th>Sân</th>
                 <th>Thu nhập</th>
                 <th>Trạng thái</th>
+                <th>Thao tác</th> {/* Cột thao tác mới */}
               </tr>
             </thead>
             <tbody>
@@ -136,6 +186,36 @@ const CourtHistory = () => {
                     >
                       {item.status}
                     </span>
+                  </td>
+                  <td>
+                    {(item.status === "Pending" ||
+                      item.status === "Confirmed") && (
+                      <button
+                        className="action-button create-room"
+                        onClick={() => handleCreateRoom(item.id)}
+                        aria-label={`Tạo phòng chơi cho booking ${item.id}`}
+                      >
+                        Tạo phòng chơi
+                      </button>
+                    )}
+                    {item.status === "Confirmed" && (
+                      <button
+                        className="action-button complete"
+                        onClick={() => handleComplete(item.id)}
+                        aria-label={`Hoàn thành booking ${item.id}`}
+                      >
+                        Hoàn thành
+                      </button>
+                    )}
+                    {item.status === "Pending" && (
+                      <button
+                        className="action-button cancel"
+                        onClick={() => handleCancel(item.id)}
+                        aria-label={`Hủy booking ${item.id}`}
+                      >
+                        Hủy
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}

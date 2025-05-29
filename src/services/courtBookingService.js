@@ -15,14 +15,23 @@ const courtBookingService = {
             return response.data;
         } catch (error) {
             console.error("Error fetching courts list:", error);
-            if (error.response && error.response.data) {
-                throw {
-                    response: error.response,
-                    message:
-                        error.response.data.message ||
-                        "Không thể lấy danh sách sân",
-                };
-            }
+            throw error.response ? error.response.data : error.message;
+        }
+    },
+    // status: "Pending" | "Confirmed" | "InProgress" | "Completed" | "CancelledByUser" | "CancelledByOwner" | "NoShow" | "Failed" | "CancelledByCoach"
+    updateStatus: async (id, status) => {
+        try {
+            const response = await axiosInstance.patch(`${ENDPOINTS.COURT_BOOKING.UPDATE_STATUS}/${id}`,
+                null,
+                {
+                    params: {
+                        status
+                    }
+                })
+
+            return response.data;
+        } catch (error) {
+            console.error("Error fetching courts list:", error);
             throw error.response ? error.response.data : error.message;
         }
     }

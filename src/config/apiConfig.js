@@ -94,7 +94,8 @@ export const ENDPOINTS = {
     GET_RESPONSE: "/ai-web/get-website-response"
   },
   COURT_BOOKING: {
-    GET_ALL: "/courtbooking/all"
+    GET_ALL: "/courtbooking/all",
+    UPDATE_STATUS: "/courtbooking/status"
   }
   // Các endpoints khác
 };
