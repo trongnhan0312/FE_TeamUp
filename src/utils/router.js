@@ -16,7 +16,8 @@ export const ROUTER = {
     BLOG: "/blog",
     CHAT: "/chat/:coachId",
     ROOM: "/room",
-    COACH_BOOKING_SELECT_COURT: "/coach-booking/:coachId/court-selector/:type"
+    COACH_BOOKING_SELECT_COURT: "/coach-booking/:coachId/court-selector/:type",
+    COURT_BOOKING_HISTORY: "court-booking-history"
   },
   AUTH: {
     LOGIN: "/login",

@@ -94,6 +94,25 @@ const authService = {
       throw error.response ? error.response.data : error.message;
     }
   },
+  loginGoogle: async (loginData) => {
+    try {
+      const response = await axiosInstance.post(
+        ENDPOINTS.AUTH.LOGIN_GOOGLE,
+        {
+          email: loginData.email,
+          email_verified: loginData.email_verified,
+          family_name: loginData.family_name,
+          given_name: loginData.given_name,
+          name: loginData.name,
+          picture: loginData.picture,
+          sub: loginData.sub
+        }
+      );
+      return response.data;
+    } catch (error) {
+      throw error.response ? error.response.data : error.message;
+    }
+  }
 };
 
 export default authService;

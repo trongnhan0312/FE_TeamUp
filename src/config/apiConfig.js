@@ -27,6 +27,7 @@ export const ENDPOINTS = {
     VERIFY_OTP: "/auth/confirm-register",
     RESEND_OTP: "/auth/resend-otp",
     LOGOUT: "/auth/logout",
+    LOGIN_GOOGLE: "/auth/google-login-user",
   },
   USER: {
     PROFILE: "/user/profile",
@@ -91,6 +92,9 @@ export const ENDPOINTS = {
   },
   AI_WEBSITE:{
     GET_RESPONSE: "/ai-web/get-website-response"
+  },
+  COURT_BOOKING: {
+    GET_ALL: "/courtbooking/all"
   }
   // Các endpoints khác
 };

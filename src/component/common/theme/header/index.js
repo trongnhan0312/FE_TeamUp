@@ -59,7 +59,7 @@ const Header = () => {
                 <li>
                   <BsChat />
                 </li>
-                <li>
+                <li onClick={() => navigate("/court-booking-history")}>
                   <BsCart3 />
                 </li>
                 <li>
