@@ -31,12 +31,18 @@ const SportsComplexDetail = () => {
   const handleCourtClick = (courtId) => {
     navigate(ROUTER.OWNER.CourtDetailOwner.replace(":courtId", courtId));
   };
-
+  const handleAddClick = () => {
+    navigate("/owner/createyard"); // thay đường dẫn bạn muốn chuyển đến
+  };
   return (
     <div className="sports-complex-detail">
       <h2>Chi tiết sân thuộc khu thể thao</h2>
       <div className="header-with-add">
-        <button className="btn-add" title="Tạo Sân Mới">
+        <button
+          className="btn-add"
+          title="Tạo Sân Mới"
+          onClick={handleAddClick}
+        >
           <BsFillPlusCircleFill size={28} />
         </button>
       </div>

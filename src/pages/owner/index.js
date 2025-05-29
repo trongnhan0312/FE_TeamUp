@@ -6,6 +6,7 @@ import {
   fetchMostBookedCourtByOwner,
   fetchOwnerCourtsWithBookings,
   fetchBookingHistory,
+  fetchTotalPriceByOwner,
 } from "../../services/ownerService";
 import {
   BarChart,
@@ -36,6 +37,7 @@ const Owner = () => {
   const [hourlyData, setHourlyData] = useState([]);
   const [todayRevenue, setTodayRevenue] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
+  const [totalPriceByOwner, setTotalPriceByOwner] = useState(0);
 
   // Hàm lọc booking theo tháng hiện tại và tháng trước, tạo dữ liệu cho BarChart
   const getMonthlyBookingData = (bookings) => {
@@ -119,7 +121,15 @@ const Owner = () => {
       console.warn("Owner ID not found");
       return;
     }
-
+    // Gọi API lấy totalPrice ở đây
+    fetchTotalPriceByOwner(storedOwnerId, "VNPay", 5, 2025)
+      .then((total) => {
+        if (total !== null && total !== undefined) {
+          setTotalPriceByOwner(total);
+          console.log("Total Price by Owner:", total);
+        }
+      })
+      .catch(console.error);
     fetchOwnerCourtsWithBookings(storedOwnerId)
       .then((courtsWithBookings) => {
         setCourts(courtsWithBookings);
@@ -170,7 +180,7 @@ const Owner = () => {
           0
         );
         console.log("Doanh thu hôm nay:", totalRevenueToday);
-        setTodayRevenue(totalRevenueToday);
+        setTodayRevenue(totalRevenue);
 
         const revenueByHour = {};
 
@@ -275,6 +285,7 @@ const Owner = () => {
     (totalCourtBookings / targetCourtBookings) * 100;
   const revenuePercentage = (monthlyRevenue / targetRevenue) * 100;
   const dailyRevenuePercentage = (todayRevenue / targetRevenue) * 100;
+
   return (
     <div className="owner-page">
       <div className="stat-cards flex flex-wrap gap-6">
@@ -292,13 +303,13 @@ const Owner = () => {
 
         <CircleStat
           title="Doanh Thu Tháng"
-          value={`${monthlyRevenue.toLocaleString("vi-VN")} VNĐ`}
+          value={`${totalPriceByOwner.toLocaleString("vi-VN")} VNĐ`}
           percentage={Math.min(revenuePercentage, 100)} // Giới hạn phần trăm không quá 100%
         />
 
         <CircleStat
-          title="Doanh thu hôm nay"
-          value={`${todayRevenue.toLocaleString("vi-VN")} VNĐ`}
+          title="Tổng Doanh thu "
+          value={`${totalRevenue.toLocaleString("vi-VN")} VNĐ`}
           percentage={Math.min(dailyRevenuePercentage, 100)} // Giới hạn phần trăm không quá 100%
         />
       </div>

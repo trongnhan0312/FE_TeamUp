@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./ChatWidget.scss";
 import aIWebsiteService from "../../services/aIWebsiteService";
+import chatIcon from "../../assets/admin/logo.png"; // Đảm bảo đúng đường dẫn ảnh
 
 const ChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -107,7 +108,11 @@ const ChatWidget = () => {
         </div>
       ) : (
         <button className="chat-toggle-button" onClick={toggleChat}>
-          💬
+          <img
+            src={chatIcon || "/placeholder.svg"}
+            alt="Chat Icon"
+            className="chat-icon-image"
+          />
         </button>
       )}
     </div>

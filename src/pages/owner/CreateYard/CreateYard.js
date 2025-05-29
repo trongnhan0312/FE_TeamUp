@@ -44,7 +44,7 @@ const CreateYard = () => {
     }
   };
   const [bigImage, setBigImage] = useState(null);
-  const [smallImages, setSmallImages] = useState([null, null, null]);
+  const [smallImages, setSmallImages] = useState([null, null, null, null]);
 
   // Xử lý khi chọn file ảnh cho big image
   const handleBigImageChange = (e) => {

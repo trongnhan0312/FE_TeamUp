@@ -69,16 +69,17 @@ export const ENDPOINTS = {
     WEEKBOOKED_SLOTS: "courtbooking/weekly-booked-slots",
     MOST_BOOKED_COURTS: "courtbooking/stats/most-booked-by-owner",
     BOOKING_HISTORY: "courtbooking/all",
-    BOOKING_UPDATE: "courtbooking/update",
+    BOOKING_UPDATE: "courtbooking/status",
     SPORTS_COMPLEXES: "sportscomplex/all",
     SPORTS_COMPLEXES_DETAIL: "court/all",
+    TOTAL_PRICE: "courtbooking/total-price/owner",
   },
-  ROOM_JOIN_REQUEST:{
-    CREATE_ROOM_JOIN_REQUEST: "/roomjoinrequest/create"
+  ROOM_JOIN_REQUEST: {
+    CREATE_ROOM_JOIN_REQUEST: "/roomjoinrequest/create",
   },
   VOUCHER: {
     GET_ALL: "/voucher/all",
-    GET_BY_ID: "/voucher"
+    GET_BY_ID: "/voucher",
   },
   COACH_BOOKING: {
     CREATE_COACH_BOOKING: "/coachbooking/create",
@@ -87,10 +88,10 @@ export const ENDPOINTS = {
     GET_MONTHLY_TOTAL: "/coachbooking/monthly-total",
     GET_WEEKLY_BOOKED_SLOTS: "/coachbooking/weekly-booked-slots",
     GET_ALL: "/coachbooking/all",
-    GET_TOTAL_PRICE: "/coachbooking/total-price/coach"
+    GET_TOTAL_PRICE: "/coachbooking/total-price/coach",
   },
-  AI_WEBSITE:{
-    GET_RESPONSE: "/ai-web/get-website-response"
-  }
+  AI_WEBSITE: {
+    GET_RESPONSE: "/ai-web/get-website-response",
+  },
   // Các endpoints khác
 };
