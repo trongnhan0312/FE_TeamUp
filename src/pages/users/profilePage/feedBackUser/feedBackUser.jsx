@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { FaStar, FaFlag, FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import "./CourtReviews.scss";
+import { FaFlag, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import "./feedBackUser.scss";
 import ratingService from "../../../../services/ratingService";
 
-const CourtReviews = ({ rating = 0, totalReviews = 0, revieweeId }) => {
+const FeedBackUser = ({ revieweeId }) => {
   const [reviewsData, setReviewsData] = useState({
     items: [],
     totalReviews: 0,
@@ -15,16 +15,18 @@ const CourtReviews = ({ rating = 0, totalReviews = 0, revieweeId }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Sử dụng giá trị từ props hoặc từ API
-  const displayRating = reviewsData.averageRating || rating || 0;
-  const displayTotalReviews = reviewsData.totalReviews || totalReviews || 0;
+  // Hiển thị giá trị ưu tiên API, fallback 0
+  const displayRating = reviewsData.averageRating ?? 0;
+  const displayTotalReviews = reviewsData.totalReviews ?? 0;
 
+  // Lấy danh sách đánh giá phân trang
   useEffect(() => {
-    const fetchRatings = async () => {
-      if (!revieweeId) return;
+    if (!revieweeId) return;
 
+    const fetchRatingsList = async () => {
       try {
         setLoading(true);
+        setError(null);
         const response = await ratingService.getList(
           currentPage,
           pageSize,
@@ -32,31 +34,47 @@ const CourtReviews = ({ rating = 0, totalReviews = 0, revieweeId }) => {
         );
 
         if (response.isSuccessed) {
-          // Cập nhật state với dữ liệu từ API
-          const items = response.resultObj?.items || [];
-          console.log("repon", response);
-          setReviewsData({
-            items: items,
-            totalReviews: response.resultObj?.totalCount || totalReviews || 0,
-            averageRating: response.resultObj?.averageRating || rating || 0,
-          });
-
-          setTotalPages(response.resultObj?.totalPages || 1);
+          setReviewsData((prev) => ({
+            ...prev,
+            items: response.resultObj?.items || [],
+          }));
+          setTotalPages(response.resultObj?.totalPages ?? 1);
         } else {
           setError(response.message || "Không thể lấy danh sách đánh giá");
         }
-      } catch (error) {
-        console.error("Lỗi khi lấy danh sách đánh giá:", error);
-        setError("Đã xảy ra lỗi khi tải dữ liệu đánh giá");
+      } catch {
+        setError("Lỗi khi lấy danh sách đánh giá");
       } finally {
         setLoading(false);
       }
     };
 
-    if (revieweeId) {
-      fetchRatings();
-    }
-  }, [revieweeId, currentPage, pageSize, rating, totalReviews]);
+    fetchRatingsList();
+  }, [revieweeId, currentPage]);
+
+  // Lấy summary điểm trung bình và tổng đánh giá
+  useEffect(() => {
+    if (!revieweeId) return;
+
+    const fetchRatingsSummary = async () => {
+      try {
+        const response = await ratingService.getAverageCount(revieweeId);
+        if (response.isSuccessed) {
+          setReviewsData((prev) => ({
+            ...prev,
+            averageRating:
+              response.resultObj?.averageRating ?? prev.averageRating,
+            totalReviews:
+              response.resultObj?.totalReviewerCount ?? prev.totalReviews,
+          }));
+        }
+      } catch {
+        // Bỏ qua lỗi summary
+      }
+    };
+
+    fetchRatingsSummary();
+  }, [revieweeId]);
 
   // Xử lý chuyển trang
   const handlePageChange = (newPage) => {
@@ -65,39 +83,30 @@ const CourtReviews = ({ rating = 0, totalReviews = 0, revieweeId }) => {
     }
   };
 
-  // Hàm xử lý khi nhấn nút viết đánh giá
-  const handleWriteReview = () => {
-    console.log("Write review button clicked");
-    // Thêm logic mở modal hoặc chuyển đến trang đánh giá ở đây
-  };
-
-  // Hàm xử lý khi nhấn nút report đánh giá
+  // Xử lý báo cáo đánh giá
   const handleReportReview = (reviewId) => {
     console.log(`Report review ${reviewId} clicked`);
-    // Thêm logic báo cáo đánh giá ở đây
+    // Thêm logic báo cáo ở đây
   };
 
-  // Hàm để hiển thị avatar từ tên người dùng
+  // Tạo avatar chữ cái đầu
   const getInitials = (name) => {
     if (!name) return "";
     return name.charAt(0).toUpperCase();
   };
 
-  // Hàm tạo màu ngẫu nhiên cho avatar dựa trên tên
+  // Tạo màu avatar dựa trên tên
   const getAvatarColor = (name) => {
     if (!name) return "#cccccc";
-
-    // Tạo màu dựa trên tên người dùng
     let hash = 0;
     for (let i = 0; i < name.length; i++) {
       hash = name.charCodeAt(i) + ((hash << 5) - hash);
     }
-
     const hue = Math.abs(hash) % 360;
     return `hsl(${hue}, 70%, 80%)`;
   };
 
-  // Định dạng thời gian
+  // Định dạng ngày tháng
   const formatDate = (dateString) => {
     if (!dateString) return "";
     const date = new Date(dateString);
@@ -116,18 +125,11 @@ const CourtReviews = ({ rating = 0, totalReviews = 0, revieweeId }) => {
     return <div className="court-reviews error">{error}</div>;
   }
 
-  // Hiển thị thông báo nếu không có đánh giá
   if (reviewsData.items.length === 0) {
     return (
-      <div className="court-reviews">
+      <div className="court-reviews no-reviews">
         <div className="reviews-header">
           <h2 className="section-title">Đánh giá</h2>
-          {/* <button
-                        className="write-review-button"
-                        onClick={handleWriteReview}
-                    >
-                        Viết đánh giá
-                    </button> */}
         </div>
         <div className="rating-summary">
           <div className="rating-score">
@@ -150,7 +152,7 @@ const CourtReviews = ({ rating = 0, totalReviews = 0, revieweeId }) => {
             </div>
           </div>
         </div>
-        <div className="no-reviews">Chưa có đánh giá nào cho sân này.</div>
+        <div>Chưa có đánh giá nào.</div>
       </div>
     );
   }
@@ -159,12 +161,6 @@ const CourtReviews = ({ rating = 0, totalReviews = 0, revieweeId }) => {
     <div className="court-reviews">
       <div className="reviews-header">
         <h2 className="section-title">Đánh giá</h2>
-        {/* <button
-                    className="write-review-button"
-                    onClick={handleWriteReview}
-                >
-                    Viết đánh giá
-                </button> */}
       </div>
 
       <div className="rating-summary">
@@ -241,7 +237,6 @@ const CourtReviews = ({ rating = 0, totalReviews = 0, revieweeId }) => {
         ))}
       </div>
 
-      {/* Phân trang - đã cập nhật để giống SimilarCourts */}
       {totalPages > 1 && (
         <div className="pagination">
           <button
@@ -269,4 +264,4 @@ const CourtReviews = ({ rating = 0, totalReviews = 0, revieweeId }) => {
   );
 };
 
-export default CourtReviews;
+export default FeedBackUser;

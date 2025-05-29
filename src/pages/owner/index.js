@@ -1,5 +1,5 @@
 import { memo, useMemo, useState, useEffect } from "react";
-
+import { getUserInfo } from "../../utils/auth";
 import "./style.scss";
 import {
   fetchOwnerStats,
@@ -116,13 +116,15 @@ const Owner = () => {
     }
 
     setFilteredBooking(filtered);
-    const storedOwnerId = localStorage.getItem("ownerId");
-    if (!storedOwnerId) {
+    const storedOwnerId = getUserInfo();
+    const ownerId = storedOwnerId?.id || storedOwnerId?.userId;
+    console.log("Owner ID:", ownerId);
+    if (!ownerId) {
       console.warn("Owner ID not found");
       return;
     }
     // Gọi API lấy totalPrice ở đây
-    fetchTotalPriceByOwner(storedOwnerId, "VNPay", 5, 2025)
+    fetchTotalPriceByOwner(ownerId, "VNPay", 5, 2025)
       .then((total) => {
         if (total !== null && total !== undefined) {
           setTotalPriceByOwner(total);
@@ -130,13 +132,13 @@ const Owner = () => {
         }
       })
       .catch(console.error);
-    fetchOwnerCourtsWithBookings(storedOwnerId)
+    fetchOwnerCourtsWithBookings(ownerId)
       .then((courtsWithBookings) => {
         setCourts(courtsWithBookings);
       })
       .catch(console.error);
 
-    fetchOwnerStats(storedOwnerId)
+    fetchOwnerStats(ownerId)
       .then((data) => {
         if (data) {
           setUniquePlayerCount(data.uniquePlayerCount);
@@ -146,7 +148,7 @@ const Owner = () => {
       })
       .catch(console.error);
 
-    fetchMostBookedCourtByOwner(storedOwnerId)
+    fetchMostBookedCourtByOwner(ownerId)
       .then((data) => {
         if (data) setMostBookedCourt(data);
       })

@@ -48,6 +48,7 @@ export const ENDPOINTS = {
   RATING: {
     GET_BY_ID: "/rating",
     LIST: "/rating/all",
+    AVERAGE: "/rating/average-count/",
   },
   EMPLOYEE: {
     GET_COACHES_PAGINATION: "/employee/get-coaches-pagination",
