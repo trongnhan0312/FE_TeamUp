@@ -36,6 +36,9 @@ export const ENDPOINTS = {
     GET_USER_BY_ID: "/user",
     GET_ALL_USER: "/user/all",
     UPDATE_USER_OWNER_PROFILE: "user/update-user-owner-profile",
+
+    UPDATE_PROFILE: "/user/update-user-owner-profile",
+
   },
   COURT: {
     GET_BY_ID: "/court",
@@ -92,9 +95,7 @@ export const ENDPOINTS = {
     GET_WEEKLY_BOOKED_SLOTS: "/coachbooking/weekly-booked-slots",
     GET_ALL: "/coachbooking/all",
     GET_TOTAL_PRICE: "/coachbooking/total-price/coach",
-  },
-  AI_WEBSITE: {
-    GET_RESPONSE: "/ai-web/get-website-response",
+    UPDATE_STATUS: "/coachbooking/status"
   },
 
   AI_WEBSITE: {

@@ -6,6 +6,7 @@ export const ROUTER = {
     SCHEDULE_COURT: "/court-schedule/:courtId",
     COURT_BOOKING_CONFIRMATION: "/booking-confirmation",
     COURT_BOOKING_SUMMARY: "/booking-summary",
+    COACH_BOOKING_HISTORY: "/coach-booking-history",
     COURT_HOMEPAGE: "/court/:type",
     COACH_GET_ALL: "/coaches/:type",
     COACH_GET_ALL_DEFAULT: "/coaches",
@@ -17,7 +18,7 @@ export const ROUTER = {
     CHAT: "/chat/:coachId",
     ROOM: "/room",
     COACH_BOOKING_SELECT_COURT: "/coach-booking/:coachId/court-selector/:type",
-    COURT_BOOKING_HISTORY: "court-booking-history"
+    COURT_BOOKING_HISTORY: "/court-booking-history"
   },
   AUTH: {
     LOGIN: "/login",
