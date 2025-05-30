@@ -18,7 +18,7 @@ import ReviewYard from "./pages/owner/ReviewYard/ReviewYard";
 import SportsComplexes from "./pages/owner/SportsComplexes/SportsComplexes";
 import SportsComplexDetail from "./pages/owner/SportsComplexes/SportsComplexesDetail/SportsComplexesDetail";
 import CourtDetailOwner from "./pages/owner/SportsComplexes/SportsComplexesDetail/CourtDetailOwner/court_detail/CourtDetailPage";
-
+import ProfileOwner from "./pages/owner/profileOwner";
 import Coach from "./pages/coach";
 import ReviewCoach from "./pages/coach/ReviewCoach/ReviewCoach";
 import CoachHistory from "./pages/coach/CoachHistory/CoachHistory";
@@ -58,6 +58,7 @@ const RouterCustom = () => {
     <OwnerLayout>
       <Routes>
         <Route path="/owner" element={<Owner />} />
+        <Route path="/ownerProfile" element={<ProfileOwner />} />
         <Route path={ROUTER.OWNER.HUMANHABITS} element={<HumanHabits />} />
         <Route path={ROUTER.OWNER.PITCHHISTORY} element={<PitchHistory />} />
         <Route
@@ -128,9 +129,20 @@ const RouterCustom = () => {
         <Route path={ROUTER.USER.BLOG} element={<Blog />} />
         <Route path={ROUTER.USER.CHAT} element={<UserChatPage />} />
         <Route path={ROUTER.USER.ROOM} element={<RoomList />} />
+
+        <Route
+          path={ROUTER.USER.COACH_BOOKING_SELECT_COURT}
+          element={<CourtSelector />}
+        />
+        <Route
+          path={ROUTER.USER.COURT_BOOKING_HISTORY}
+          element={<CourtHistory />}
+        />
+
         <Route path={ROUTER.USER.COACH_BOOKING_SELECT_COURT} element={<CourtSelector />} />
         <Route path={ROUTER.USER.COURT_BOOKING_HISTORY} element={<CourtHistory />} />
         <Route path={ROUTER.USER.COACH_BOOKING_HISTORY} element={<CoachBookingHistory />} />
+
         {/* <Route path="*" element={<Navigate to="/home" replace />} /> */}
       </Routes>
     </MasterLayout>

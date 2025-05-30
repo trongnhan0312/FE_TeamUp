@@ -1,7 +1,8 @@
-import { memo, useState } from "react";
+import { memo, useState, useEffect } from "react";
 import { Link } from "react-router-dom"; // Import Link
-import { logout } from "../../../../../utils/auth"; // Import hàm logout
+import { logout, getUserInfo } from "../../../../../utils/auth"; // Import hàm logout
 import { useNavigate } from "react-router-dom";
+import userService from "../../../../../services/userService"; // Import userService
 
 import "./style.scss";
 import {
@@ -22,7 +23,27 @@ import logo from "../../../../../assets/admin/logo.png"; // Import logo
 const HeaderOwner = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
-
+  // Lấy thông tin user từ localStorage và lưu vào state
+  const [user, setUser] = useState(() => {
+    const storedUser = getUserInfo();
+    console.log("User info from localStorage:", storedUser);
+    return storedUser;
+  });
+  // Hàm lấy thông tin user từ localStorage
+  useEffect(() => {
+    if (user?.id) {
+      console.log("Fetching user info for userId:", user.id);
+      userService
+        .getUserById(user.id)
+        .then((response) => {
+          console.log("Fresh user info from API:", response);
+          setUser(response.resultObj); // Lấy đúng đối tượng user
+        })
+        .catch((err) => {
+          console.error("Lỗi lấy thông tin user:", err);
+        });
+    }
+  }, [user?.id]);
   const handleSearch = (e) => {
     e.preventDefault();
     // Xử lý tìm kiếm, ví dụ redirect hoặc gọi API
@@ -34,7 +55,7 @@ const HeaderOwner = () => {
     logout(); // gọi hàm logout từ utils
     navigate("/login", { replace: true }); // chuyển hướng về login
   };
-
+  const defaultAvatar = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
   return (
     <>
       <div className="owner-layout">
@@ -158,9 +179,22 @@ const HeaderOwner = () => {
 
                 <div
                   className="user"
-                  style={{ display: "flex", alignItems: "center", gap: "8px" }}
+                  onClick={() => navigate("/ownerProfile")}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    marginLeft: "20px",
+                  }}
                 >
-                  <img src={logo} alt="Avatar" className="avatar" />
+                  <img
+                    src={user?.avatarUrl || user?.avatar || defaultAvatar}
+                    alt="Avatar"
+                    className="avatar"
+                  />
+                  <span className="username">
+                    {user?.fullName || user?.name || "Người dùng"}
+                  </span>
                 </div>
               </div>
             </div>

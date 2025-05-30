@@ -5,7 +5,7 @@ import {
   fetchBookingHistory,
   updateBooking,
 } from "../../../services/ownerService";
-
+import { toast } from "react-toastify";
 const statusColors = {
   Pending: "#ff9800",
   Confirmed: "#2196f3",
@@ -120,9 +120,9 @@ const PitchHistory = () => {
       }));
 
       setRawData([...formatted]);
-      alert("Cập nhật thành công!");
+      toast.success("Cập nhật trạng thái thành công!");
     } catch (error) {
-      alert("Cập nhật trạng thái thất bại, vui lòng thử lại.");
+      toast.error("Có lỗi xảy ra, vui lòng thử lại!");
     }
   };
   const completedPercentage = (completed / totalOrders) * 100;

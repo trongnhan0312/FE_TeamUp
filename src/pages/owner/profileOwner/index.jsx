@@ -1,13 +1,12 @@
 import { memo, useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./style.scss";
-import FeedBackUser from "./feedBackUser/feedBackUser";
+import FeedBackOwner from "./feedBackOwner/feedBackOwner";
 import userService from "../../../services/userService";
-
 import { logout, getUserInfo } from "../../../utils/auth";
 import { toast } from "react-toastify";
 
-const ProfilePage = () => {
+const ProfileOwnerPage = () => {
   const [user, setUser] = useState(() => getUserInfo());
   const fileInputRef = useRef(null); // 👈 thêm ref để trigger upload ảnh
 
@@ -20,14 +19,6 @@ const ProfilePage = () => {
     AvatarUrl: "", // File
     PhoneNumber: "",
   });
-
-
-import { getUserInfo } from "../../../utils/auth";
-import { useNavigate } from "react-router-dom";
-
-const ProfilePage = () => {
-  const [user, setUser] = useState(() => getUserInfo());
-const navigate = useNavigate();
 
   useEffect(() => {
     if (user?.id) {
@@ -98,7 +89,7 @@ const navigate = useNavigate();
     navigate("/login", { replace: true });
   };
   return (
-    <div className="profile-container">
+    <div className="profileOwner-container">
       <aside className="sidebar">
         <div className="avatar-section">
           <img
@@ -131,8 +122,6 @@ const navigate = useNavigate();
 
         <nav className="menu">
           <ul>
-            <li onClick={() => navigate("/court-booking-history")}>Lịch sử đặt Sân</li>
-            <li onClick={() => navigate("/coach-booking-history")}>Lịch sử đặt HLV</li>
             <li>Lịch sử trận đấu</li>
             <li>Phòng đã tạo</li>
             <li>Số dư</li>
@@ -197,10 +186,10 @@ const navigate = useNavigate();
             <button className="cancel">Hủy</button>
           </div>
         </section>
-        <FeedBackUser revieweeId={user?.id} />
+        <FeedBackOwner revieweeId={user?.id} />
       </main>
     </div>
   );
 };
 
-export default memo(ProfilePage);
+export default memo(ProfileOwnerPage);
