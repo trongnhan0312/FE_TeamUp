@@ -50,6 +50,7 @@ export const ENDPOINTS = {
   RATING: {
     GET_BY_ID: "/rating",
     LIST: "/rating/all",
+    AVERAGE: "/rating/average-count/",
   },
   EMPLOYEE: {
     GET_COACHES_PAGINATION: "/employee/get-coaches-pagination",
@@ -71,16 +72,17 @@ export const ENDPOINTS = {
     WEEKBOOKED_SLOTS: "courtbooking/weekly-booked-slots",
     MOST_BOOKED_COURTS: "courtbooking/stats/most-booked-by-owner",
     BOOKING_HISTORY: "courtbooking/all",
-    BOOKING_UPDATE: "courtbooking/update",
+    BOOKING_UPDATE: "courtbooking/status",
     SPORTS_COMPLEXES: "sportscomplex/all",
     SPORTS_COMPLEXES_DETAIL: "court/all",
+    TOTAL_PRICE: "courtbooking/total-price/owner",
   },
-  ROOM_JOIN_REQUEST:{
-    CREATE_ROOM_JOIN_REQUEST: "/roomjoinrequest/create"
+  ROOM_JOIN_REQUEST: {
+    CREATE_ROOM_JOIN_REQUEST: "/roomjoinrequest/create",
   },
   VOUCHER: {
     GET_ALL: "/voucher/all",
-    GET_BY_ID: "/voucher"
+    GET_BY_ID: "/voucher",
   },
   COACH_BOOKING: {
     CREATE_COACH_BOOKING: "/coachbooking/create",
@@ -92,6 +94,7 @@ export const ENDPOINTS = {
     GET_TOTAL_PRICE: "/coachbooking/total-price/coach",
     UPDATE_STATUS: "/coachbooking/status"
   },
+
   AI_WEBSITE:{
     GET_RESPONSE: "/ai-web/get-website-response"
   },
@@ -99,5 +102,6 @@ export const ENDPOINTS = {
     GET_ALL: "/courtbooking/all",
     UPDATE_STATUS: "/courtbooking/status"
   }
+
   // Các endpoints khác
 };

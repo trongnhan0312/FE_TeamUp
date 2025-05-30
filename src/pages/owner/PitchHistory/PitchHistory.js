@@ -96,7 +96,9 @@ const PitchHistory = () => {
   const handleStatusChange = async (bookingId, newStatus) => {
     try {
       await updateBooking(bookingId, newStatus);
-
+      console.log(
+        `Cập nhật trạng thái booking ${bookingId} thành ${newStatus}`
+      );
       const items = await fetchBookingHistory(1, 100, Date.now());
 
       const formatted = items.map((item) => ({

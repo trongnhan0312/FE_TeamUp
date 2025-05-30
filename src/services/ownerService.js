@@ -231,8 +231,8 @@ export const updateBooking = async (bookingId, status) => {
     const formData = new FormData();
     formData.append("Status", status);
 
-    const url = `${ENDPOINTS.OWNER.BOOKING_UPDATE}/${bookingId}`;
-    const response = await axiosInstance.put(url, formData, {
+    const url = `${ENDPOINTS.OWNER.BOOKING_UPDATE}/${bookingId}?status=${status}`;
+    const response = await axiosInstance.patch(url, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -314,6 +314,41 @@ export const fetchCourtsBySportsComplexId = async (
     return [];
   } catch (error) {
     console.error("Lỗi khi lấy sân theo SportsComplexId:", error);
+    throw error;
+  }
+};
+
+/**
+ * Lấy tổng giá tiền booking theo courtId, phương thức thanh toán, tháng và năm
+ * @param {number|string} courtId - ID sân
+ * @param {string} VNPay - phương thức thanh toán (VD: "VNPay")
+ * @param {number|string} month - tháng (VD: 5)
+ * @param {number|string} year - năm (VD: 2025)
+ * @returns {Promise<number|null>} totalPrice hoặc null nếu lỗi
+ */
+export const fetchTotalPriceByOwner = async (
+  ownerId,
+  paymentMethod,
+  month,
+  year
+) => {
+  try {
+    const url = getApiUrl(
+      `${
+        ENDPOINTS.OWNER.TOTAL_PRICE
+      }?ownerId=${ownerId}&paymentMethod=${encodeURIComponent(
+        paymentMethod
+      )}&month=${month}&year=${year}`
+    );
+    console.log("Calling Total Price API: ", url);
+    const response = await axiosInstance.get(url);
+
+    if (response.data.isSuccessed && response.data.resultObj) {
+      return response.data.resultObj.totalPrice || 0;
+    }
+    return null;
+  } catch (error) {
+    console.error("Lỗi khi lấy tổng giá tiền:", error);
     throw error;
   }
 };

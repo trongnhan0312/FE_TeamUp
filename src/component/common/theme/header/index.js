@@ -1,7 +1,7 @@
-import { memo, useEffect, useState } from "react";
-import { Link } from "react-router-dom"; // Import Link
-import { getUserInfo, logout } from "../../../../utils/auth"; // Import hàm logout
-import { useNavigate } from "react-router-dom";
+import { memo, useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { logout, getUserInfo } from "../../../../utils/auth";
+import userService from "../../../../services/userService";
 import "./style.scss";
 import {
   BsChat,
@@ -15,20 +15,33 @@ import userService from "../../../../services/userService";
 
 const Header = () => {
   const navigate = useNavigate();
+  const [user, setUser] = useState(() => {
+    const storedUser = getUserInfo();
+    console.log("User info from localStorage:", storedUser);
+    return storedUser;
+  });
+
+  useEffect(() => {
+    if (user?.id) {
+      console.log("Fetching user info for userId:", user.id);
+      userService
+        .getUserById(user.id)
+        .then((response) => {
+          console.log("Fresh user info from API:", response);
+          setUser(response.resultObj); // Lấy đúng đối tượng user
+        })
+        .catch((err) => {
+          console.error("Lỗi lấy thông tin user:", err);
+        });
+    }
+  }, [user?.id]);
+
   const handleLogout = () => {
-    logout(); // gọi hàm logout từ utils
-    navigate("/login", { replace: true }); // chuyển hướng về login
+    logout();
+    navigate("/login", { replace: true });
   };
 
-  const [userData, setUserData] = useState(null);
-  
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const response = await userService.getUserById(getUserInfo().id);
-      setUserData(response.resultObj);
-    };
-    fetchUserData();
-  }, []);
+  const defaultAvatar = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
   return (
     <>
@@ -37,14 +50,12 @@ const Header = () => {
           <div className="header_wrapper">
             <div className="header_left">
               <div className="logo">
-                {/* Logo là link về trang chủ */}
                 <Link to="/" className="logo">
                   <img src={logo} alt="Logo" className="logo_img" />
                   <span className="logo_text">TeamUp</span>
                 </Link>
               </div>
               <ul className="menu">
-                {/* Dùng Link cho từng menu item */}
                 <li>
                   <Link to="/">Trang chủ</Link>
                 </li>
@@ -88,20 +99,23 @@ const Header = () => {
                   <BsBoxArrowRight />
                 </li>
               </ul>
-              <div className="user" onClick={() => navigate("/profile")}>
+              <div
+                className="user"
+                onClick={() => navigate("/profile")}
+                style={{ cursor: "pointer" }}
+              >
                 <img
-                  src={userData?.avatarUrl}
+                  src={user?.avatarUrl || user?.avatar || defaultAvatar}
                   alt="Avatar"
                   className="avatar"
                 />
-                <span className="username">{userData?.fullName}</span>
+                <span className="username">
+                  {user?.fullName || user?.name || "Người dùng"}
+                </span>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <div className="row">
-        <div className="col-lg-3"></div>
       </div>
     </>
   );
