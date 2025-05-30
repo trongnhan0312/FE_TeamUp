@@ -1,5 +1,5 @@
 import { memo, useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./style.scss";
 import FeedBackCoach from "./feedBackCoach/feedBackCoach";
 import { fetchEmployeeById } from "../../../services/ownerService";
@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 const ProfileCoachPage = () => {
   const [owner, setOwner] = useState(() => getUserInfo());
   const fileInputRef = useRef(null);
-
+  const [packageName, setPackageName] = useState("");
   const [formData, setFormData] = useState({
     Id: "",
     FullName: "",
@@ -23,6 +23,7 @@ const ProfileCoachPage = () => {
 
   const navigate = useNavigate();
 
+  // Lấy dữ liệu employee khi owner.id thay đổi
   useEffect(() => {
     if (owner?.id) {
       fetchEmployeeById(owner.id)
@@ -44,6 +45,15 @@ const ProfileCoachPage = () => {
     }
   }, [owner?.id]);
 
+  // Cập nhật packageName khi owner thay đổi
+  useEffect(() => {
+    if (owner?.package?.name) {
+      setPackageName(owner.package.name);
+    } else {
+      setPackageName("");
+    }
+  }, [owner]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -56,23 +66,19 @@ const ProfileCoachPage = () => {
     try {
       const file = e.target.files[0];
       if (file) {
-        // Cập nhật local preview ảnh
         const previewURL = URL.createObjectURL(file);
         setOwner((prev) => ({
           ...prev,
           avatarUrl: previewURL,
         }));
 
-        // Tạo FormData chỉ để gửi ảnh avatar
         const formDataToUpload = new FormData();
         formDataToUpload.append("AvatarUrl", file);
 
-        // Gọi API update ảnh ngay
         await userService.updateUserOwnerProfile(formDataToUpload);
 
         toast.success("Cập nhật ảnh đại diện thành công!");
 
-        // Đồng thời cập nhật state formData để giữ đồng bộ nếu cần
         setFormData((prev) => ({
           ...prev,
           AvatarUrl: file,
@@ -134,6 +140,25 @@ const ProfileCoachPage = () => {
 
         <nav className="menu">
           <ul>
+            <li>
+              <Link
+                to="/coach/package"
+                state={{ currentPackage: packageName }}
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                Gói:{" "}
+                <span
+                  className={
+                    packageName === "Basic"
+                      ? "package-badge premium"
+                      : "package-badge"
+                  }
+                >
+                  {packageName || "Chưa có gói"}
+                </span>
+              </Link>
+            </li>
+
             <li>Lịch sử trận đấu</li>
             <li>Phòng đã tạo</li>
             <li>Số dư</li>

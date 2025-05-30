@@ -467,3 +467,42 @@ export const createCourt = async ({
     throw error;
   }
 };
+
+/**
+ * Tạo URL thanh toán VNPay cho user với packageId, courtBookingId hoặc coachBookingId có thể null
+ * @param {Object} params
+ * @param {number} params.userId - Id người dùng
+ * @param {number|null} params.courtBookingId - Id đặt sân (null nếu không có)
+ * @param {number|null} params.coachBookingId - Id đặt huấn luyện viên (null nếu không có)
+ * @param {number} params.packageId - Id gói thanh toán
+ * @returns {Promise<string>} trả về URL thanh toán hoặc throw lỗi
+ */
+export const createVnPayUrl = async ({
+  userId,
+  courtBookingId = null,
+  coachBookingId = null,
+  packageId,
+}) => {
+  try {
+    const url = getApiUrl(ENDPOINTS.PAYMENT.CREATE_PAYMENT_VNPay);
+
+    const payload = { userId, courtBookingId, coachBookingId, packageId };
+
+    const response = await axiosInstance.post(url, payload, {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+
+    if (response.status === 200 && response.data.isSuccessed) {
+      // Lấy link từ response.data.message
+      return response.data.message;
+    } else {
+      throw new Error("Lỗi khi tạo URL thanh toán");
+    }
+  } catch (error) {
+    console.error("Lỗi khi gọi createVnPayUrl:", error);
+    throw error;
+  }
+};
