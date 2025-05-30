@@ -3,10 +3,11 @@ import "./style.scss";
 import FeedBackUser from "./feedBackUser/feedBackUser";
 import userService from "../../../services/userService";
 import { getUserInfo } from "../../../utils/auth";
+import { useNavigate } from "react-router-dom";
 
 const ProfilePage = () => {
   const [user, setUser] = useState(() => getUserInfo());
-
+const navigate = useNavigate();
   useEffect(() => {
     if (user?.id) {
       userService
@@ -42,6 +43,8 @@ const ProfilePage = () => {
         </div>
         <nav className="menu">
           <ul>
+            <li onClick={() => navigate("/court-booking-history")}>Lịch sử đặt Sân</li>
+            <li onClick={() => navigate("/coach-booking-history")}>Lịch sử đặt HLV</li>
             <li>Lịch sử trận đấu</li>
             <li>Phòng đã tạo</li>
             <li>Số dư</li>

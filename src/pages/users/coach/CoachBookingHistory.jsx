@@ -166,13 +166,13 @@ const CoachBookingHistory = () => {
           <table className="min-w-full border-collapse border border-gray-300">
             <thead>
               <tr>
-                <th className="border border-gray-300 p-2">Coach</th>
-                <th className="border border-gray-300 p-2">Booking ID</th>
-                <th className="border border-gray-300 p-2">Slots</th>
-                <th className="border border-gray-300 p-2">Court</th>
-                <th className="border border-gray-300 p-2">Price</th>
-                <th className="border border-gray-300 p-2">Status</th>
-                <th className="border border-gray-300 p-2">Actions</th>
+                <th>Tên HLV</th>
+                <th>Mã đơn</th>
+                <th>Khung giờ</th>
+                <th>Sân</th>
+                <th>Giá</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
               </tr>
             </thead>
             <tbody>
