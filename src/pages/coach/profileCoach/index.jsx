@@ -1,13 +1,13 @@
 import { memo, useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./style.scss";
-import FeedBackOwner from "./feedBackOwner/feedBackOwner";
+import FeedBackCoach from "./feedBackCoach/feedBackCoach";
 import { fetchEmployeeById } from "../../../services/ownerService";
 import userService from "../../../services/userService";
 import { logout, getUserInfo } from "../../../utils/auth";
 import { toast } from "react-toastify";
 
-const ProfileOwnerPage = () => {
+const ProfileCoachPage = () => {
   const [owner, setOwner] = useState(() => getUserInfo());
   const fileInputRef = useRef(null);
 
@@ -100,7 +100,7 @@ const ProfileOwnerPage = () => {
   };
 
   return (
-    <div className="profileOwner-container">
+    <div className="profileCoach-container">
       <aside className="sidebar">
         <div className="avatar-section">
           <img
@@ -202,10 +202,10 @@ const ProfileOwnerPage = () => {
             </button>
           </div>
         </section>
-        <FeedBackOwner revieweeId={owner?.id} />
+        <FeedBackCoach revieweeId={owner?.id} />
       </main>
     </div>
   );
 };
 
-export default memo(ProfileOwnerPage);
+export default memo(ProfileCoachPage);

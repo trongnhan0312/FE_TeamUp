@@ -1,5 +1,5 @@
 import { memo, useState, useEffect } from "react";
-import { Link } from "react-router-dom"; // Import Link
+import { Link, useNavigate } from "react-router-dom"; // Import Link
 import { fetchSportsComplexesByOwner } from "../../../services/ownerService";
 import { BsFillPlusCircleFill } from "react-icons/bs";
 import "./style.scss";
@@ -8,7 +8,10 @@ const SportsComplexes = () => {
   const [complexes, setComplexes] = useState([]);
   const [loading, setLoading] = useState(false);
   const storedOwnerId = localStorage.getItem("ownerId");
-
+  const navigate = useNavigate();
+  const handleClick = () => {
+    navigate("/owner/CreateSportsComplexes"); // đường dẫn tới trang tạo khu thể thao
+  };
   useEffect(() => {
     if (!storedOwnerId) {
       console.warn("Không tìm thấy ownerId trong localStorage");
@@ -35,7 +38,12 @@ const SportsComplexes = () => {
     <div className="sports-complexes">
       <h2>Danh sách Khu Thể Thao</h2>
       <div className="header-with-add">
-        <button className="btn-add" title="Tạo khu thể thao mới">
+        <button
+          className="btn-add"
+          title="Tạo khu thể thao mới"
+          onClick={handleClick}
+          type="button"
+        >
           <BsFillPlusCircleFill size={28} />
         </button>
       </div>

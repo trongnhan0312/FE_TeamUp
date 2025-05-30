@@ -352,3 +352,118 @@ export const fetchTotalPriceByOwner = async (
     throw error;
   }
 };
+
+// Lấy chi tiết employee theo id
+export const fetchEmployeeById = async (employeeId) => {
+  try {
+    const url = getApiUrl(
+      `${ENDPOINTS.EMPLOYEE.GET_EMPLOYEE_BY_ID}/${employeeId}`
+    );
+    console.log("Calling Employee Detail API:", url);
+    const response = await axiosInstance.get(url);
+    if (response.data.isSuccessed) {
+      return response.data.resultObj;
+    }
+    return null;
+  } catch (error) {
+    console.error("Lỗi khi lấy thông tin employee:", error);
+    throw error;
+  }
+};
+
+/**
+ * Tạo khu thể thao mới
+ * @param {Object} payload
+ * @param {string} payload.Type - Loại sân (ví dụ "Bóng đá")
+ * @param {string} payload.Name - Tên khu thể thao
+ * @param {string} payload.Address - Địa chỉ khu thể thao
+ * @param {string[]} payload.ImageUrls - Mảng URL ảnh (string)
+ * @param {number} payload.OwnerId - ID chủ sở hữu
+ * @param {number} [payload.Latitude] - Tọa độ vĩ độ, có thể null hoặc undefined
+ * @param {number} [payload.Longitude] - Tọa độ kinh độ, có thể null hoặc undefined
+ * @returns {Promise<Object>} Kết quả API trả về
+ */
+export const createSportsComplex = async ({
+  Type,
+  Name,
+  Address,
+  ImageUrls,
+  OwnerId,
+  Latitude = null,
+  Longitude = null,
+}) => {
+  try {
+    const url = getApiUrl(ENDPOINTS.OWNER.CREATE_SPORTS_COMPLEX);
+
+    const payload = {
+      Type,
+      Name,
+      Address,
+      ImageUrls,
+      OwnerId,
+      Latitude,
+      Longitude,
+    };
+
+    console.log("Calling createSportsComplex API with payload:", payload);
+
+    const response = await axiosInstance.post(url, payload);
+
+    if (response.data.isSuccessed) {
+      return response.data.resultObj;
+    } else {
+      throw new Error(response.data.message || "Tạo khu thể thao thất bại");
+    }
+  } catch (error) {
+    console.error("Lỗi khi gọi createSportsComplex:", error);
+    throw error;
+  }
+};
+
+/**
+ * Tạo sân mới (court)
+ * @param {Object} payload
+ * @param {number|string} payload.SportsComplexId - ID khu thể thao cha
+ * @param {string} payload.Name - Tên sân
+ * @param {string} payload.Description - Mô tả sân
+ * @param {number|string} payload.PricePerHour - Giá tiền mỗi giờ
+ * @param {File[]} payload.ImageUrls - Mảng file ảnh (File objects)
+ * @returns {Promise<Object>} Kết quả API trả về
+ */
+export const createCourt = async ({
+  SportsComplexId,
+  Name,
+  Description,
+  PricePerHour,
+  ImageUrls = [],
+}) => {
+  try {
+    const url = getApiUrl(ENDPOINTS.OWNER.CREATE_COURT); // giả sử ENDPOINTS.OWNER.CREATE_COURT = "/court/create"
+
+    const formData = new FormData();
+    formData.append("SportsComplexId", SportsComplexId.toString());
+    formData.append("Name", Name);
+    formData.append("Description", Description);
+    formData.append("PricePerHour", PricePerHour.toString());
+
+    // Gửi nhiều ảnh cùng key ImageUrls
+    ImageUrls.forEach((file) => {
+      formData.append("ImageUrls", file);
+    });
+
+    const response = await axiosInstance.post(url, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    if (response.data.isSuccessed) {
+      return response.data.resultObj;
+    } else {
+      throw new Error(response.data.message || "Tạo sân thất bại");
+    }
+  } catch (error) {
+    console.error("Lỗi khi gọi createCourt:", error);
+    throw error;
+  }
+};

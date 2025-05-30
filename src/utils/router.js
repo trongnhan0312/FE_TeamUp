@@ -18,7 +18,9 @@ export const ROUTER = {
     CHAT: "/chat/:coachId",
     ROOM: "/room",
     COACH_BOOKING_SELECT_COURT: "/coach-booking/:coachId/court-selector/:type",
-    COURT_BOOKING_HISTORY: "/court-booking-history"
+    COURT_BOOKING_HISTORY: "/court-booking-history",
+    PAYMENT_SUCCESS: "/payment-success",
+    PAYMENT_FAIL: "/payment-fail",
   },
   AUTH: {
     LOGIN: "/login",
@@ -31,16 +33,18 @@ export const ROUTER = {
     HUMANHABITS: "/owner/humanhabits",
     PITCHHISTORY: "/owner/pitchhistory",
     BOOKINGMANAGEMENT: "/owner/bookingmanagement",
-    CREATEYARD: "/owner/createyard",
     REVIEWYARD: "/owner/reviewyard",
     SportsComplexes: "/owner/sportscomplexes",
     SportsComplexDetail: "/owner/sportscomplexes/:id",
     CourtDetailOwner: "/owner/CourtDetailOwner/:courtId",
+    CreateSportsComplexes: "/owner/CreateSportsComplexes",
+    CREATE_COURT: "/owner/createcourt/:sportsComplexId", // thêm param sportsComplexId
   },
   COACH: {
     HOME: "/coach",
     CHAT: "/coach/chat",
     REVIEWCOACH: "/coach/reviewCoach",
     COACHHISTORY: "/coach/CoachHistory",
+    PROFILEBYCOACH: "/coachProfile",
   },
 };
