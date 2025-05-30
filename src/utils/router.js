@@ -26,6 +26,7 @@ export const ROUTER = {
   OTP_VERIFICATION: "/verify-otp",
   OWNER: {
     HOME: "/owner",
+    OWNERPROFILE: "/ownerProfile",
     HUMANHABITS: "/owner/humanhabits",
     PITCHHISTORY: "/owner/pitchhistory",
     BOOKINGMANAGEMENT: "/owner/bookingmanagement",

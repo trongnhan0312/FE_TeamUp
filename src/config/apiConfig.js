@@ -35,6 +35,7 @@ export const ENDPOINTS = {
     CHANGE_PASSWORD: "/user/change-password",
     GET_USER_BY_ID: "/user",
     GET_ALL_USER: "/user/all",
+    UPDATE_USER_OWNER_PROFILE: "user/update-user-owner-profile",
   },
   COURT: {
     GET_BY_ID: "/court",
@@ -96,13 +97,13 @@ export const ENDPOINTS = {
     GET_RESPONSE: "/ai-web/get-website-response",
   },
 
-  AI_WEBSITE:{
-    GET_RESPONSE: "/ai-web/get-website-response"
+  AI_WEBSITE: {
+    GET_RESPONSE: "/ai-web/get-website-response",
   },
   COURT_BOOKING: {
     GET_ALL: "/courtbooking/all",
-    UPDATE_STATUS: "/courtbooking/status"
-  }
+    UPDATE_STATUS: "/courtbooking/status",
+  },
 
   // Các endpoints khác
 };

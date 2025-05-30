@@ -103,7 +103,7 @@
         gap: 20px;
         list-style: none;
         margin-right: 20px;
-        
+
         li {
           cursor: pointer;
           font-size: 18px;
@@ -111,22 +111,22 @@
             color: #8ad839;
           }
         }
-        
       }
-      
 
       .user {
         display: flex;
         align-items: center;
-        background: none;
+        background: white;
+        border-radius: 20px;
         padding: 5px 10px;
         color: black;
 
         .avatar {
           width: 35px;  // Đảm bảo kích thước avatar phù hợp
           height: 35px;
-         
+          border-radius: 50%;
           margin-right: 8px;
+          object-fit: cover;
         }
 
         .username {

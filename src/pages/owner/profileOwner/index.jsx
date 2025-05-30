@@ -1,12 +1,12 @@
 import { memo, useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./style.scss";
-import FeedBackUser from "./feedBackUser/feedBackUser";
+import FeedBackOwner from "./feedBackOwner/feedBackOwner";
 import userService from "../../../services/userService";
 import { logout, getUserInfo } from "../../../utils/auth";
 import { toast } from "react-toastify";
 
-const ProfilePage = () => {
+const ProfileOwnerPage = () => {
   const [user, setUser] = useState(() => getUserInfo());
   const fileInputRef = useRef(null); // 👈 thêm ref để trigger upload ảnh
 
@@ -89,7 +89,7 @@ const ProfilePage = () => {
     navigate("/login", { replace: true });
   };
   return (
-    <div className="profile-container">
+    <div className="profileOwner-container">
       <aside className="sidebar">
         <div className="avatar-section">
           <img
@@ -186,10 +186,10 @@ const ProfilePage = () => {
             <button className="cancel">Hủy</button>
           </div>
         </section>
-        <FeedBackUser revieweeId={user?.id} />
+        <FeedBackOwner revieweeId={user?.id} />
       </main>
     </div>
   );
 };
 
-export default memo(ProfilePage);
+export default memo(ProfileOwnerPage);
