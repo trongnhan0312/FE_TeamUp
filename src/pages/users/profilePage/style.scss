@@ -1,0 +1,117 @@
+.profile-page {
+  display: flex;
+  padding: 2rem;
+  background: #f8f9fa;
+  font-family: sans-serif;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 240px;
+  padding: 1rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+  text-align: center;
+}
+
+.avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto;
+}
+
+.name {
+  font-size: 1.2rem;
+  margin: 0.5rem 0;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-around;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+}
+
+.menu {
+  list-style: none;
+  padding: 0;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+.menu li {
+  padding: 0.5rem 0;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+}
+
+/* Main content */
+.main-content {
+  flex: 1;
+  margin-left: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.section {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.edit-icon {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+.section-body label {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+
+.section-body input {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.actions {
+  margin-top: 1rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.actions .save {
+  background: #a4d100;
+  color: white;
+  border: none;
+  padding: 0.5rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.actions .cancel {
+  background: white;
+  color: black;
+  border: 1px solid #ccc;
+  padding: 0.5rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+}

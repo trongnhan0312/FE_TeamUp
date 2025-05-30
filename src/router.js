@@ -39,6 +39,7 @@ import UserChatPage from "./pages/users/chat";
 import RoomList from "./pages/users/roomList";
 import CourtSelector from "./pages/users/courts/booking_court/CourtSelector";
 import CourtHistory from "./pages/users/courts/court_history/CourtHistory";
+import CoachBookingHistory from "./pages/users/coach/CoachBookingHistory";
 
 const RouterCustom = () => {
   const location = useLocation();
@@ -129,6 +130,7 @@ const RouterCustom = () => {
         <Route path={ROUTER.USER.ROOM} element={<RoomList />} />
         <Route path={ROUTER.USER.COACH_BOOKING_SELECT_COURT} element={<CourtSelector />} />
         <Route path={ROUTER.USER.COURT_BOOKING_HISTORY} element={<CourtHistory />} />
+        <Route path={ROUTER.USER.COACH_BOOKING_HISTORY} element={<CoachBookingHistory />} />
         {/* <Route path="*" element={<Navigate to="/home" replace />} /> */}
       </Routes>
     </MasterLayout>

@@ -1,6 +1,6 @@
-import { memo } from "react";
+import { memo, useEffect, useState } from "react";
 import { Link } from "react-router-dom"; // Import Link
-import { logout } from "../../../../utils/auth"; // Import hàm logout
+import { getUserInfo, logout } from "../../../../utils/auth"; // Import hàm logout
 import { useNavigate } from "react-router-dom";
 import "./style.scss";
 import {
@@ -11,6 +11,7 @@ import {
   BsBoxArrowRight,
 } from "react-icons/bs";
 import logo from "../../../../assets/admin/logo.png";
+import userService from "../../../../services/userService";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -18,6 +19,17 @@ const Header = () => {
     logout(); // gọi hàm logout từ utils
     navigate("/login", { replace: true }); // chuyển hướng về login
   };
+
+  const [userData, setUserData] = useState(null);
+  
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const response = await userService.getUserById(getUserInfo().id);
+      setUserData(response.resultObj);
+    };
+    fetchUserData();
+  }, []);
+
   return (
     <>
       <div className="header_top">
@@ -59,7 +71,7 @@ const Header = () => {
                 <li>
                   <BsChat />
                 </li>
-                <li onClick={() => navigate("/court-booking-history")}>
+                <li onClick={() => navigate("/cart")}>
                   <BsCart3 />
                 </li>
                 <li>
@@ -76,13 +88,13 @@ const Header = () => {
                   <BsBoxArrowRight />
                 </li>
               </ul>
-              <div className="user">
+              <div className="user" onClick={() => navigate("/profile")}>
                 <img
-                  src="https://via.placeholder.com/30"
+                  src={userData?.avatarUrl}
                   alt="Avatar"
                   className="avatar"
                 />
-                <span className="username">Nguyễn Văn Tèo</span>
+                <span className="username">{userData?.fullName}</span>
               </div>
             </div>
           </div>

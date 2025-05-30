@@ -167,6 +167,41 @@ const coachBookingService = {
             throw error.response ? error.response.data : error.message;
         }
     },
+    getAllByUserId: async (userId, pageNumber = 1, pageSize = 10) => {
+        try {
+            const response = await axiosInstance.get(
+                ENDPOINTS.COACH_BOOKING.GET_ALL,
+                {
+                    params: {
+                        userId,
+                        pageNumber,
+                        pageSize
+                    }
+                }
+            );
+
+            return response.data;
+        } catch (error) {
+            console.error("Error getAllByUserId:", error);
+            throw error.response ? error.response.data : error.message;
+        }
+    },
+    updateStatus: async (id, status) => {
+        try {
+            const response = await axiosInstance.patch(`${ENDPOINTS.COACH_BOOKING.UPDATE_STATUS}/${id}`,
+                null,
+                {
+                    params: {
+                        status
+                    }
+                })
+
+            return response.data;
+        } catch (error) {
+            console.error("Error fetching courts list:", error);
+            throw error.response ? error.response.data : error.message;
+        }
+    }
 
 }
 
