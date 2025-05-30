@@ -1,0 +1,266 @@
+.create-SportComplexe-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 24px 20px 40px 20px;
+  font-family: "Roboto", sans-serif;
+  font-size: 12px;
+  color: #222222;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 10px;
+
+    .title {
+      font-weight: 700;
+      font-size: 14px;
+      color: #222;
+    }
+    .price {
+      font-weight: 700;
+      font-size: 14px;
+      color: #222;
+    }
+  }
+
+  .image-section {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+
+    .big-image {
+      flex: 2;
+      height: 260px;
+      border-radius: 12px;
+      background: #ccc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 48px;
+      font-weight: 700;
+      color: #777;
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+      overflow: hidden;
+      border: 2px dashed #bbb;
+      transition: border-color 0.3s ease;
+
+      &:hover {
+        border-color: #6c63ff;
+      }
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 12px;
+      }
+    }
+
+    .small-images {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: 10px;
+
+      .small-image {
+        background: #ccc;
+        border-radius: 12px;
+        cursor: pointer;
+        user-select: none;
+        position: relative;
+        overflow: hidden;
+        height: 120px;
+        font-size: 32px;
+        font-weight: 700;
+        color: #777;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 2px dashed #bbb;
+        transition: border-color 0.3s ease;
+
+        &:hover {
+          border-color: #6c63ff;
+        }
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border-radius: 12px;
+        }
+      }
+    }
+  }
+
+  .description {
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+    margin-bottom: 40px;
+    font-weight: 400;
+    color: #444;
+    line-height: 1.4;
+  }
+
+  .utility-price {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    background: #f7fcee;
+    padding: 15px 20px;
+    border-radius: 12px;
+
+    .utility {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      font-size: 12px;
+
+      .title {
+        font-weight: 700;
+        color: #222;
+      }
+
+      .type-sport {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #222;
+
+        .label {
+          flex: 1;
+        }
+        .add-btn {
+          width: 24px;
+          height: 24px;
+          background: #999999;
+          border-radius: 4px;
+          border: none;
+          font-weight: 700;
+          font-size: 18px;
+          color: white;
+          cursor: pointer;
+          user-select: none;
+        }
+      }
+    }
+
+    .price-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      color: #222;
+
+      span {
+        white-space: nowrap;
+      }
+
+      .btn-book {
+        background: #b8d800;
+        border: none;
+        border-radius: 14px;
+        padding: 6px 15px;
+        color: #222;
+        font-weight: 700;
+        font-size: 12px;
+        cursor: pointer;
+        user-select: none;
+        white-space: nowrap;
+      }
+    }
+  }
+
+  .location-section {
+    .location-title {
+      font-weight: 700;
+      font-size: 12px;
+      color: #222;
+      margin-bottom: 10px;
+    }
+
+    .location-map {
+      width: 100%;
+      height: 140px;
+      border-radius: 8px;
+      background: #ccc;
+      margin-bottom: 6px;
+    }
+
+    .location-desc {
+      font-size: 10px;
+      color: #222;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+
+      .location-icon {
+        font-style: normal;
+        font-size: 12px;
+      }
+    }
+  }
+
+  input[type="number"] {
+    width: 150px;
+    padding: 8px 12px;
+    font-size: 1rem;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    transition: border-color 0.3s ease;
+    outline: none;
+
+    &:focus {
+      border-color: #007bff;
+      box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+  }
+
+  .price {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #333;
+    background-color: #f1f1f1;
+    padding: 8px 14px;
+    border-radius: 6px;
+    min-width: 120px;
+    text-align: center;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  // Nút "Tạo khu thể thao"
+  .btn-create {
+    background-color: #afdd21;
+    color: #222;
+    font-weight: 700;
+    font-size: 16px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0 4px 12px rgba(175, 221, 33, 0.6);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    min-width: 180px;
+    margin: 20px auto 0;
+    display: block;
+
+    &:hover:not(:disabled) {
+      background-color: #92c01c;
+      box-shadow: 0 6px 16px rgba(146, 192, 28, 0.8);
+    }
+
+    &:disabled {
+      background-color: #c4dca8;
+      cursor: not-allowed;
+      box-shadow: none;
+      color: #777;
+    }
+  }
+}

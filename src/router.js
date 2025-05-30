@@ -13,13 +13,15 @@ import Owner from "./pages/owner";
 import HumanHabits from "./pages/owner/HumanHabits/HumanHabits";
 import PitchHistory from "./pages/owner/PitchHistory/PitchHistory";
 import BOOKINGMANAGEMENT from "./pages/owner/BookingManagement/BookingManagement";
-import CreateYard from "./pages/owner/CreateYard/CreateYard";
+import CreateCourt from "./pages/owner/SportsComplexes/SportsComplexesDetail/CreateCourt/CreateCourt";
 import ReviewYard from "./pages/owner/ReviewYard/ReviewYard";
+import CreateSportsComplexes from "./pages/owner/SportsComplexes/CreateSportsComplexes/CreateSportsComplexes";
 import SportsComplexes from "./pages/owner/SportsComplexes/SportsComplexes";
 import SportsComplexDetail from "./pages/owner/SportsComplexes/SportsComplexesDetail/SportsComplexesDetail";
 import CourtDetailOwner from "./pages/owner/SportsComplexes/SportsComplexesDetail/CourtDetailOwner/court_detail/CourtDetailPage";
 import ProfileOwner from "./pages/owner/profileOwner";
 import Coach from "./pages/coach";
+import ProfileByCoach from "./pages/coach/profileCoach";
 import ReviewCoach from "./pages/coach/ReviewCoach/ReviewCoach";
 import CoachHistory from "./pages/coach/CoachHistory/CoachHistory";
 import { ROUTER } from "./utils/router";
@@ -40,7 +42,8 @@ import RoomList from "./pages/users/roomList";
 import CourtSelector from "./pages/users/courts/booking_court/CourtSelector";
 import CourtHistory from "./pages/users/courts/court_history/CourtHistory";
 import CoachBookingHistory from "./pages/users/coach/CoachBookingHistory";
-
+import PaymentSuccess from "./pages/users/Payment/PaymentSucces/PaymentSuccess";
+import PaymentFail from "./pages/users/Payment/PaymentFail/PaymentFail";
 const RouterCustom = () => {
   const location = useLocation();
   const [isLoggedIn, setIsLoggedIn] = useState(isAuthenticated());
@@ -65,7 +68,7 @@ const RouterCustom = () => {
           path={ROUTER.OWNER.BOOKINGMANAGEMENT}
           element={<BOOKINGMANAGEMENT />}
         />
-        <Route path={ROUTER.OWNER.CREATEYARD} element={<CreateYard />} />
+        <Route path={ROUTER.OWNER.CREATE_COURT} element={<CreateCourt />} />
         <Route path={ROUTER.OWNER.REVIEWYARD} element={<ReviewYard />} />
         <Route
           path={ROUTER.OWNER.SportsComplexes}
@@ -82,6 +85,13 @@ const RouterCustom = () => {
             <CourtDetailOwner />
           }
         />
+        <Route
+          path={ROUTER.OWNER.CreateSportsComplexes}
+          element={
+            // import đúng component CourtDetailOwner
+            <CreateSportsComplexes />
+          }
+        />
         <Route path="*" element={<Navigate to="/owner" replace />} />
       </Routes>
     </OwnerLayout>
@@ -95,6 +105,11 @@ const RouterCustom = () => {
         <Route path={ROUTER.COACH.CHAT} element={<CoachChatPage />} />
         <Route path={ROUTER.COACH.REVIEWCOACH} element={<ReviewCoach />} />
         <Route path={ROUTER.COACH.COACHHISTORY} element={<CoachHistory />} />
+        <Route path={ROUTER.COACH.PROFILE} element={<CoachProfile />} />
+        <Route
+          path={ROUTER.COACH.PROFILEBYCOACH}
+          element={<ProfileByCoach />}
+        />
         {/* <Route path="*" element={<Navigate to="/coach" replace />} /> */}
       </Routes>
     </CoachLayout>
@@ -139,10 +154,23 @@ const RouterCustom = () => {
           element={<CourtHistory />}
         />
 
-        <Route path={ROUTER.USER.COACH_BOOKING_SELECT_COURT} element={<CourtSelector />} />
-        <Route path={ROUTER.USER.COURT_BOOKING_HISTORY} element={<CourtHistory />} />
-        <Route path={ROUTER.USER.COACH_BOOKING_HISTORY} element={<CoachBookingHistory />} />
-
+        <Route
+          path={ROUTER.USER.COACH_BOOKING_SELECT_COURT}
+          element={<CourtSelector />}
+        />
+        <Route
+          path={ROUTER.USER.COURT_BOOKING_HISTORY}
+          element={<CourtHistory />}
+        />
+        <Route
+          path={ROUTER.USER.COACH_BOOKING_HISTORY}
+          element={<CoachBookingHistory />}
+        />
+        <Route
+          path={ROUTER.USER.PAYMENT_SUCCESS}
+          element={<PaymentSuccess />}
+        />
+        <Route path={ROUTER.USER.PAYMENT_FAIL} element={<PaymentFail />} />
         {/* <Route path="*" element={<Navigate to="/home" replace />} /> */}
       </Routes>
     </MasterLayout>

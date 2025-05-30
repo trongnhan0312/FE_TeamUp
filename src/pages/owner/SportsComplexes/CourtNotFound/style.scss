@@ -1,0 +1,41 @@
+.no-courts-container {
+  text-align: center;
+  padding: 20px;
+  font-size: 1.1rem;
+  color: #555;
+
+  p {
+    margin-bottom: 16px;
+  }
+
+  .btn-create-court {
+    background-color: #afdd21;
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    font-size: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.25s ease;
+
+    &:hover {
+      background-color: #8bbc17;
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(175, 221, 33, 0.5);
+    }
+  }
+
+  .logo-container {
+    margin-top: 24px;
+  }
+
+  .no-courts-logo {
+    max-width: 300px;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+}

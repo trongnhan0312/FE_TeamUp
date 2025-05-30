@@ -2,6 +2,7 @@
   padding: 20px;
   font-family: Arial, sans-serif;
   background-color: #f9f9f9;
+
   .header-with-add {
     display: flex;
     align-items: center;
@@ -26,6 +27,7 @@
       }
     }
   }
+
   h2 {
     text-align: center;
     margin-bottom: 25px;
@@ -73,6 +75,38 @@
         margin: 0;
         color: #7f8c8d;
         font-style: italic;
+      }
+    }
+  }
+
+  /* Bổ sung phần no-courts-container */
+  .no-courts-container {
+    text-align: center;
+    padding: 20px;
+    font-size: 1.1rem;
+    color: #555;
+
+    p {
+      margin-bottom: 16px;
+    }
+
+    .btn-create-court {
+      background-color: #afdd21;  // màu chủ đạo
+      color: white;
+      border: none;
+      padding: 10px 24px;
+      font-size: 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.25s ease;
+
+      &:hover {
+        background-color: #8bbc17; // màu đậm hơn khi hover
+      }
+
+      &:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(175, 221, 33, 0.5);
       }
     }
   }

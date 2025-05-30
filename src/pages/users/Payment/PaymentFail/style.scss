@@ -1,0 +1,21 @@
+.payment-fail-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; // full màn hình
+    background-color: #fce7e7; // nền đỏ nhạt biểu thị lỗi
+  }
+  
+  .icon-fail {
+    margin-bottom: 20px;
+  }
+  
+  .text-fail {
+    font-weight: 700;
+    font-style: italic;
+    font-size: 20px;
+    color: #b71c1c; // màu đỏ đậm cho chữ
+    font-family: Arial, sans-serif;
+  }
+  
