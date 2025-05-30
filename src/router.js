@@ -20,6 +20,7 @@ import SportsComplexes from "./pages/owner/SportsComplexes/SportsComplexes";
 import SportsComplexDetail from "./pages/owner/SportsComplexes/SportsComplexesDetail/SportsComplexesDetail";
 import CourtDetailOwner from "./pages/owner/SportsComplexes/SportsComplexesDetail/CourtDetailOwner/court_detail/CourtDetailPage";
 import ProfileOwner from "./pages/owner/profileOwner";
+import OwnerPackage from "./pages/owner/OwnerPackage/OwnerPackage";
 import Coach from "./pages/coach";
 import ProfileByCoach from "./pages/coach/profileCoach";
 import ReviewCoach from "./pages/coach/ReviewCoach/ReviewCoach";
@@ -32,6 +33,7 @@ import BookingSummary from "./pages/users/courts/booking_court/BookingSummary";
 import CourtListing from "./pages/users/courts/homepage_court/CourtListing";
 import CoachListing from "./pages/users/coach/CoachListing";
 import CoachProfile from "./pages/users/coach/CoachProfile";
+import CoachPackage from "./pages/coach/CoachPackage/CoachPackage";
 import PrivacyPolicy from "./pages/users/privacyPolicy";
 import AboutUs from "./pages/users/aboutUs";
 import SupportCenter from "./pages/users/supportCenter";
@@ -80,18 +82,13 @@ const RouterCustom = () => {
         />
         <Route
           path={ROUTER.OWNER.CourtDetailOwner}
-          element={
-            // import đúng component CourtDetailOwner
-            <CourtDetailOwner />
-          }
+          element={<CourtDetailOwner />}
         />
         <Route
           path={ROUTER.OWNER.CreateSportsComplexes}
-          element={
-            // import đúng component CourtDetailOwner
-            <CreateSportsComplexes />
-          }
+          element={<CreateSportsComplexes />}
         />
+        <Route path={ROUTER.OWNER.OWNER_PACKAGE} element={<OwnerPackage />} />
         <Route path="*" element={<Navigate to="/owner" replace />} />
       </Routes>
     </OwnerLayout>
@@ -110,6 +107,7 @@ const RouterCustom = () => {
           path={ROUTER.COACH.PROFILEBYCOACH}
           element={<ProfileByCoach />}
         />
+        <Route path={ROUTER.COACH.COACH_PACKAGE} element={<CoachPackage />} />
         {/* <Route path="*" element={<Navigate to="/coach" replace />} /> */}
       </Routes>
     </CoachLayout>

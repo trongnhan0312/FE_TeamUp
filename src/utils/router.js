@@ -38,7 +38,8 @@ export const ROUTER = {
     SportsComplexDetail: "/owner/sportscomplexes/:id",
     CourtDetailOwner: "/owner/CourtDetailOwner/:courtId",
     CreateSportsComplexes: "/owner/CreateSportsComplexes",
-    CREATE_COURT: "/owner/createcourt/:sportsComplexId", // thêm param sportsComplexId
+    CREATE_COURT: "/owner/createcourt/:sportsComplexId",
+    OWNER_PACKAGE: "/owner/package",
   },
   COACH: {
     HOME: "/coach",
@@ -46,5 +47,6 @@ export const ROUTER = {
     REVIEWCOACH: "/coach/reviewCoach",
     COACHHISTORY: "/coach/CoachHistory",
     PROFILEBYCOACH: "/coachProfile",
+    COACH_PACKAGE: "/coach/package",
   },
 };

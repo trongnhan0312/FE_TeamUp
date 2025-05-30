@@ -85,6 +85,9 @@ export const ENDPOINTS = {
   ROOM_JOIN_REQUEST: {
     CREATE_ROOM_JOIN_REQUEST: "/roomjoinrequest/create",
   },
+  PAYMENT: {
+    CREATE_PAYMENT_VNPay: "payment/create-vnpay-url",
+  },
   VOUCHER: {
     GET_ALL: "/voucher/all",
     GET_BY_ID: "/voucher",

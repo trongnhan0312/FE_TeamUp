@@ -80,6 +80,22 @@
             }
           }
         }
+        .package-badge {
+          background-color: #708f12;  // màu cho gói thường
+          color: #fff;
+          padding: 0px 12px;
+          border-radius: 12px;
+          font-weight: bold;
+          border: 2px solid #708f12;
+          display: inline-block;
+          margin-left: 6px;
+          font-size: 0.9rem;
+        }
+        
+        .package-badge.premium {
+          background-color: #c8ff00; // màu xanh dương cho Premium
+          border-color: #c8ff00;     // viền màu đậm hơn
+        }
       }
     }
   

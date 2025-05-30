@@ -1,21 +1,53 @@
-.payment-fail-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh; // full màn hình
-    background-color: #fce7e7; // nền đỏ nhạt biểu thị lỗi
+$font-family: 'Arial, sans-serif';
+
+.payment-success-container {
+  position: relative;
+  min-height: 100vh;
+  padding: 40px 20px;
+  font-family: $font-family;
+  color: white;
+  text-align: center;
+  overflow: hidden; /* đảm bảo không tràn */
+  padding-top: 200px;
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0; /* top:0; left:0; right:0; bottom:0; */
+    background-image: url('../../../../assets/admin/logo.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    opacity: 0.1; /* chỉnh độ mờ ở đây */
+    pointer-events: none; /* để không che chắn event */
+    z-index: 0;
   }
-  
-  .icon-fail {
-    margin-bottom: 20px;
+
+  > * {
+    position: relative;
+    z-index: 1; /* nội dung lên trên ảnh nền */
   }
-  
-  .text-fail {
-    font-weight: 700;
-    font-style: italic;
-    font-size: 20px;
-    color: #b71c1c; // màu đỏ đậm cho chữ
-    font-family: Arial, sans-serif;
+}
+
+.icon-check {
+  margin-bottom: 10px;
+  width: 160px;
+  height: 160px;
+  margin-left: auto;
+  margin-right: auto;
+
+  svg {
+    width: 100%;
+    height: 100%;
   }
-  
+}
+
+
+.text-success {
+  font-family: $font-family;
+  font-weight: 700;
+  font-style: italic;
+  font-size: 36px;
+  color: #000000;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}

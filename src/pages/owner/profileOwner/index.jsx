@@ -1,5 +1,5 @@
 import { memo, useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./style.scss";
 import FeedBackOwner from "./feedBackOwner/feedBackOwner";
 import { fetchEmployeeById } from "../../../services/ownerService";
@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 const ProfileOwnerPage = () => {
   const [owner, setOwner] = useState(() => getUserInfo());
   const fileInputRef = useRef(null);
-
+  const [packageName, setPackageName] = useState("");
   const [formData, setFormData] = useState({
     Id: "",
     FullName: "",
@@ -24,6 +24,9 @@ const ProfileOwnerPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (owner?.package?.name) {
+      setPackageName(owner.package.name);
+    }
     if (owner?.id) {
       fetchEmployeeById(owner.id)
         .then((data) => {
@@ -37,6 +40,10 @@ const ProfileOwnerPage = () => {
             AvatarUrl: "", // File mới chưa chọn
             PhoneNumber: data.phoneNumber || "",
           });
+          // Sau khi lấy dữ liệu employee, cập nhật packageName luôn nếu có
+          if (data.package?.name) {
+            setPackageName(data.package.name);
+          }
         })
         .catch((err) => {
           console.error("Lỗi lấy thông tin owner:", err);
@@ -134,6 +141,25 @@ const ProfileOwnerPage = () => {
 
         <nav className="menu">
           <ul>
+            <li>
+              <Link
+                to="/owner/package"
+                state={{ currentPackage: packageName }}
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                Gói:{" "}
+                <span
+                  className={
+                    packageName === "Premium"
+                      ? "package-badge premium"
+                      : "package-badge"
+                  }
+                >
+                  {packageName || "Chưa có gói"}
+                </span>
+              </Link>
+            </li>
+
             <li>Lịch sử trận đấu</li>
             <li>Phòng đã tạo</li>
             <li>Số dư</li>
