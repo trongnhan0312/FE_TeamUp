@@ -48,6 +48,8 @@
 
         li {
           cursor: pointer;
+          border-bottom: 0px;
+          
           &:hover {
             text-decoration: none; 
           }
@@ -92,6 +94,7 @@
         border-radius: 20px;
         padding: 5px 10px;
         color: black;
+        cursor: pointer;
 
         .avatar {
           width: 35px;  // Đảm bảo kích thước avatar phù hợp
