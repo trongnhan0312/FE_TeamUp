@@ -28,6 +28,9 @@ const ProfilePage = () => {
   // Dùng state này để lưu preview ảnh (local url)
   const [previewAvatar, setPreviewAvatar] = useState("");
 
+  // State bật/tắt chế độ sửa tuổi
+  const [editAge, setEditAge] = useState(false);
+
   // Khi component mount hoặc user thay đổi (id)
   useEffect(() => {
     if (user?.id) {
@@ -46,6 +49,7 @@ const ProfilePage = () => {
             PhoneNumber: data.phoneNumber || "",
           });
           setPreviewAvatar(data.avatarUrl || data.avatar || ""); // ảnh hiện tại
+          setEditAge(!data.age); // Nếu chưa có tuổi thì bật chế độ sửa luôn
         })
         .catch((err) => {
           console.error("Lỗi lấy thông tin user:", err);
@@ -86,8 +90,6 @@ const ProfilePage = () => {
   // Xử lý lưu hồ sơ
   const handleSave = async () => {
     try {
-      // Nếu cần upload file riêng, xử lý upload file ở đây và lấy URL trả về
-      // Giả sử userService.updateUserOwnerProfile có xử lý upload file đúng cách
       await userService.updateUserOwnerProfile(formData);
 
       toast.success("Cập nhật hồ sơ thành công!");
@@ -96,6 +98,7 @@ const ProfilePage = () => {
       if (user?.id) {
         const response = await userService.getUserById(user.id);
         setUser(response.resultObj);
+        setEditAge(!response.resultObj.age); // cập nhật lại chế độ sửa tuổi
       }
     } catch (error) {
       console.error("Lỗi cập nhật hồ sơ:", error);
@@ -103,9 +106,8 @@ const ProfilePage = () => {
     }
   };
 
-  // Hủy không làm gì (có thể reset formData nếu cần)
+  // Hủy không làm gì (reset formData)
   const handleCancel = () => {
-    // Reset formData về dữ liệu user hiện tại
     setFormData({
       Id: user.id,
       FullName: user.fullName || "",
@@ -116,6 +118,7 @@ const ProfilePage = () => {
       PhoneNumber: user.phoneNumber || "",
     });
     setPreviewAvatar(user.avatarUrl || user.avatar || "");
+    setEditAge(!user.age);
   };
 
   const handleLogout = () => {
@@ -151,7 +154,33 @@ const ProfilePage = () => {
           <div className="name">{user?.fullName}</div>
           <div className="stats">
             <div>
-              <strong>{user?.age}</strong> Tuổi
+              {editAge ? (
+                <input
+                  name="Age"
+                  value={formData.Age}
+                  onChange={handleChange}
+                  placeholder="Tuổi"
+                  style={{ width: "60px", fontWeight: "bold" }}
+                />
+              ) : (
+                <span>
+                  <strong>{formData.Age}</strong> Tuổi&nbsp;
+                  <button
+                    type="button"
+                    onClick={() => setEditAge(true)}
+                    style={{
+                      fontSize: "0.8rem",
+                      cursor: "pointer",
+                      color: "#7ac943",
+                      border: "none",
+                      background: "none",
+                      padding: 0,
+                    }}
+                  >
+                    Sửa
+                  </button>
+                </span>
+              )}
             </div>
           </div>
         </div>
@@ -196,14 +225,6 @@ const ProfilePage = () => {
               onChange={handleChange}
               placeholder="Số điện thoại"
             />
-          </div>
-          <div className="buttons">
-            <button className="save" type="button" onClick={handleSave}>
-              Lưu
-            </button>
-            <button className="cancel" type="button" onClick={handleCancel}>
-              Hủy
-            </button>
           </div>
         </section>
 

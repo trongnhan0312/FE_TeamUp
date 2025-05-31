@@ -44,8 +44,15 @@ import RoomList from "./pages/users/roomList";
 import CourtSelector from "./pages/users/courts/booking_court/CourtSelector";
 import CourtHistory from "./pages/users/courts/court_history/CourtHistory";
 import CoachBookingHistory from "./pages/users/coach/CoachBookingHistory";
+//User
 import PaymentSuccess from "./pages/users/Payment/PaymentSucces/PaymentSuccess";
 import PaymentFail from "./pages/users/Payment/PaymentFail/PaymentFail";
+//Owner
+import PaymentSuccessOwner from "./pages/owner/Payment/PaymentSucces/PaymentSuccess";
+import PaymentFailOwner from "./pages/owner/Payment/PaymentFail/PaymentFail";
+//Coach
+import PaymentSuccessCoach from "./pages/coach/Payment/PaymentSucces/PaymentSuccess";
+import PaymentFailCoach from "./pages/coach/Payment/PaymentFail/PaymentFail";
 const RouterCustom = () => {
   const location = useLocation();
   const [isLoggedIn, setIsLoggedIn] = useState(isAuthenticated());
@@ -89,6 +96,14 @@ const RouterCustom = () => {
           element={<CreateSportsComplexes />}
         />
         <Route path={ROUTER.OWNER.OWNER_PACKAGE} element={<OwnerPackage />} />
+        <Route
+          path={ROUTER.OWNER.PAYMENT_SUCCESS}
+          element={<PaymentSuccessOwner />}
+        />
+        <Route
+          path={ROUTER.OWNER.PAYMENT_FAIL}
+          element={<PaymentFailOwner />}
+        />
         <Route path="*" element={<Navigate to="/owner" replace />} />
       </Routes>
     </OwnerLayout>
@@ -106,6 +121,14 @@ const RouterCustom = () => {
         <Route
           path={ROUTER.COACH.PROFILEBYCOACH}
           element={<ProfileByCoach />}
+        />
+        <Route
+          path={ROUTER.COACH.PAYMENT_SUCCESS}
+          element={<PaymentSuccessCoach />}
+        />
+        <Route
+          path={ROUTER.COACH.PAYMENT_FAIL}
+          element={<PaymentFailCoach />}
         />
         <Route path={ROUTER.COACH.COACH_PACKAGE} element={<CoachPackage />} />
         {/* <Route path="*" element={<Navigate to="/coach" replace />} /> */}
