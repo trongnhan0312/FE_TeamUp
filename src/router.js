@@ -53,6 +53,7 @@ import PaymentFailOwner from "./pages/owner/Payment/PaymentFail/PaymentFail";
 //Coach
 import PaymentSuccessCoach from "./pages/coach/Payment/PaymentSucces/PaymentSuccess";
 import PaymentFailCoach from "./pages/coach/Payment/PaymentFail/PaymentFail";
+import RoomCreateHistory from "./pages/users/roomList/RoomCreateHistory";
 const RouterCustom = () => {
   const location = useLocation();
   const [isLoggedIn, setIsLoggedIn] = useState(isAuthenticated());
@@ -192,6 +193,7 @@ const RouterCustom = () => {
           element={<PaymentSuccess />}
         />
         <Route path={ROUTER.USER.PAYMENT_FAIL} element={<PaymentFail />} />
+        <Route path={ROUTER.USER.ROOM_CREATE_HISTORY} element={<RoomCreateHistory />} />
         {/* <Route path="*" element={<Navigate to="/home" replace />} /> */}
       </Routes>
     </MasterLayout>

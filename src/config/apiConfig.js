@@ -66,6 +66,7 @@ export const ENDPOINTS = {
   },
   ROOM: {
     GET_ALL: "/room/all",
+    UPDATE_STATUS: "/room/status"
   },
   ROOM_JOIN_REQUEST: {
     CREATE_ROOM_JOIN_REQUEST: "/roomjoinrequest/create",

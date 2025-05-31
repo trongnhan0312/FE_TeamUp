@@ -21,6 +21,7 @@ export const ROUTER = {
     COURT_BOOKING_HISTORY: "/court-booking-history",
     PAYMENT_SUCCESS: "/payment-success",
     PAYMENT_FAIL: "/payment-fail",
+    ROOM_CREATE_HISTORY: "/room-create-history",
   },
   AUTH: {
     LOGIN: "/login",
