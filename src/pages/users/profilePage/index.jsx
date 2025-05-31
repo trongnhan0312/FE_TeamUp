@@ -193,6 +193,9 @@ const ProfilePage = () => {
             <li onClick={() => navigate("/coach-booking-history")}>
               Lịch sử đặt HLV
             </li>
+            <li onClick={() => navigate("/room-create-history")}>
+              Lịch sử tạo phòng
+            </li>
             <li>Lịch sử trận đấu</li>
             <li>Phòng đã tạo</li>
             <li>Số dư</li>
