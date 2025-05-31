@@ -11,6 +11,7 @@ const ProfileOwnerPage = () => {
   const [owner, setOwner] = useState(() => getUserInfo());
   const fileInputRef = useRef(null);
   const [packageName, setPackageName] = useState("");
+  const [editAge, setEditAge] = useState(false);
   const [formData, setFormData] = useState({
     Id: "",
     FullName: "",
@@ -40,10 +41,10 @@ const ProfileOwnerPage = () => {
             AvatarUrl: "", // File mới chưa chọn
             PhoneNumber: data.phoneNumber || "",
           });
-          // Sau khi lấy dữ liệu employee, cập nhật packageName luôn nếu có
           if (data.package?.name) {
             setPackageName(data.package.name);
           }
+          setEditAge(!data.age); // Nếu chưa có tuổi thì bật chế độ sửa luôn
         })
         .catch((err) => {
           console.error("Lỗi lấy thông tin owner:", err);
@@ -63,23 +64,19 @@ const ProfileOwnerPage = () => {
     try {
       const file = e.target.files[0];
       if (file) {
-        // Cập nhật local preview ảnh
         const previewURL = URL.createObjectURL(file);
         setOwner((prev) => ({
           ...prev,
           avatarUrl: previewURL,
         }));
 
-        // Tạo FormData chỉ để gửi ảnh avatar
         const formDataToUpload = new FormData();
         formDataToUpload.append("AvatarUrl", file);
 
-        // Gọi API update ảnh ngay
         await userService.updateUserOwnerProfile(formDataToUpload);
 
         toast.success("Cập nhật ảnh đại diện thành công!");
 
-        // Đồng thời cập nhật state formData để giữ đồng bộ nếu cần
         setFormData((prev) => ({
           ...prev,
           AvatarUrl: file,
@@ -95,10 +92,28 @@ const ProfileOwnerPage = () => {
     try {
       await userService.updateUserOwnerProfile(formData);
       toast.success("Cập nhật hồ sơ thành công!");
+      if (owner?.id) {
+        const data = await fetchEmployeeById(owner.id);
+        setOwner(data);
+        setEditAge(!data.age);
+      }
     } catch (error) {
       console.error("Lỗi cập nhật hồ sơ:", error);
       toast.error("Có lỗi xảy ra, vui lòng thử lại!");
     }
+  };
+
+  const handleCancel = () => {
+    setFormData({
+      Id: owner.id,
+      FullName: owner.fullName || "",
+      Age: owner.age || "",
+      Height: owner.height || "",
+      Weight: owner.weight || "",
+      AvatarUrl: "",
+      PhoneNumber: owner.phoneNumber || "",
+    });
+    setEditAge(!owner.age);
   };
 
   const handleLogout = () => {
@@ -134,7 +149,33 @@ const ProfileOwnerPage = () => {
           <div className="name">{owner?.fullName}</div>
           <div className="stats">
             <div>
-              <strong>{owner?.age}</strong> Tuổi
+              {editAge ? (
+                <input
+                  name="Age"
+                  value={formData.Age}
+                  onChange={handleChange}
+                  placeholder="Tuổi"
+                  style={{ width: "60px", fontWeight: "bold" }}
+                />
+              ) : (
+                <span>
+                  <strong>{formData.Age}</strong> Tuổi&nbsp;
+                  <button
+                    type="button"
+                    onClick={() => setEditAge(true)}
+                    style={{
+                      fontSize: "0.8rem",
+                      cursor: "pointer",
+                      color: "#7ac943",
+                      border: "none",
+                      background: "none",
+                      padding: 0,
+                    }}
+                  >
+                    Sửa
+                  </button>
+                </span>
+              )}
             </div>
           </div>
         </div>
@@ -193,14 +234,6 @@ const ProfileOwnerPage = () => {
               placeholder="Số điện thoại"
             />
           </div>
-          <div className="buttons">
-            <button className="save" type="button" onClick={handleSave}>
-              Lưu
-            </button>
-            <button className="cancel" type="button">
-              Hủy
-            </button>
-          </div>
         </section>
 
         <section className="form-section">
@@ -223,11 +256,12 @@ const ProfileOwnerPage = () => {
             <button className="save" type="button" onClick={handleSave}>
               Lưu
             </button>
-            <button className="cancel" type="button">
+            <button className="cancel" type="button" onClick={handleCancel}>
               Hủy
             </button>
           </div>
         </section>
+
         <FeedBackOwner revieweeId={owner?.id} />
       </main>
     </div>

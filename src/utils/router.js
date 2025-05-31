@@ -40,6 +40,8 @@ export const ROUTER = {
     CreateSportsComplexes: "/owner/CreateSportsComplexes",
     CREATE_COURT: "/owner/createcourt/:sportsComplexId",
     OWNER_PACKAGE: "/owner/package",
+    PAYMENT_SUCCESS: "/payment-success",
+    PAYMENT_FAIL: "/payment-fail",
   },
   COACH: {
     HOME: "/coach",
@@ -48,5 +50,7 @@ export const ROUTER = {
     COACHHISTORY: "/coach/CoachHistory",
     PROFILEBYCOACH: "/coachProfile",
     COACH_PACKAGE: "/coach/package",
+    PAYMENT_SUCCESS: "/payment-success",
+    PAYMENT_FAIL: "/payment-fail",
   },
 };
