@@ -10,15 +10,6 @@ const voucherService = {
 
             return response.data;
         } catch (error) {
-            console.error("Error fetching voucher list:", error);
-            if (error.response && error.response.data) {
-                throw {
-                    response: error.response,
-                    message:
-                        error.response.data.message ||
-                        "Không thể lấy danh sách voucher",
-                };
-            }
             throw error.response ? error.response.data : error.message;
         }
     },
@@ -28,15 +19,6 @@ const voucherService = {
 
             return response.data;
         } catch (error) {
-            console.error("Error fetching voucher:", error);
-            if (error.response && error.response.data) {
-                throw {
-                    response: error.response,
-                    message:
-                        error.response.data.message ||
-                        "Không thể lấy voucher",
-                };
-            }
             throw error.response ? error.response.data : error.message;
         }
     }

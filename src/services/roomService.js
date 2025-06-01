@@ -9,7 +9,6 @@ const roomService = {
       });
       return response.data;
     } catch (error) {
-      console.error("Error fetching match list:", error);
       throw error.response ? error.response.data : error.message;
     }
   },
@@ -25,7 +24,6 @@ const roomService = {
 
       return response.data;
     } catch (error) {
-      console.error("Error fetching courts list:", error);
       throw error.response ? error.response.data : error.message;
     }
   },
@@ -44,7 +42,6 @@ const roomService = {
 
       return response.data;
     } catch (error) {
-      console.error("Error fetching courts list:", error);
       throw error.response ? error.response.data : error.message;
     }
   },
@@ -54,7 +51,6 @@ const roomService = {
 
       return response.data;
     } catch (error) {
-      console.error("Error fetching courts list:", error);
       throw error.response ? error.response.data : error.message;
     }
   }

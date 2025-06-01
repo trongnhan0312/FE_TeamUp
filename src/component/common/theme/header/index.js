@@ -16,7 +16,6 @@ const Header = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(() => {
     const storedUser = getUserInfo();
-    console.log("User info from localStorage:", storedUser);
     return storedUser;
   });
 

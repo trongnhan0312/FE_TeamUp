@@ -6,12 +6,7 @@ import {
   updateBooking,
 } from "../../../services/ownerService";
 import { toast } from "react-toastify";
-const statusColors = {
-  Pending: "#ff9800",
-  Confirmed: "#2196f3",
-  Completed: "#94d82d",
-  CancelledByOwner: "#f44336",
-};
+import { statusColors } from "../../../data";
 
 const PitchHistory = () => {
   const [filter, setFilter] = useState("Mới nhất");

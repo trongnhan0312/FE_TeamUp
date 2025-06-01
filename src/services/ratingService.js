@@ -11,13 +11,6 @@ const ratingService = {
       );
       return response.data;
     } catch (error) {
-      console.error("Error fetching court details:", error);
-      if (error.response && error.response.data) {
-        throw {
-          response: error.response,
-          message: error.response.data.message || "Không thể lấy thông tin sân",
-        };
-      }
       throw error.response ? error.response.data : error.message;
     }
   },
@@ -35,13 +28,6 @@ const ratingService = {
 
       return response.data;
     } catch (error) {
-      console.error("Error fetching ratings list:", error);
-      if (error.response && error.response.data) {
-        throw {
-          response: error.response,
-          message: error.response.data.message || "Không thể lấy danh đánh giá",
-        };
-      }
       throw error.response ? error.response.data : error.message;
     }
   },

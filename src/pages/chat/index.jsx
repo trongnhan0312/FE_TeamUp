@@ -86,10 +86,10 @@ const ChatPage = () => {
 
     fetchMessages();
   }, [currentUserId, recipientUserId]);
-
+  
   // Lắng nghe tin nhắn realtime từ Pusher
   useEffect(() => {
-    const pusher = new Pusher("01567a69c62f53eeceb1", {
+    const pusher = new Pusher(process.env.REACT_APP_PUSHER_APP_ID, {
       cluster: "ap1",
     });
 

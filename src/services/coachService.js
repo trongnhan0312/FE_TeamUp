@@ -16,14 +16,6 @@ const coachService = {
       );
       return response.data;
     } catch (error) {
-      if (error.response && error.response.data) {
-        throw {
-          response: error.response,
-          message:
-            error.response.data.message ||
-            "Không thể lấy danh sách huấn luyện viên",
-        };
-      }
       throw error.response ? error.response.data : error.message;
     }
   },
@@ -47,13 +39,6 @@ const coachService = {
       );
       return response.data;
     } catch (error) {
-      if (error.response && error.response.data) {
-        throw {
-          response: error.response,
-          message:
-            error.response.data.message || "Không thể lấy danh sách đánh giá",
-        };
-      }
       throw error.response ? error.response.data : error.message;
     }
   },
@@ -101,14 +86,6 @@ const coachService = {
       );
       return response.data;
     } catch (error) {
-      if (error.response && error.response.data) {
-        throw {
-          response: error.response,
-          message:
-            error.response.data.message ||
-            "Không thể cập nhật thông tin huấn luyện viên",
-        };
-      }
       throw error.response ? error.response.data : error.message;
     }
   },

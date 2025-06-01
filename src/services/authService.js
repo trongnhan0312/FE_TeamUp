@@ -11,12 +11,6 @@ const authService = {
       });
       return response.data;
     } catch (error) {
-      if (error.response && error.response.data) {
-        throw {
-          response: error.response,
-          message: error.response.data.message || "Đăng nhập thất bại",
-        };
-      }
       throw error.response ? error.response.data : error.message;
     }
   },
