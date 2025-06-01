@@ -38,8 +38,6 @@ import PrivacyPolicy from "./pages/users/privacyPolicy";
 import AboutUs from "./pages/users/aboutUs";
 import SupportCenter from "./pages/users/supportCenter";
 import Blog from "./pages/users/blog";
-import CoachChatPage from "./pages/coach/chat";
-import UserChatPage from "./pages/users/chat";
 import RoomList from "./pages/users/roomList";
 import CourtSelector from "./pages/users/courts/booking_court/CourtSelector";
 import CourtHistory from "./pages/users/courts/court_history/CourtHistory";
@@ -56,6 +54,7 @@ import PaymentFailCoach from "./pages/coach/Payment/PaymentFail/PaymentFail";
 import RoomCreateHistory from "./pages/users/roomList/RoomCreateHistory";
 import CreateRoomForm from "./pages/users/roomList/CreateRoomForm";
 import RoomDetail from "./pages/users/roomList/RoomDetail";
+import ChatPage from "./pages/chat";
 const RouterCustom = () => {
     const location = useLocation();
     const [isLoggedIn, setIsLoggedIn] = useState(isAuthenticated());
@@ -132,7 +131,7 @@ const RouterCustom = () => {
         <CoachLayout>
             <Routes>
                 <Route path="/coach" element={<Coach />} />
-                <Route path={ROUTER.COACH.CHAT} element={<CoachChatPage />} />
+                <Route path={ROUTER.COACH.CHAT} element={<ChatPage />} />
                 <Route
                     path={ROUTER.COACH.REVIEWCOACH}
                     element={<ReviewCoach />}
@@ -211,7 +210,7 @@ const RouterCustom = () => {
                     element={<SupportCenter />}
                 />
                 <Route path={ROUTER.USER.BLOG} element={<Blog />} />
-                <Route path={ROUTER.USER.CHAT} element={<UserChatPage />} />
+                <Route path={ROUTER.USER.CHAT} element={<ChatPage />} />
                 <Route path={ROUTER.USER.ROOM} element={<RoomList />} />
 
                 <Route

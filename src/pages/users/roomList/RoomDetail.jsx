@@ -336,7 +336,6 @@ const RoomDetail = () => {
 
   // const handleLeaveRoom = async () => {
   //   try {
-  //     // TODO: Implement leave room
   //     console.log("Leaving room");
   //     // await roomPlayerService.leaveRoom(roomId, userId);
   //     fetchJoinedPlayers(joinedPlayersPagination.currentPage);
@@ -345,13 +344,8 @@ const RoomDetail = () => {
   //   }
   // };
 
-  const handleChatWithPlayer = (playerId, playerName) => {
-    try {
-      console.log(`Opening chat with player: ${playerName} (ID: ${playerId})`);
-      // TODO: Implement chat functionality
-    } catch (err) {
-      console.error("Error opening chat:", err);
-    }
+  const handleChatWithPlayer = (playerId) => {
+    navigate(`/chat`, { state: { userId: playerId } });
   };
 
   const handlePageChange = (newPage) => {
@@ -643,10 +637,7 @@ const RoomDetail = () => {
                                 <button
                                   className="chat-btn"
                                   onClick={() =>
-                                    handleChatWithPlayer(
-                                      player.playerId,
-                                      player.name
-                                    )
+                                    handleChatWithPlayer(player.playerId)
                                   }
                                   title="Chat"
                                 >
@@ -744,9 +735,7 @@ const RoomDetail = () => {
                         {player.id !== userId && (
                           <button
                             className="chat-btn"
-                            onClick={() =>
-                              handleChatWithPlayer(player.id, player.name)
-                            }
+                            onClick={() => handleChatWithPlayer(player.id)}
                             title="Chat"
                           >
                             <FaComments />

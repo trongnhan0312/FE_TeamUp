@@ -15,7 +15,7 @@ $border-radius: 12px;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
@@ -50,7 +50,7 @@ body {
   display: flex;
   align-items: center;
   position: relative;
-  
+
   .search-icon {
     position: absolute;
     left: 25px;
@@ -58,7 +58,7 @@ body {
     height: 18px;
     color: #999;
   }
-  
+
   .search-input {
     width: 100%;
     padding: 10px 10px 10px 35px;
@@ -66,7 +66,7 @@ body {
     border: 1px solid $border-color;
     outline: none;
     font-size: 14px;
-    
+
     &:focus {
       border-color: $primary-color;
     }
@@ -76,18 +76,18 @@ body {
 .conversation-list {
   flex: 1;
   overflow-y: auto;
-  
+
   .conversation-item {
     display: flex;
     padding: 15px;
     border-bottom: 1px solid $border-color;
     cursor: pointer;
     transition: background-color 0.2s;
-    
+
     &:hover {
       background-color: $light-gray;
     }
-    
+
     .avatar {
       width: 50px;
       height: 50px;
@@ -95,14 +95,14 @@ body {
       overflow: hidden;
       margin-right: 15px;
       flex-shrink: 0;
-      
+
       img {
         width: 100%;
         height: 100%;
         object-fit: cover;
       }
     }
-    
+
     .preview-message {
       font-size: 14px;
       color: $text-color;
@@ -128,11 +128,11 @@ body {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  
+
   .header-actions {
     display: flex;
     gap: 15px;
-    
+
     .action-button {
       background: none;
       border: none;
@@ -144,13 +144,13 @@ body {
       align-items: center;
       justify-content: center;
       transition: background-color 0.2s;
-      
+
       svg {
         width: 20px;
         height: 20px;
         color: $primary-color;
       }
-      
+
       &:hover {
         background-color: $light-gray;
       }
@@ -165,63 +165,63 @@ body {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  
+
   .message-container {
     display: flex;
     gap: 10px;
     max-width: 80%;
-    
+
     &.user-message {
       align-self: flex-end;
       flex-direction: row-reverse;
-      
+
       .message-bubble {
         background-color: $message-bg-user;
         color: $message-text-user;
         border-radius: $border-radius $border-radius 0 $border-radius;
       }
-      
+
       .message-time {
         text-align: right;
       }
     }
-    
+
     &.other-message {
       align-self: flex-start;
-      
+
       .message-bubble {
         background-color: $message-bg-other;
         color: $message-text-other;
         border-radius: $border-radius $border-radius $border-radius 0;
       }
     }
-    
+
     .avatar {
       width: 36px;
       height: 36px;
       border-radius: 50%;
       overflow: hidden;
       flex-shrink: 0;
-      
+
       img {
         width: 100%;
         height: 100%;
         object-fit: cover;
       }
     }
-    
+
     .message-content {
       display: flex;
       flex-direction: column;
       gap: 5px;
-      
+
       .message-bubble {
         padding: 12px 15px;
         font-size: 14px;
         line-height: 1.4;
         word-wrap: break-word;
       }
-      
+
       .message-time {
         font-size: 12px;
         color: #999;
@@ -285,14 +285,14 @@ body {
   .chat-app {
     flex-direction: column;
   }
-  
+
   .conversation-panel {
     width: 100%;
     height: 30%;
     border-right: none;
     border-bottom: 1px solid $border-color;
   }
-  
+
   .chat-messages {
     .message-container {
       max-width: 90%;
@@ -396,51 +396,61 @@ body {
     margin-bottom: 1rem;
   }
 
-   .user-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
+  .user-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
 
-      .user-item {
+    .user-item {
+      display: flex;
+      align-items: center;
+      padding: 0.5rem 0.75rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background-color: #f3f4f6;
+      }
+
+      &.active {
+        background-color: #e0f2fe;
+      }
+
+      a {
         display: flex;
         align-items: center;
-        padding: 0.5rem 0.75rem;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: background-color 0.2s ease;
+        text-decoration: none;
+        color: inherit;
+        width: 100%;
 
-        &:hover {
-          background-color: #f3f4f6;
+        .user-avatar {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          object-fit: cover;
+          margin-right: 0.75rem;
         }
 
-        &.active {
-          background-color: #e0f2fe;
-        }
-
-        a {
-          display: flex;
-          align-items: center;
-          text-decoration: none;
-          color: inherit;
-          width: 100%;
-
-          .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-right: 0.75rem;
-          }
-
-          .user-name {
-            font-size: 1rem;
-            font-weight: 500;
-            color: #1f2937;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-          }
+        .user-name {
+          font-size: 1rem;
+          font-weight: 500;
+          color: #1f2937;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
       }
     }
+  }
+}
+
+.user-avatar {
+  border-radius: 50%;
+  width: 20%;
+  margin-right: 20px;
+}
+
+.user-name {
+    font-size: 14px;
 }

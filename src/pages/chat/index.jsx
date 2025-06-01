@@ -1,17 +1,29 @@
 import { useEffect, useRef, useState } from "react";
 import Pusher from "pusher-js";
-import chatService from "../../../services/chatService";
-import { getUserInfo } from "../../../utils/auth";
-import { useParams } from "react-router-dom";
 import "./style.scss";
+import { useLocation } from "react-router-dom";
+import { getUserInfo } from "../../utils/auth";
+import chatService from "../../services/chatService";
 
-const UserChatPage = () => {
-  const { coachId: recipientUserId } = useParams();
+const ChatPage = () => {
+  const location = useLocation();
+  const userId = location?.state?.userId;
+
+  const [recipientUserId, setRecipientUserId] = useState(userId);
   const currentUserId = getUserInfo().id;
+  const [listUsers, setListUsers] = useState([]);
 
-  //   const [recipientUser, setRecipientUser] = useState(null);
-  //   const [loading, setLoading] = useState(true);
-  //   const [error, setError] = useState(null);
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const data = await chatService.getParners(getUserInfo().id);
+        setListUsers(data);
+      } catch (error) {
+        console.error("Lỗi khi lấy dữ liệu:", error);
+      }
+    };
+    fetchUsers();
+  }, []);
 
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
@@ -25,10 +37,14 @@ const UserChatPage = () => {
     scrollToBottom();
   }, [messages]);
 
-  const channelName =
-    currentUserId < recipientUserId
-      ? `chat-${currentUserId}-${recipientUserId}`
-      : `chat-${recipientUserId}-${currentUserId}`;
+  const [channelName, setChannelName] = useState("");
+  useEffect(() => {
+    setChannelName(
+      currentUserId < recipientUserId
+        ? `chat-${currentUserId}-${recipientUserId}`
+        : `chat-${recipientUserId}-${currentUserId}`
+    );
+  }, [currentUserId, recipientUserId]);
 
   // Lấy thông tin người nhận
   //   useEffect(() => {
@@ -114,6 +130,25 @@ const UserChatPage = () => {
 
   return (
     <div className="chat-app">
+      <div className="conversation-panel">
+        <h4 className="panel-title">Danh sách cuộc trò chuyện</h4>
+        <ul className="user-list">
+          {listUsers?.map((user) => (
+            <li
+              key={user.id}
+              className={`user-item ${
+                user.id === recipientUserId ? "active" : ""
+              }`}
+              tabIndex={0}
+              onClick={() => setRecipientUserId(user.id)}
+            >
+              <img src={user.avatarUrl} alt="Avatar" className="user-avatar" />
+              <span className="user-name">{user.fullName}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
       <div className="chat-panel">
         {/* {recipientUser && (
           <div className="chat-header">
@@ -180,4 +215,4 @@ const UserChatPage = () => {
   );
 };
 
-export default UserChatPage;
+export default ChatPage;

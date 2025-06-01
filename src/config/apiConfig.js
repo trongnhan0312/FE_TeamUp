@@ -63,6 +63,7 @@ export const ENDPOINTS = {
   CHAT: {
     GET_MESSAGE: "/chat/get-message",
     SEND_MESSAGE: "/chat/send-message",
+    GET_PARNERS: "/chat/chat-partners"
   },
   ROOM: {
     GET_ALL: "/room/all",

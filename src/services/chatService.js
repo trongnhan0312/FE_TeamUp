@@ -13,15 +13,6 @@ const chatService = {
 
             return response.data;
         } catch (error) {
-            console.error("Error fetching courts list:", error);
-            if (error.response && error.response.data) {
-                throw {
-                    response: error.response,
-                    message:
-                        error.response.data.message ||
-                        "Không thể lấy danh sách sân",
-                };
-            }
             throw error.response ? error.response.data : error.message;
         }
     },
@@ -31,15 +22,19 @@ const chatService = {
 
             return response.data;
         } catch (error) {
-            console.error("Error fetching courts list:", error);
-            if (error.response && error.response.data) {
-                throw {
-                    response: error.response,
-                    message:
-                        error.response.data.message ||
-                        "Không thể lấy danh sách sân",
-                };
-            }
+            throw error.response ? error.response.data : error.message;
+        }
+    },
+    getParners: async (senderId) => {
+        try {
+            const response = await axiosInstance.get(ENDPOINTS.CHAT.GET_PARNERS, {
+                params: {
+                    senderId
+                }
+            });
+
+            return response.data;
+        } catch (error) {
             throw error.response ? error.response.data : error.message;
         }
     }
