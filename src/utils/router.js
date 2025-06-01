@@ -15,7 +15,7 @@ export const ROUTER = {
         ABOUT_US: "/about-us",
         SUPPORT_CENTER: "/support-center",
         BLOG: "/blog",
-        CHAT: "/chat/:coachId",
+        CHAT: "/chat",
         ROOM: "/room",
         ROOM_CREATE: "/room-create",
         ROOM_DETAIL: "/room/:roomId",

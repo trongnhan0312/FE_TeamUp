@@ -302,7 +302,7 @@ const CoachBookingHistory = () => {
       // Show rating button
       return (
         <button
-          className="action-button rating"
+          className="action-button rating-btn"
           onClick={() => handleRating(coachId, coachName)}
           aria-label={`Đánh giá HLV ${coachName}`}
         >

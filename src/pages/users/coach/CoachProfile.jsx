@@ -25,7 +25,7 @@ const CoachProfile = () => {
   const navigate = useNavigate();
 
   const handleContract = () => {
-    navigate(`/chat/${coachId}`);
+    navigate(`/chat`, { state: { userId: coachId } });
   };
 
   const handleBooking = () => {
@@ -231,8 +231,13 @@ const CoachProfile = () => {
                   "Liên hệ ngay để đặt lịch học và nâng cao kỹ năng của bạn!"}
               </p>
               <div className="contact-buttons">
-                <button onClick={handleContract} className="contact-button">Liên hệ</button>
-                <button onClick={handleBooking} className="contact-button schedule-button">
+                <button onClick={handleContract} className="contact-button">
+                  Liên hệ
+                </button>
+                <button
+                  onClick={handleBooking}
+                  className="contact-button schedule-button"
+                >
                   Đặt lịch
                 </button>
               </div>
