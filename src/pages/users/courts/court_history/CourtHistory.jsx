@@ -5,13 +5,7 @@ import ratingService from "../../../../services/ratingService"; // Import rating
 import { getUserInfo } from "../../../../utils/auth";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
-
-const statusColors = {
-  Pending: "#ff9800",
-  Confirmed: "#2196f3",
-  Completed: "#94d82d",
-  CancelledByOwner: "#f44336",
-};
+import { statusColors } from "../../../../data";
 
 const CourtHistory = () => {
   const [filter, setFilter] = useState("Mới nhất");

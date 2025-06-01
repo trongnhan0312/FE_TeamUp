@@ -4,13 +4,7 @@ import Swal from "sweetalert2";
 import { getUserInfo } from "../../../utils/auth";
 import coachBookingService from "../../../services/coachBookingService";
 import ratingService from "../../../services/ratingService";
-
-const statusColors = {
-  Pending: "#ff9800",
-  Confirmed: "#2196f3",
-  Completed: "#94d82d",
-  CancelledByOwner: "#f44336",
-};
+import { statusColors } from "../../../data";
 
 const formatDateDMY = (dateStr) => {
   const date = new Date(dateStr);

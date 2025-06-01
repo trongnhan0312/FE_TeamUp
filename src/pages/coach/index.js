@@ -3,6 +3,7 @@ import "./style.scss";
 import { getUserInfo } from "../../utils/auth";
 import coachBookingService from "../../services/coachBookingService";
 import { formatPrice } from "../../utils/formatUtils";
+import { statusColors } from "../../data";
 
 const paymentHistory = [
   {
@@ -65,12 +66,6 @@ const dayLabelToNum = {
   "Thứ Sáu": 6,
   "Thứ Bảy": 7,
   "Chủ Nhật": 8,
-};
-
-const statusColors = {
-  Confirmed: "#8bc34a",
-  Pending: "#c5e1a5",
-  Cancelled: "#e57373",
 };
 
 function CircleProgress({ percentage = 75, size = 44 }) {
