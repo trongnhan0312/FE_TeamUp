@@ -55,7 +55,7 @@ import PaymentSuccessCoach from "./pages/coach/Payment/PaymentSucces/PaymentSucc
 import PaymentFailCoach from "./pages/coach/Payment/PaymentFail/PaymentFail";
 import RoomCreateHistory from "./pages/users/roomList/RoomCreateHistory";
 import CreateRoomForm from "./pages/users/roomList/CreateRoomForm";
-
+import RoomDetail from "./pages/users/roomList/RoomDetail";
 const RouterCustom = () => {
     const location = useLocation();
     const [isLoggedIn, setIsLoggedIn] = useState(isAuthenticated());
@@ -126,50 +126,6 @@ const RouterCustom = () => {
             </Routes>
         </OwnerLayout>
     );
-    // Routes cho Owner
-    const ownerRoutes = (
-        <OwnerLayout>
-            <Routes>
-                <Route path="/owner" element={<Owner />} />
-                <Route
-                    path={ROUTER.OWNER.HUMANHABITS}
-                    element={<HumanHabits />}
-                />
-                <Route
-                    path={ROUTER.OWNER.PITCHHISTORY}
-                    element={<PitchHistory />}
-                />
-                <Route
-                    path={ROUTER.OWNER.BOOKINGMANAGEMENT}
-                    element={<BOOKINGMANAGEMENT />}
-                />
-                <Route
-                    path={ROUTER.OWNER.CREATEYARD}
-                    element={<CreateYard />}
-                />
-                <Route
-                    path={ROUTER.OWNER.REVIEWYARD}
-                    element={<ReviewYard />}
-                />
-                <Route
-                    path={ROUTER.OWNER.SportsComplexes}
-                    element={<SportsComplexes />}
-                />
-                <Route
-                    path={ROUTER.OWNER.SportsComplexDetail}
-                    element={<SportsComplexDetail />}
-                />
-                <Route
-                    path={ROUTER.OWNER.CourtDetailOwner}
-                    element={
-                        // import đúng component CourtDetailOwner
-                        <CourtDetailOwner />
-                    }
-                />
-                <Route path="*" element={<Navigate to="/owner" replace />} />
-            </Routes>
-        </OwnerLayout>
-    );
 
     // Routes cho Coach
     const coachRoutes = (
@@ -201,24 +157,6 @@ const RouterCustom = () => {
                 <Route
                     path={ROUTER.COACH.COACH_PACKAGE}
                     element={<CoachPackage />}
-                />
-                {/* <Route path="*" element={<Navigate to="/coach" replace />} /> */}
-            </Routes>
-        </CoachLayout>
-    );
-    // Routes cho Coach
-    const coachRoutes = (
-        <CoachLayout>
-            <Routes>
-                <Route path="/coach" element={<Coach />} />
-                <Route path={ROUTER.COACH.CHAT} element={<CoachChatPage />} />
-                <Route
-                    path={ROUTER.COACH.REVIEWCOACH}
-                    element={<ReviewCoach />}
-                />
-                <Route
-                    path={ROUTER.COACH.COACHHISTORY}
-                    element={<CoachHistory />}
                 />
                 {/* <Route path="*" element={<Navigate to="/coach" replace />} /> */}
             </Routes>
@@ -309,69 +247,14 @@ const RouterCustom = () => {
                     path={ROUTER.USER.ROOM_CREATE_HISTORY}
                     element={<RoomCreateHistory />}
                 />
-                {/* <Route path="*" element={<Navigate to="/home" replace />} /> */}
-            </Routes>
-        </MasterLayout>
-    );
-    // Routes cho user bình thường
-    const userRoutes = (
-        <MasterLayout>
-            <Routes>
-                <Route path="/home" element={<HomePage />} />
-                <Route path="/profile" element={<ProfilePage />} />
                 <Route
-                    path={ROUTER.USER.DETAIL_COURT}
-                    element={<CourtDetailPage />}
-                />
-                <Route
-                    path={ROUTER.USER.SCHEDULE_COURT}
-                    element={<CourtSchedule />}
-                />
-                <Route
-                    path={ROUTER.USER.COURT_BOOKING_CONFIRMATION}
-                    element={<BookingConfirmation />}
-                />
-                <Route
-                    path={ROUTER.USER.COURT_BOOKING_SUMMARY}
-                    element={<BookingSummary />}
-                />
-                <Route
-                    path={ROUTER.USER.COURT_HOMEPAGE}
-                    element={<CourtListing />}
-                />
-                <Route
-                    path={ROUTER.USER.COACH_GET_ALL_DEFAULT}
-                    element={<CoachListing />}
-                />
-                <Route
-                    path={ROUTER.USER.COACH_GET_ALL}
-                    element={<CoachListing />}
-                />
-                <Route
-                    path={ROUTER.USER.COACH_GET_DETAIL}
-                    element={<CoachProfile />}
-                />
-                <Route
-                    path={ROUTER.USER.PRIVACY_POLICY}
-                    element={<PrivacyPolicy />}
-                />
-                <Route path={ROUTER.USER.ABOUT_US} element={<AboutUs />} />
-                <Route
-                    path={ROUTER.USER.SUPPORT_CENTER}
-                    element={<SupportCenter />}
-                />
-                <Route path={ROUTER.USER.BLOG} element={<Blog />} />
-                <Route path={ROUTER.USER.CHAT} element={<UserChatPage />} />
-                <Route path={ROUTER.USER.ROOM} element={<RoomList />} />
-                <Route
-                    path={ROUTER.USER.COACH_BOOKING_SELECT_COURT}
-                    element={<CourtSelector />}
-                />
-                <Route
-                    path={ROUTER.USER.CREATE_ROOM}
+                    path={ROUTER.USER.ROOM_CREATE}
                     element={<CreateRoomForm />}
                 />
-
+                <Route
+                    path={ROUTER.USER.ROOM_DETAIL}
+                    element={<RoomDetail />}
+                />
                 {/* <Route path="*" element={<Navigate to="/home" replace />} /> */}
             </Routes>
         </MasterLayout>

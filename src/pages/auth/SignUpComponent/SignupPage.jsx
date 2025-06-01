@@ -209,11 +209,10 @@ const SignupPage = () => {
                                 </button>
                             </div>
                             <div
-                                className={`password-requirement ${
-                                    password.length > 0 && !isPasswordValid
+                                className={`password-requirement ${password.length > 0 && !isPasswordValid
                                         ? "invalid"
                                         : ""
-                                }`}
+                                    }`}
                             >
                                 Mật khẩu phải có ít nhất 6 ký tự, bao gồm chữ
                                 hoa, chữ thường và ký tự đặc biệt
@@ -241,7 +240,7 @@ const SignupPage = () => {
                                     required
                                     className={
                                         confirmPassword &&
-                                        password !== confirmPassword
+                                            password !== confirmPassword
                                             ? "invalid"
                                             : ""
                                     }
