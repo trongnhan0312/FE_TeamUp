@@ -66,7 +66,7 @@ const MainContent = ({ filters, currentType }) => {
       // Lần đầu load trang chưa có dữ liệu
       fetchRooms(pagination.currentPage, filters);
     }
-  }, [filters, currentType, fetchRooms]);
+  }, [filters, currentType, fetchRooms, pagination.currentPage, rooms.length]);
 
   // Gọi API khi đổi trang, trừ trang 1 đã được xử lý ở trên
   useEffect(() => {

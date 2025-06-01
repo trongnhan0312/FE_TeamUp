@@ -26,7 +26,7 @@ const VoucherSelector = ({ selectedVoucher, onSelectVoucher, pageSize = 5 }) => 
     };
 
     fetchVouchers();
-  }, [page]);
+  }, [page, pageSize]);
 
   const handlePrev = () => {
     if (page > 1) setPage(page - 1);

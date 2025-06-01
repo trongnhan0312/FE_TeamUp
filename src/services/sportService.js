@@ -11,15 +11,6 @@ const sportService = {
             );
             return response.data;
         } catch (error) {
-            console.error("Error fetching sport details:", error);
-            if (error.response && error.response.data) {
-                throw {
-                    response: error.response,
-                    message:
-                        error.response.data.message ||
-                        "Không thể lấy thông tin sân",
-                };
-            }
             throw error.response ? error.response.data : error.message;
         }
     },
@@ -32,15 +23,6 @@ const sportService = {
             });
             return response.data;
         } catch (error) {
-            console.error("Error fetching sports list:", error);
-            if (error.response && error.response.data) {
-                throw {
-                    response: error.response,
-                    message:
-                        error.response.data.message ||
-                        "Không thể lấy danh sách sân",
-                };
-            }
             throw error.response ? error.response.data : error.message;
         }
     },

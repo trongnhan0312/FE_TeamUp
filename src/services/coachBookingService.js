@@ -25,13 +25,6 @@ const coachBookingService = {
 
             return response.data;
         } catch (error) {
-            console.error("Error create coach booking:", error);
-            if (error.response && error.response.data) {
-                throw {
-                    response: error.response,
-                    message: error.response.data.message,
-                };
-            }
             throw error.response ? error.response.data : error.message;
         }
     },
@@ -44,14 +37,6 @@ const coachBookingService = {
 
             return response.data;
         } catch (error) {
-            console.error("Error get coach stats:", error);
-            if (error.response && error.response.data) {
-                throw {
-                    response: error.response,
-                    message:
-                        error.response.data.message,
-                };
-            }
             throw error.response ? error.response.data : error.message;
         }
     },
@@ -63,14 +48,6 @@ const coachBookingService = {
 
             return response.data;
         } catch (error) {
-            console.error("Error get player list:", error);
-            if (error.response && error.response.data) {
-                throw {
-                    response: error.response,
-                    message:
-                        error.response.data.message,
-                };
-            }
             throw error.response ? error.response.data : error.message;
         }
     },
@@ -82,14 +59,6 @@ const coachBookingService = {
 
             return response.data;
         } catch (error) {
-            console.error("Error get coachboooking monthly total:", error);
-            if (error.response && error.response.data) {
-                throw {
-                    response: error.response,
-                    message:
-                        error.response.data.message,
-                };
-            }
             throw error.response ? error.response.data : error.message;
         }
     },
@@ -101,14 +70,6 @@ const coachBookingService = {
 
             return response.data;
         } catch (error) {
-            console.error("Error get coachboooking weekly booked slots:", error);
-            if (error.response && error.response.data) {
-                throw {
-                    response: error.response,
-                    message:
-                        error.response.data.message,
-                };
-            }
             throw error.response ? error.response.data : error.message;
         }
     },
@@ -125,14 +86,6 @@ const coachBookingService = {
 
             return response.data;
         } catch (error) {
-            console.error("Error get coachboooking weekly booked slots:", error);
-            if (error.response && error.response.data) {
-                throw {
-                    response: error.response,
-                    message:
-                        error.response.data.message,
-                };
-            }
             throw error.response ? error.response.data : error.message;
         }
     },
@@ -156,14 +109,6 @@ const coachBookingService = {
 
             return response.data;
         } catch (error) {
-            console.error("Error get coachboooking weekly booked slots:", error);
-            if (error.response && error.response.data) {
-                throw {
-                    response: error.response,
-                    message:
-                        error.response.data.message,
-                };
-            }
             throw error.response ? error.response.data : error.message;
         }
     },
@@ -182,7 +127,6 @@ const coachBookingService = {
 
             return response.data;
         } catch (error) {
-            console.error("Error getAllByUserId:", error);
             throw error.response ? error.response.data : error.message;
         }
     },
@@ -198,7 +142,6 @@ const coachBookingService = {
 
             return response.data;
         } catch (error) {
-            console.error("Error fetching courts list:", error);
             throw error.response ? error.response.data : error.message;
         }
     }

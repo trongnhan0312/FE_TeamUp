@@ -11,15 +11,6 @@ const courtService = {
             );
             return response.data;
         } catch (error) {
-            console.error("Error fetching court details:", error);
-            if (error.response && error.response.data) {
-                throw {
-                    response: error.response,
-                    message:
-                        error.response.data.message ||
-                        "Không thể lấy thông tin sân",
-                };
-            }
             throw error.response ? error.response.data : error.message;
         }
     },
@@ -37,15 +28,6 @@ const courtService = {
             );
             return response.data;
         } catch (error) {
-            console.error("Error fetching court details:", error);
-            if (error.response && error.response.data) {
-                throw {
-                    response: error.response,
-                    message:
-                        error.response.data.message ||
-                        "Không thể lấy thông tin sân",
-                };
-            }
             throw error.response ? error.response.data : error.message;
         }
     },
@@ -71,15 +53,6 @@ const courtService = {
 
             return response.data;
         } catch (error) {
-            console.error("Error fetching courts list:", error);
-            if (error.response && error.response.data) {
-                throw {
-                    response: error.response,
-                    message:
-                        error.response.data.message ||
-                        "Không thể lấy danh sách sân",
-                };
-            }
             throw error.response ? error.response.data : error.message;
         }
     },
@@ -114,7 +87,6 @@ const courtService = {
 
             return response.data;
         } catch (error) {
-            console.error("Booking error:", error);
             throw error.response ? error.response.data : error.message;
         }
     },

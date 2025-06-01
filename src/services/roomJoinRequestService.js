@@ -13,7 +13,6 @@ const roomJoinRequestService = {
 
             return response.data;
         } catch (error) {
-            console.error("Error create room join request:", error);
             throw error.response ? error.response.data : error.message;
         }
     },

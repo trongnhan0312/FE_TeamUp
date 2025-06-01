@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Footer from "../../component/common/theme/footer";
 import "./LoginPage.scss";
@@ -8,7 +8,6 @@ import authService from "../../services/authService";
 import { saveAuthData } from "../../utils/auth";
 import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
-import { loadAppConfig } from "../../services/configService";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -17,13 +16,6 @@ const LoginPage = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [clientId, setClientId] = useState("");
-
-  useEffect(() => {
-    loadAppConfig().then(config => {
-      setClientId(config.GOOGLE_CLIENT_ID);
-    });
-  }, []);
 
   const navigate = useNavigate();
 
@@ -234,7 +226,7 @@ const LoginPage = () => {
 
           {/* Social login */}
           <div className="social-login">
-            <GoogleOAuthProvider clientId={clientId}>
+            <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
               <GoogleLogin
                 onSuccess={handleGoogleSuccess}
                 onError={() => {
