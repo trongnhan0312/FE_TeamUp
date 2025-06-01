@@ -14,11 +14,13 @@ import {
   FaComments,
   FaTrash,
   FaSignOutAlt,
+  FaUser,
 } from "react-icons/fa";
 import "./RoomDetail.scss";
 import roomService from "../../../services/roomService";
 import roomJoinRequestService from "../../../services/roomJoinRequestService";
 import roomPlayerService from "../../../services/roomPlayerService";
+import userService from "../../../services/userService";
 import { getUserInfo } from "../../../utils/auth";
 import Swal from "sweetalert2";
 import ratingService from "../../../services/ratingService";
@@ -28,6 +30,10 @@ const RoomDetail = () => {
   const [roomData, setRoomData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const [selectedProfile, setSelectedProfile] = useState(null);
+  const [profileLoading, setProfileLoading] = useState(false);
+  const [showProfilePopup, setShowProfilePopup] = useState(false);
 
   const userId = getUserInfo().id;
 
@@ -458,6 +464,32 @@ const RoomDetail = () => {
     );
   };
 
+  // Thêm function này vào component
+  const handleViewProfile = async (userId) => {
+    try {
+      setProfileLoading(true);
+      setShowProfilePopup(true);
+      const response = await userService.getUserById(userId);
+      setSelectedProfile(response?.resultObj || response);
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+      Swal.fire({
+        title: "Lỗi",
+        text: "Không thể tải thông tin người dùng",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+      setShowProfilePopup(false);
+    } finally {
+      setProfileLoading(false);
+    }
+  };
+
+  const closeProfilePopup = () => {
+    setShowProfilePopup(false);
+    setSelectedProfile(null);
+  };
+
   // Loading state
   if (loading) {
     return (
@@ -643,6 +675,16 @@ const RoomDetail = () => {
                                 >
                                   <FaComments />
                                 </button>
+
+                                <button
+                                  className="profile-btn"
+                                  onClick={() =>
+                                    handleViewProfile(player.playerId)
+                                  }
+                                  title="Xem profile"
+                                >
+                                  <FaUser />
+                                </button>
                               </div>
                             </td>
                           </tr>
@@ -739,6 +781,16 @@ const RoomDetail = () => {
                             title="Chat"
                           >
                             <FaComments />
+                          </button>
+                        )}
+
+                        {player.id !== userId && (
+                          <button
+                            className="profile-btn"
+                            onClick={() => handleViewProfile(player.id)}
+                            title="Xem profile"
+                          >
+                            <FaUser />
                           </button>
                         )}
 
@@ -842,6 +894,78 @@ const RoomDetail = () => {
           )}
         </div>
       </div>
+
+      {/* Profile Popup */}
+      {showProfilePopup && (
+        <div className="profile-popup-overlay" onClick={closeProfilePopup}>
+          <div className="profile-popup" onClick={(e) => e.stopPropagation()}>
+            <div className="profile-popup-header">
+              <h3>Thông tin người chơi</h3>
+              <button className="close-btn" onClick={closeProfilePopup}>
+                <FaTimes />
+              </button>
+            </div>
+
+            <div className="profile-popup-content">
+              {profileLoading ? (
+                <div className="profile-loading">Đang tải thông tin...</div>
+              ) : selectedProfile ? (
+                <div className="profile-details">
+                  <div className="profile-avatar-section">
+                    <img
+                      src={selectedProfile.avatarUrl || selectedProfile.avatar}
+                      alt={selectedProfile.fullName || selectedProfile.name}
+                      className="profile-popup-avatar"
+                    />
+                  </div>
+
+                  <div className="profile-info-section">
+                    <div className="profile-info-item">
+                      <strong>Tên:</strong>{" "}
+                      {selectedProfile.fullName || selectedProfile.name}
+                    </div>
+
+                    {selectedProfile.phoneNumber && (
+                      <div className="profile-info-item">
+                        <strong>Số điện thoại:</strong>{" "}
+                        {selectedProfile.phoneNumber}
+                      </div>
+                    )}
+
+                    {selectedProfile.age && (
+                      <div className="profile-info-item">
+                        <strong>Tuổi:</strong> {selectedProfile.age}
+                      </div>
+                    )}
+
+                    {selectedProfile.height && (
+                      <div className="profile-info-item">
+                        <strong>Chiều cao:</strong> {selectedProfile.height} cm
+                      </div>
+                    )}
+
+                    {selectedProfile.weight && (
+                      <div className="profile-info-item">
+                        <strong>Cân nặng:</strong> {selectedProfile.weight} kg
+                      </div>
+                    )}
+
+                    {selectedProfile.email && (
+                      <div className="profile-info-item">
+                        <strong>Email:</strong> {selectedProfile.email}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <div className="profile-error">
+                  Không thể tải thông tin người dùng
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
