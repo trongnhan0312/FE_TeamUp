@@ -78,7 +78,7 @@ const Header = () => {
 
             <div className="header_right">
               <ul className="icons">
-                <li>
+                <li onClick={() => navigate("/chat")}>
                   <BsChat />
                 </li>
                 <li onClick={() => navigate("/cart")}>

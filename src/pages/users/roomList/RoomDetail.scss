@@ -2,7 +2,8 @@
   min-height: 100vh;
   padding: 20px;
 
-  .loading-container, .error-container {
+  .loading-container,
+  .error-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -673,7 +674,8 @@
 
 // Animations
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
@@ -801,5 +803,110 @@
         }
       }
     }
+  }
+}
+
+// Profile Popup Styles
+.profile-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.profile-popup {
+  background: white;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.profile-popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #eee;
+
+  h3 {
+    margin: 0;
+    color: #333;
+  }
+
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: #666;
+    padding: 5px;
+
+    &:hover {
+      color: #333;
+    }
+  }
+}
+
+.profile-popup-content {
+  padding: 20px;
+}
+
+.profile-loading,
+.profile-error {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+}
+
+.profile-details {
+  .profile-avatar-section {
+    text-align: center;
+    margin-bottom: 20px;
+
+    .profile-popup-avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #ddd;
+    }
+  }
+
+  .profile-info-section {
+    .profile-info-item {
+      margin-bottom: 12px;
+      padding: 8px 0;
+      border-bottom: 1px solid #f0f0f0;
+
+      strong {
+        color: #333;
+        margin-right: 8px;
+      }
+    }
+  }
+}
+
+// Button styles
+.profile-btn {
+  background: #17a2b8;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  margin-left: 4px;
+
+  &:hover {
+    background: #138496;
   }
 }
