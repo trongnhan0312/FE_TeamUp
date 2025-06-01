@@ -1,9 +1,9 @@
 import { memo, useState, useEffect } from "react";
 import "../courts/court_history/CourtHistory.scss";
 import Swal from "sweetalert2";
-import courtBookingService from "../../../services/courtBookingService";
 import { getUserInfo } from "../../../utils/auth";
 import coachBookingService from "../../../services/coachBookingService";
+import ratingService from "../../../services/ratingService";
 
 const statusColors = {
   Pending: "#ff9800",
@@ -44,6 +44,7 @@ const CoachBookingHistory = () => {
   const [timeFilter, setTimeFilter] = useState("Tuần");
   const [bookingHistory, setBookingHistory] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [userRatings, setUserRatings] = useState({}); // Store user's ratings for coaches
   const pageSize = 10;
 
   const fetchData = async () => {
@@ -54,6 +55,47 @@ const CoachBookingHistory = () => {
     );
     const result = response.resultObj;
     setBookingHistory(result);
+    
+    // Fetch user's ratings for all coaches in the booking history
+    if (result?.items) {
+      await fetchUserRatings(result.items);
+    }
+  };
+
+  const fetchUserRatings = async (bookingItems) => {
+    const userId = getUserInfo().id;
+    const ratings = {};
+    
+    // Get unique coach IDs from completed bookings
+    const coachIds = [...new Set(
+      bookingItems
+        .filter(item => item.status === "Completed" && item.coach?.id)
+        .map(item => item.coach.id)
+    )];
+
+    // Fetch ratings for each coach
+    await Promise.all(
+      coachIds.map(async (coachId) => {
+        try {
+          const response = await ratingService.getValueRating(userId, coachId);
+          if (response.isSuccessed && response.resultObj?.items?.length > 0) {
+            const rating = response.resultObj.items[0];
+            ratings[coachId] = {
+              ratingValue: rating.ratingValue,
+              comment: rating.comment,
+              hasRated: rating.ratingValue > 0
+            };
+          } else {
+            ratings[coachId] = { hasRated: false };
+          }
+        } catch (error) {
+          console.error(`Error fetching rating for coach ${coachId}:`, error);
+          ratings[coachId] = { hasRated: false };
+        }
+      })
+    );
+
+    setUserRatings(ratings);
   };
 
   useEffect(() => {
@@ -79,10 +121,6 @@ const CoachBookingHistory = () => {
         item.court?.name?.toLowerCase().includes(lowerSearch)
       );
     });
-
-  const handleCreateRoom = (id) => {
-    console.log("Tạo phòng chơi cho booking", id);
-  };
 
   const handleComplete = async (id) => {
     const result = await Swal.fire({
@@ -123,6 +161,154 @@ const CoachBookingHistory = () => {
       } catch (error) {
         Swal.fire("Lỗi", "Không thể hủy đơn", "error");
       }
+    }
+  };
+
+  const handleRating = async (coachId, coachName) => {
+    const { value: formValues } = await Swal.fire({
+      title: `Đánh giá HLV ${coachName}`,
+      html: `
+        <div style="text-align: left; margin-bottom: 15px;">
+          <label style="display: block; margin-bottom: 5px; font-weight: bold;">Đánh giá:</label>
+          <div style="display: flex; justify-content: center; margin-bottom: 15px;">
+            <div class="rating-stars">
+              ${[1, 2, 3, 4, 5].map(star => 
+                `<span class="star" data-rating="${star}" style="font-size: 24px; color: #ddd; cursor: pointer; margin: 0 2px;">★</span>`
+              ).join('')}
+            </div>
+          </div>
+          <input type="hidden" id="rating-value" value="0">
+        </div>
+        <div style="text-align: left;">
+          <label for="comment" style="display: block; margin-bottom: 5px; font-weight: bold;">Nhận xét:</label>
+          <textarea 
+            id="comment" 
+            placeholder="Chia sẻ trải nghiệm của bạn với HLV..."
+            style="width: 100%; height: 100px; padding: 8px; border: 1px solid #ddd; border-radius: 4px; resize: vertical;"
+          ></textarea>
+        </div>
+      `,
+      showCancelButton: true,
+      confirmButtonText: "Gửi đánh giá",
+      cancelButtonText: "Hủy",
+      preConfirm: () => {
+        const rating = document.getElementById('rating-value').value;
+        const comment = document.getElementById('comment').value.trim();
+        
+        if (rating === "0") {
+          Swal.showValidationMessage('Vui lòng chọn số sao đánh giá');
+          return false;
+        }
+        
+        return {
+          rating: parseInt(rating),
+          comment: comment
+        };
+      },
+      didOpen: () => {
+        const stars = document.querySelectorAll('.star');
+        const ratingInput = document.getElementById('rating-value');
+        
+        stars.forEach((star, index) => {
+          star.addEventListener('click', () => {
+            const rating = index + 1;
+            ratingInput.value = rating;
+            
+            // Update star colors
+            stars.forEach((s, i) => {
+              if (i < rating) {
+                s.style.color = '#ffc107';
+              } else {
+                s.style.color = '#ddd';
+              }
+            });
+          });
+          
+          // Hover effect
+          star.addEventListener('mouseenter', () => {
+            stars.forEach((s, i) => {
+              if (i <= index) {
+                s.style.color = '#ffc107';
+              } else {
+                s.style.color = '#ddd';
+              }
+            });
+          });
+        });
+        
+        document.querySelector('.rating-stars').addEventListener('mouseleave', () => {
+          const currentRating = parseInt(ratingInput.value);
+          stars.forEach((s, i) => {
+            if (i < currentRating) {
+              s.style.color = '#ffc107';
+            } else {
+              s.style.color = '#ddd';
+            }
+          });
+        });
+      }
+    });
+
+    if (formValues) {
+      try {
+        await ratingService.create(getUserInfo().id, coachId, formValues.rating, formValues.comment);
+        
+        Swal.fire({
+          title: "Cảm ơn!",
+          text: "Đánh giá của bạn đã được gửi thành công",
+          icon: "success"
+        });
+        
+        await fetchData(); // This will also refresh the ratings
+      } catch (error) {
+        Swal.fire("Lỗi", "Không thể gửi đánh giá", "error");
+      }
+    }
+  };
+
+  const renderRatingSection = (item) => {
+    const coachId = item.coach?.id;
+    const coachName = item.coach?.fullName;
+    const userRating = userRatings[coachId];
+
+    if (userRating?.hasRated) {
+      // Show existing rating
+      return (
+        <div className="existing-rating">
+          <div className="rating-display">
+            <span className="rating-stars">
+              {[1, 2, 3, 4, 5].map(star => (
+                <span 
+                  key={star}
+                  style={{ 
+                    color: star <= userRating.ratingValue ? '#ffc107' : '#ddd',
+                    fontSize: '16px'
+                  }}
+                >
+                  ★
+                </span>
+              ))}
+            </span>
+            <span className="rating-value">({userRating.ratingValue}/5)</span>
+          </div>
+          {userRating.comment && (
+            <div className="rating-comment" style={{ fontSize: '12px', color: '#666', marginTop: '4px' }}>
+              "{userRating.comment}"
+            </div>
+          )}
+        </div>
+      );
+    } else {
+      // Show rating button
+      return (
+        <button
+          className="action-button rating"
+          onClick={() => handleRating(coachId, coachName)}
+          aria-label={`Đánh giá HLV ${coachName}`}
+        >
+          Đánh giá
+        </button>
+      );
     }
   };
 
@@ -208,33 +394,29 @@ const CoachBookingHistory = () => {
                       {item.status}
                     </td>
                     <td className="border border-gray-300 p-2 space-x-2">
-                      {/* {(item.status === "Pending" ||
-                        item.status === "Confirmed") && (
-                        <button
-                          className="action-button create-room"
-                          onClick={() => handleCreateRoom(item.id)}
-                          aria-label={`Tạo phòng chơi cho booking ${item.id}`}
-                        >
-                          Tạo phòng chơi
-                        </button>
-                      )} */}
-                      {item.status === "Confirmed" && (
-                        <button
-                          className="action-button complete"
-                          onClick={() => handleComplete(item.id)}
-                          aria-label={`Hoàn thành booking ${item.id}`}
-                        >
-                          Hoàn thành
-                        </button>
-                      )}
-                      {item.status === "Pending" && (
-                        <button
-                          className="action-button cancel"
-                          onClick={() => handleCancel(item.id)}
-                          aria-label={`Hủy booking ${item.id}`}
-                        >
-                          Hủy
-                        </button>
+                      {item.status === "Completed" ? (
+                        renderRatingSection(item)
+                      ) : (
+                        <>
+                          {item.status === "Confirmed" && (
+                            <button
+                              className="action-button complete"
+                              onClick={() => handleComplete(item.id)}
+                              aria-label={`Hoàn thành booking ${item.id}`}
+                            >
+                              Hoàn thành
+                            </button>
+                          )}
+                          {item.status === "Pending" && (
+                            <button
+                              className="action-button cancel"
+                              onClick={() => handleCancel(item.id)}
+                              aria-label={`Hủy booking ${item.id}`}
+                            >
+                              Hủy
+                            </button>
+                          )}
+                        </>
                       )}
                     </td>
                   </tr>

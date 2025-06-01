@@ -5,6 +5,7 @@ import { formatDateTime } from "../../../../utils/timeUtils";
 import roomJoinRequestService from "../../../../services/roomJoinRequestService";
 import { getUserInfo } from "../../../../utils/auth";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 const ActivityCard = ({ room }) => {
   const [isFavorited, setIsFavorited] = useState(false);
@@ -43,9 +44,11 @@ const ActivityCard = ({ room }) => {
     }
   };
 
+  const navigate = useNavigate();
+
   return (
     <div className="activity-card">
-      <div className="card-header">
+      <div className="card-header" onClick={() => navigate(`/room/${room.id}`)}>
         <div className="room-info">
           <div className="avatar">
             <img

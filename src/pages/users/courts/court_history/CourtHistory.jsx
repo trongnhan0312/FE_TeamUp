@@ -3,6 +3,7 @@ import "./CourtHistory.scss";
 import courtBookingService from "../../../../services/courtBookingService";
 import { getUserInfo } from "../../../../utils/auth";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 const statusColors = {
   Pending: "#ff9800",
@@ -19,6 +20,8 @@ const CourtHistory = () => {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
+
+  const navigate = useNavigate();
 
   const fetchData = async () => {
     const response = await courtBookingService.getCourtBookingList(
@@ -53,7 +56,7 @@ const CourtHistory = () => {
         item.user?.fullName?.toLowerCase().includes(lowerSearch) ||
         item.court?.name?.toLowerCase().includes(lowerSearch)
       );
-    });
+    });    
 
   const formatDate = (datetimeStr) =>
     new Date(datetimeStr).toLocaleDateString("vi-VN");
@@ -69,9 +72,21 @@ const CourtHistory = () => {
     return `${s} - ${e}`;
   };
 
+  // Kiểm tra xem thời gian bắt đầu có lớn hơn thời gian hiện tại không
+  const isStartTimeInFuture = (startTime) => {
+    const now = new Date();
+    const bookingStartTime = new Date(startTime);
+    return bookingStartTime > now;
+  };
+
   // Chưa handle cho nút tạo phòng
-  const handleCreateRoom = (id) => {
-    console.log("Tạo phòng chơi cho booking", id);
+  const handleCreateRoom = (id, startTime) => {
+    navigate("/room-create", {
+      state: {
+        courtId: id,
+        scheduledTime: startTime
+      }
+    })
   };
 
   const handleComplete = async (id) => {
@@ -156,12 +171,11 @@ const CourtHistory = () => {
           <table>
             <thead>
               <tr>
-                <th>Người đặt sân</th>
                 <th>Mã đơn</th>
                 <th>Ngày</th>
                 <th>Thời gian</th>
                 <th>Sân</th>
-                <th>Thu nhập</th>
+                <th>Tổng giá</th>
                 <th>Trạng thái</th>
                 <th>Thao tác</th> {/* Cột thao tác mới */}
               </tr>
@@ -169,7 +183,6 @@ const CourtHistory = () => {
             <tbody>
               {filteredData.map((item) => (
                 <tr key={item.id}>
-                  <td>{item.user?.fullName}</td>
                   <td>{item.id}</td>
                   <td>{formatDate(item.startTime)}</td>
                   <td>{formatTime(item.startTime, item.endTime)}</td>
@@ -189,10 +202,11 @@ const CourtHistory = () => {
                   </td>
                   <td>
                     {(item.status === "Pending" ||
-                      item.status === "Confirmed") && (
+                      item.status === "Confirmed") && 
+                      isStartTimeInFuture(item.startTime) && (
                       <button
                         className="action-button create-room"
-                        onClick={() => handleCreateRoom(item.id)}
+                        onClick={() => handleCreateRoom(item?.court.id, item?.startTime)}
                         aria-label={`Tạo phòng chơi cho booking ${item.id}`}
                       >
                         Tạo phòng chơi

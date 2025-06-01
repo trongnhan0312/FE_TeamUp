@@ -36,7 +36,6 @@ export const ENDPOINTS = {
     GET_USER_BY_ID: "/user",
     GET_ALL_USER: "/user/all",
     UPDATE_USER_OWNER_PROFILE: "user/update-user-owner-profile",
-
     UPDATE_PROFILE: "/user/update-user-owner-profile",
   },
   COURT: {
@@ -53,6 +52,7 @@ export const ENDPOINTS = {
     GET_BY_ID: "/rating",
     LIST: "/rating/all",
     AVERAGE: "/rating/average-count/",
+    CREATE: "/rating/create"
   },
   EMPLOYEE: {
     GET_COACHES_PAGINATION: "/employee/get-coaches-pagination",
@@ -66,10 +66,18 @@ export const ENDPOINTS = {
   },
   ROOM: {
     GET_ALL: "/room/all",
-    UPDATE_STATUS: "/room/status"
+    UPDATE_STATUS: "/room/status",
+    CREATE: "/room/create",
+    GET_BY_ID: "/room",
+    DELETE: "/room/delete"
   },
   ROOM_JOIN_REQUEST: {
     CREATE_ROOM_JOIN_REQUEST: "/roomjoinrequest/create",
+    GET_ALL: "/roomjoinrequest/all",
+    UPDATE_STATUS: "roomjoinrequest/status",
+  },
+  ROOM_PLAYER:{
+    GET_ALL: "/roomplayer/all"
   },
   OWNER: {
     OWNER_STATS: "courtbooking/user-court-totalprice-stats/owner",
@@ -83,9 +91,6 @@ export const ENDPOINTS = {
     TOTAL_PRICE: "courtbooking/total-price/owner",
     CREATE_SPORTS_COMPLEX: "sportscomplex/create",
     CREATE_COURT: "court/create",
-  },
-  ROOM_JOIN_REQUEST: {
-    CREATE_ROOM_JOIN_REQUEST: "/roomjoinrequest/create",
   },
   PAYMENT: {
     CREATE_PAYMENT_VNPay: "payment/create-vnpay-url",
