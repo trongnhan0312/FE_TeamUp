@@ -29,9 +29,15 @@ function FlyToLocation({ latLng }) {
   return null;
 }
 
-function Map({ address = "", coordinate, selectable = false, onSelect }) {
+function Map({
+  address = "",
+  coordinate,
+  selectable = false,
+  onSelect,
+  onAddressChange,
+}) {
   const defaultLatLng = {
-    latitude: 21.028511, // Hà Nội
+    latitude: 21.028511,
     longitude: 105.804817,
   };
 
@@ -47,6 +53,23 @@ function Map({ address = "", coordinate, selectable = false, onSelect }) {
   const [isSatellite, setIsSatellite] = useState(false);
   const [searchText, setSearchText] = useState("");
 
+  const fetchAddress = async (lat, lon) => {
+    try {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`
+      );
+      const data = await res.json();
+      if (data && data.display_name) {
+        onAddressChange && onAddressChange(data.display_name);
+      } else {
+        onAddressChange && onAddressChange("");
+      }
+    } catch (error) {
+      console.error("Lỗi lấy địa chỉ từ tọa độ:", error);
+      onAddressChange && onAddressChange("");
+    }
+  };
+
   const handleMapClick = (e) => {
     if (!selectable) return;
     const newLatLng = {
@@ -55,6 +78,7 @@ function Map({ address = "", coordinate, selectable = false, onSelect }) {
     };
     setLatLng(newLatLng);
     if (onSelect) onSelect(newLatLng);
+    fetchAddress(newLatLng.latitude, newLatLng.longitude);
   };
 
   const handleSearch = async (e) => {
@@ -77,12 +101,15 @@ function Map({ address = "", coordinate, selectable = false, onSelect }) {
         };
         setLatLng(newLatLng);
         if (onSelect) onSelect(newLatLng);
+        fetchAddress(newLatLng.latitude, newLatLng.longitude);
       } else {
         alert("Không tìm thấy địa điểm.");
+        onAddressChange && onAddressChange("");
       }
     } catch (error) {
       console.error("Lỗi tìm địa điểm:", error);
       alert("Có lỗi xảy ra khi tìm kiếm.");
+      onAddressChange && onAddressChange("");
     }
   };
 
@@ -157,13 +184,6 @@ function Map({ address = "", coordinate, selectable = false, onSelect }) {
         >
           Xem trên OpenStreetMap
         </a>
-        <p className="map-description">
-          {address?.trim()
-            ? address
-            : `Tọa độ: ${latLng.latitude.toFixed(
-                6
-              )}, ${latLng.longitude.toFixed(6)}`}
-        </p>
       </div>
     </div>
   );

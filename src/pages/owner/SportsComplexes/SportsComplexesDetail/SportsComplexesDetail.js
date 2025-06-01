@@ -5,7 +5,7 @@ import { fetchCourtsBySportsComplexId } from "../../../../services/ownerService"
 import { BsFillPlusCircleFill } from "react-icons/bs";
 import "./style.scss";
 import { ROUTER } from "../../../../utils/router";
-
+import CourtNotFound from "../CourtNotFound/CourtNotFound"; // Import component CourtNotFound nếu cần
 const SportsComplexDetail = () => {
   const { id } = useParams(); // Lấy param id từ url
   const [courts, setCourts] = useState([]);
@@ -21,11 +21,13 @@ const SportsComplexDetail = () => {
       .catch(() => setCourts([]))
       .finally(() => setLoading(false));
   }, [id]);
+  const handleAddCourtClick = () => {
+    navigate(ROUTER.OWNER.CREATE_COURT.replace(":sportsComplexId", id));
+  };
 
   if (loading) return <div>Đang tải sân thuộc khu thể thao...</div>;
 
-  if (!courts.length)
-    return <div>Không có sân nào thuộc khu thể thao này.</div>;
+  if (!courts.length) return <CourtNotFound onCreate={handleAddCourtClick} />;
 
   // Hàm xử lý sự kiện khi bấm vào sân
   const handleCourtClick = (courtId) => {
@@ -36,7 +38,11 @@ const SportsComplexDetail = () => {
     <div className="sports-complex-detail">
       <h2>Chi tiết sân thuộc khu thể thao</h2>
       <div className="header-with-add">
-        <button className="btn-add" title="Tạo Sân Mới">
+        <button
+          className="btn-add"
+          title="Tạo Sân Mới"
+          onClick={handleAddCourtClick}
+        >
           <BsFillPlusCircleFill size={28} />
         </button>
       </div>

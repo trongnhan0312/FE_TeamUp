@@ -1895,6 +1895,11 @@
   resolved "https://registry.npmjs.org/@react-leaflet/core/-/core-3.0.0.tgz"
   integrity sha512-3EWmekh4Nz+pGcr+xjf0KNyYfC3U2JjnkWsh0zcqaexYqmmB5ZhH37kz41JXGmKzpaMZCnPofBBm64i+YrEvGQ==
 
+"@react-oauth/google@^0.12.2":
+  version "0.12.2"
+  resolved "https://registry.npmjs.org/@react-oauth/google/-/google-0.12.2.tgz"
+  integrity sha512-d1GVm2uD4E44EJft2RbKtp8Z1fp/gK8Lb6KHgs3pHlM0PxCXGLaq8LLYQYENnN4xPWO1gkL4apBtlPKzpLvZwg==
+
 "@rollup/plugin-babel@^5.2.0":
   version "5.3.1"
   resolved "https://registry.npmjs.org/@rollup/plugin-babel/-/plugin-babel-5.3.1.tgz"
@@ -8260,7 +8265,7 @@ raw-body@2.5.2:
 
 rc-slider@^11.1.8:
   version "11.1.8"
-  resolved "https://registry.yarnpkg.com/rc-slider/-/rc-slider-11.1.8.tgz#cf3b30dacac8f98d44f7685f733f6f7da146fc06"
+  resolved "https://registry.npmjs.org/rc-slider/-/rc-slider-11.1.8.tgz"
   integrity sha512-2gg/72YFSpKP+Ja5AjC5DPL1YnV8DEITDQrcc1eASrUYjl0esptaBVJBh5nLTXCCp15eD8EuGjwezVGSHhs9tQ==
   dependencies:
     "@babel/runtime" "^7.10.1"
@@ -9566,6 +9571,7 @@ tapable@^2.0.0, tapable@^2.1.1, tapable@^2.2.0, tapable@^2.2.1:
     "@fortawesome/react-fontawesome" "^0.2.2"
     "@mui/material" "^7.1.0"
     "@mui/x-charts" "^8.3.1"
+    "@react-oauth/google" "^0.12.2"
     "@testing-library/dom" "^10.4.0"
     "@testing-library/jest-dom" "^6.6.3"
     "@testing-library/react" "^16.3.0"
@@ -9587,7 +9593,7 @@ tapable@^2.0.0, tapable@^2.1.1, tapable@^2.2.0, tapable@^2.2.1:
     sass "^1.87.0"
     sweetalert2 "^11.21.2"
     tailwindcss "^4.1.7"
-    teamup "file:C:/Users/Admin/AppData/Local/Yarn/Cache/v6/npm-teamup-0.1.0-6aa566b1-7a08-47c7-9905-2ab583ac22a0-1748391699901/node_modules/teamup"
+    teamup "file:C:/Users/Admin/AppData/Local/Yarn/Cache/v6/npm-teamup-0.1.0-c618b6f8-7dd0-44aa-a0bf-2c2ac3e6953c-1748547748701/node_modules/teamup"
     web-vitals "^2.1.4"
 
 temp-dir@^2.0.0:

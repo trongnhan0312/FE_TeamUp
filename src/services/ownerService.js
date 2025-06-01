@@ -231,8 +231,8 @@ export const updateBooking = async (bookingId, status) => {
     const formData = new FormData();
     formData.append("Status", status);
 
-    const url = `${ENDPOINTS.OWNER.BOOKING_UPDATE}/${bookingId}`;
-    const response = await axiosInstance.put(url, formData, {
+    const url = `${ENDPOINTS.OWNER.BOOKING_UPDATE}/${bookingId}?status=${status}`;
+    const response = await axiosInstance.patch(url, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -314,6 +314,195 @@ export const fetchCourtsBySportsComplexId = async (
     return [];
   } catch (error) {
     console.error("Lỗi khi lấy sân theo SportsComplexId:", error);
+    throw error;
+  }
+};
+
+/**
+ * Lấy tổng giá tiền booking theo courtId, phương thức thanh toán, tháng và năm
+ * @param {number|string} courtId - ID sân
+ * @param {string} VNPay - phương thức thanh toán (VD: "VNPay")
+ * @param {number|string} month - tháng (VD: 5)
+ * @param {number|string} year - năm (VD: 2025)
+ * @returns {Promise<number|null>} totalPrice hoặc null nếu lỗi
+ */
+export const fetchTotalPriceByOwner = async (
+  ownerId,
+  paymentMethod,
+  month,
+  year
+) => {
+  try {
+    const url = getApiUrl(
+      `${
+        ENDPOINTS.OWNER.TOTAL_PRICE
+      }?ownerId=${ownerId}&paymentMethod=${encodeURIComponent(
+        paymentMethod
+      )}&month=${month}&year=${year}`
+    );
+    console.log("Calling Total Price API: ", url);
+    const response = await axiosInstance.get(url);
+
+    if (response.data.isSuccessed && response.data.resultObj) {
+      return response.data.resultObj.totalPrice || 0;
+    }
+    return null;
+  } catch (error) {
+    console.error("Lỗi khi lấy tổng giá tiền:", error);
+    throw error;
+  }
+};
+
+// Lấy chi tiết employee theo id
+export const fetchEmployeeById = async (employeeId) => {
+  try {
+    const url = getApiUrl(
+      `${ENDPOINTS.EMPLOYEE.GET_EMPLOYEE_BY_ID}/${employeeId}`
+    );
+    console.log("Calling Employee Detail API:", url);
+    const response = await axiosInstance.get(url);
+    if (response.data.isSuccessed) {
+      return response.data.resultObj;
+    }
+    return null;
+  } catch (error) {
+    console.error("Lỗi khi lấy thông tin employee:", error);
+    throw error;
+  }
+};
+
+/**
+ * Tạo khu thể thao mới
+ * @param {Object} payload
+ * @param {string} payload.Type - Loại sân (ví dụ "Bóng đá")
+ * @param {string} payload.Name - Tên khu thể thao
+ * @param {string} payload.Address - Địa chỉ khu thể thao
+ * @param {string[]} payload.ImageUrls - Mảng URL ảnh (string)
+ * @param {number} payload.OwnerId - ID chủ sở hữu
+ * @param {number} [payload.Latitude] - Tọa độ vĩ độ, có thể null hoặc undefined
+ * @param {number} [payload.Longitude] - Tọa độ kinh độ, có thể null hoặc undefined
+ * @returns {Promise<Object>} Kết quả API trả về
+ */
+export const createSportsComplex = async ({
+  Type,
+  Name,
+  Address,
+  ImageUrls,
+  OwnerId,
+  Latitude = null,
+  Longitude = null,
+}) => {
+  try {
+    const url = getApiUrl(ENDPOINTS.OWNER.CREATE_SPORTS_COMPLEX);
+
+    const payload = {
+      Type,
+      Name,
+      Address,
+      ImageUrls,
+      OwnerId,
+      Latitude,
+      Longitude,
+    };
+
+    console.log("Calling createSportsComplex API with payload:", payload);
+
+    const response = await axiosInstance.post(url, payload);
+
+    if (response.data.isSuccessed) {
+      return response.data.resultObj;
+    } else {
+      throw new Error(response.data.message || "Tạo khu thể thao thất bại");
+    }
+  } catch (error) {
+    console.error("Lỗi khi gọi createSportsComplex:", error);
+    throw error;
+  }
+};
+
+/**
+ * Tạo sân mới (court)
+ * @param {Object} payload
+ * @param {number|string} payload.SportsComplexId - ID khu thể thao cha
+ * @param {string} payload.Name - Tên sân
+ * @param {string} payload.Description - Mô tả sân
+ * @param {number|string} payload.PricePerHour - Giá tiền mỗi giờ
+ * @param {File[]} payload.ImageUrls - Mảng file ảnh (File objects)
+ * @returns {Promise<Object>} Kết quả API trả về
+ */
+export const createCourt = async ({
+  SportsComplexId,
+  Name,
+  Description,
+  PricePerHour,
+  ImageUrls = [],
+}) => {
+  try {
+    const url = getApiUrl(ENDPOINTS.OWNER.CREATE_COURT); // giả sử ENDPOINTS.OWNER.CREATE_COURT = "/court/create"
+
+    const formData = new FormData();
+    formData.append("SportsComplexId", SportsComplexId.toString());
+    formData.append("Name", Name);
+    formData.append("Description", Description);
+    formData.append("PricePerHour", PricePerHour.toString());
+
+    // Gửi nhiều ảnh cùng key ImageUrls
+    ImageUrls.forEach((file) => {
+      formData.append("ImageUrls", file);
+    });
+
+    const response = await axiosInstance.post(url, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    if (response.data.isSuccessed) {
+      return response.data.resultObj;
+    } else {
+      throw new Error(response.data.message || "Tạo sân thất bại");
+    }
+  } catch (error) {
+    console.error("Lỗi khi gọi createCourt:", error);
+    throw error;
+  }
+};
+
+/**
+ * Tạo URL thanh toán VNPay cho user với packageId, courtBookingId hoặc coachBookingId có thể null
+ * @param {Object} params
+ * @param {number} params.userId - Id người dùng
+ * @param {number|null} params.courtBookingId - Id đặt sân (null nếu không có)
+ * @param {number|null} params.coachBookingId - Id đặt huấn luyện viên (null nếu không có)
+ * @param {number} params.packageId - Id gói thanh toán
+ * @returns {Promise<string>} trả về URL thanh toán hoặc throw lỗi
+ */
+export const createVnPayUrl = async ({
+  userId,
+  courtBookingId = null,
+  coachBookingId = null,
+  packageId,
+}) => {
+  try {
+    const url = getApiUrl(ENDPOINTS.PAYMENT.CREATE_PAYMENT_VNPay);
+
+    const payload = { userId, courtBookingId, coachBookingId, packageId };
+
+    const response = await axiosInstance.post(url, payload, {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+
+    if (response.status === 200 && response.data.isSuccessed) {
+      // Lấy link từ response.data.message
+      return response.data.message;
+    } else {
+      throw new Error("Lỗi khi tạo URL thanh toán");
+    }
+  } catch (error) {
+    console.error("Lỗi khi gọi createVnPayUrl:", error);
     throw error;
   }
 };

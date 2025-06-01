@@ -27,6 +27,7 @@ export const ENDPOINTS = {
     VERIFY_OTP: "/auth/confirm-register",
     RESEND_OTP: "/auth/resend-otp",
     LOGOUT: "/auth/logout",
+    LOGIN_GOOGLE: "/auth/google-login-user",
   },
   USER: {
     PROFILE: "/user/profile",
@@ -34,6 +35,9 @@ export const ENDPOINTS = {
     CHANGE_PASSWORD: "/user/change-password",
     GET_USER_BY_ID: "/user",
     GET_ALL_USER: "/user/all",
+    UPDATE_USER_OWNER_PROFILE: "user/update-user-owner-profile",
+
+    UPDATE_PROFILE: "/user/update-user-owner-profile",
   },
   COURT: {
     GET_BY_ID: "/court",
@@ -48,10 +52,13 @@ export const ENDPOINTS = {
   RATING: {
     GET_BY_ID: "/rating",
     LIST: "/rating/all",
+    AVERAGE: "/rating/average-count/",
   },
   EMPLOYEE: {
     GET_COACHES_PAGINATION: "/employee/get-coaches-pagination",
     GET_COACH_PROFILE: "/employee",
+    GET_EMPLOYEE_BY_ID: "employee",
+    UPDATE_COACH_PROFILE: "/employee/update-coach-profile",
   },
   CHAT: {
     GET_MESSAGE: "/chat/get-message",
@@ -59,6 +66,7 @@ export const ENDPOINTS = {
   },
   ROOM: {
     GET_ALL: "/room/all",
+    UPDATE_STATUS: "/room/status"
   },
   ROOM_JOIN_REQUEST: {
     CREATE_ROOM_JOIN_REQUEST: "/roomjoinrequest/create",
@@ -69,16 +77,22 @@ export const ENDPOINTS = {
     WEEKBOOKED_SLOTS: "courtbooking/weekly-booked-slots",
     MOST_BOOKED_COURTS: "courtbooking/stats/most-booked-by-owner",
     BOOKING_HISTORY: "courtbooking/all",
-    BOOKING_UPDATE: "courtbooking/update",
+    BOOKING_UPDATE: "courtbooking/status",
     SPORTS_COMPLEXES: "sportscomplex/all",
     SPORTS_COMPLEXES_DETAIL: "court/all",
+    TOTAL_PRICE: "courtbooking/total-price/owner",
+    CREATE_SPORTS_COMPLEX: "sportscomplex/create",
+    CREATE_COURT: "court/create",
   },
-  ROOM_JOIN_REQUEST:{
-    CREATE_ROOM_JOIN_REQUEST: "/roomjoinrequest/create"
+  ROOM_JOIN_REQUEST: {
+    CREATE_ROOM_JOIN_REQUEST: "/roomjoinrequest/create",
+  },
+  PAYMENT: {
+    CREATE_PAYMENT_VNPay: "payment/create-vnpay-url",
   },
   VOUCHER: {
     GET_ALL: "/voucher/all",
-    GET_BY_ID: "/voucher"
+    GET_BY_ID: "/voucher",
   },
   COACH_BOOKING: {
     CREATE_COACH_BOOKING: "/coachbooking/create",
@@ -87,10 +101,17 @@ export const ENDPOINTS = {
     GET_MONTHLY_TOTAL: "/coachbooking/monthly-total",
     GET_WEEKLY_BOOKED_SLOTS: "/coachbooking/weekly-booked-slots",
     GET_ALL: "/coachbooking/all",
-    GET_TOTAL_PRICE: "/coachbooking/total-price/coach"
+    GET_TOTAL_PRICE: "/coachbooking/total-price/coach",
+    UPDATE_STATUS: "/coachbooking/status",
   },
-  AI_WEBSITE:{
-    GET_RESPONSE: "/ai-web/get-website-response"
-  }
+
+  AI_WEBSITE: {
+    GET_RESPONSE: "/ai-web/get-website-response",
+  },
+  COURT_BOOKING: {
+    GET_ALL: "/courtbooking/all",
+    UPDATE_STATUS: "/courtbooking/status",
+  },
+
   // Các endpoints khác
 };

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Footer from "../../component/common/theme/footer";
 import "./LoginPage.scss";
@@ -6,6 +6,9 @@ import loginImg from "../../assets/user/login.png";
 import { ROUTER } from "../../utils/router";
 import authService from "../../services/authService";
 import { saveAuthData } from "../../utils/auth";
+import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
+import { loadAppConfig } from "../../services/configService";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -14,6 +17,13 @@ const LoginPage = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [clientId, setClientId] = useState("");
+
+  useEffect(() => {
+    loadAppConfig().then(config => {
+      setClientId(config.GOOGLE_CLIENT_ID);
+    });
+  }, []);
 
   const navigate = useNavigate();
 
@@ -70,6 +80,39 @@ const LoginPage = () => {
       }
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      const decoded = jwtDecode(credentialResponse.credential);
+
+      const response = await authService.loginGoogle({
+        email: decoded.email,
+        email_verified: decoded.email_verified,
+        family_name: decoded.family_name,
+        given_name: decoded.given_name,
+        name: decoded.name,
+        picture: decoded.picture,
+        sub: decoded.sub
+      });
+
+      if (!response.isSuccessed) {
+        throw new Error(response.message || "Đăng nhập với Google thất bại");
+      }
+
+      const userData = saveAuthData(response);
+      const ownerId = userData.id || userData.userId;
+
+      if (userData.role === "User") navigate(ROUTER.USER.HOME);
+      else if (userData.role === "Owner") {
+        localStorage.setItem("ownerId", ownerId);
+        navigate(ROUTER.OWNER.HOME);
+      } else if (userData.role === "Coach") navigate(ROUTER.COACH.HOME);
+      else setError("Không thể xử lý thông tin đăng nhập.");
+    } catch (err) {
+      console.error("Google Login error:", err);
+      setError(err.message || "Đăng nhập với Google thất bại");
     }
   };
 
@@ -191,7 +234,15 @@ const LoginPage = () => {
 
           {/* Social login */}
           <div className="social-login">
-            <button className="social-button google" disabled={loading}>
+            <GoogleOAuthProvider clientId={clientId}>
+              <GoogleLogin
+                onSuccess={handleGoogleSuccess}
+                onError={() => {
+                  console.log("Google login failed");
+                }}
+              />
+            </GoogleOAuthProvider>
+            {/* <button className="social-button google" disabled={loading}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -215,7 +266,7 @@ const LoginPage = () => {
                   fill="#EA4335"
                 />
               </svg>
-            </button>
+            </button> */}
           </div>
         </div>
 

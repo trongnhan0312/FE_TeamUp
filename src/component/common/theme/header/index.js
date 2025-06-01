@@ -1,7 +1,7 @@
-import { memo } from "react";
-import { Link } from "react-router-dom"; // Import Link
-import { logout } from "../../../../utils/auth"; // Import hàm logout
-import { useNavigate } from "react-router-dom";
+import { memo, useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { logout, getUserInfo } from "../../../../utils/auth";
+import userService from "../../../../services/userService";
 import "./style.scss";
 import {
   BsChat,
@@ -14,10 +14,34 @@ import logo from "../../../../assets/admin/logo.png";
 
 const Header = () => {
   const navigate = useNavigate();
+  const [user, setUser] = useState(() => {
+    const storedUser = getUserInfo();
+    console.log("User info from localStorage:", storedUser);
+    return storedUser;
+  });
+
+  useEffect(() => {
+    if (user?.id) {
+      console.log("Fetching user info for userId:", user.id);
+      userService
+        .getUserById(user.id)
+        .then((response) => {
+          console.log("Fresh user info from API:", response);
+          setUser(response.resultObj); // Lấy đúng đối tượng user
+        })
+        .catch((err) => {
+          console.error("Lỗi lấy thông tin user:", err);
+        });
+    }
+  }, [user?.id]);
+
   const handleLogout = () => {
-    logout(); // gọi hàm logout từ utils
-    navigate("/login", { replace: true }); // chuyển hướng về login
+    logout();
+    navigate("/login", { replace: true });
   };
+
+  const defaultAvatar = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+
   return (
     <>
       <div className="header_top">
@@ -25,14 +49,12 @@ const Header = () => {
           <div className="header_wrapper">
             <div className="header_left">
               <div className="logo">
-                {/* Logo là link về trang chủ */}
                 <Link to="/" className="logo">
                   <img src={logo} alt="Logo" className="logo_img" />
                   <span className="logo_text">TeamUp</span>
                 </Link>
               </div>
               <ul className="menu">
-                {/* Dùng Link cho từng menu item */}
                 <li>
                   <Link to="/">Trang chủ</Link>
                 </li>
@@ -59,7 +81,7 @@ const Header = () => {
                 <li>
                   <BsChat />
                 </li>
-                <li>
+                <li onClick={() => navigate("/cart")}>
                   <BsCart3 />
                 </li>
                 <li>
@@ -76,20 +98,23 @@ const Header = () => {
                   <BsBoxArrowRight />
                 </li>
               </ul>
-              <div className="user">
+              <div
+                className="user"
+                onClick={() => navigate("/profile")}
+                style={{ cursor: "pointer" }}
+              >
                 <img
-                  src="https://via.placeholder.com/30"
+                  src={user?.avatarUrl || user?.avatar || defaultAvatar}
                   alt="Avatar"
                   className="avatar"
                 />
-                <span className="username">Nguyễn Văn Tèo</span>
+                <span className="username">
+                  {user?.fullName || user?.name || "Người dùng"}
+                </span>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <div className="row">
-        <div className="col-lg-3"></div>
       </div>
     </>
   );

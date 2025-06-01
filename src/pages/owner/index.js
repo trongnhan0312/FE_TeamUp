@@ -1,11 +1,12 @@
 import { memo, useMemo, useState, useEffect } from "react";
-
+import { getUserInfo } from "../../utils/auth";
 import "./style.scss";
 import {
   fetchOwnerStats,
   fetchMostBookedCourtByOwner,
   fetchOwnerCourtsWithBookings,
   fetchBookingHistory,
+  fetchTotalPriceByOwner,
 } from "../../services/ownerService";
 import {
   BarChart,
@@ -26,16 +27,20 @@ import CircleStat from "./CircleStat";
 
 const Owner = () => {
   const [filter, setFilter] = useState("Mới nhất");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [bookingHistory, setBookingHistory] = useState([]);
   const [filteredBooking, setFilteredBooking] = useState([]);
   const [courts, setCourts] = useState([]);
   const [uniquePlayerCount, setUniquePlayerCount] = useState(0);
   const [totalCourtBookings, setTotalCourtBookings] = useState(0);
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [mostBookedCourt, setMostBookedCourt] = useState(null);
-  const [bookingHistory, setBookingHistory] = useState([]);
   const [hourlyData, setHourlyData] = useState([]);
   const [todayRevenue, setTodayRevenue] = useState(0);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [totalPriceByOwner, setTotalPriceByOwner] = useState(0);
+
+  const storedOwnerId = getUserInfo();
+  const ownerId = storedOwnerId?.id || storedOwnerId?.userId;
 
   // Hàm lọc booking theo tháng hiện tại và tháng trước, tạo dữ liệu cho BarChart
   const getMonthlyBookingData = (bookings) => {
@@ -70,83 +75,18 @@ const Owner = () => {
     return monthlyData;
   };
 
+  // 1. useEffect chỉ gọi API 1 lần khi ownerId thay đổi
   useEffect(() => {
-    let filtered = [...bookingHistory];
-
-    if (filter === "Mới nhất") {
-      // Sắp xếp ngày mới nhất trước (startTime giảm dần)
-      filtered.sort((a, b) => new Date(b.startTime) - new Date(a.startTime));
-    } else if (filter === "Cũ nhất") {
-      // Sắp xếp ngày cũ nhất trước (startTime tăng dần)
-      filtered.sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
-    } else if (filter === "Xác nhận") {
-      const acceptedStatuses = ["confirmed", "completed"];
-      filtered = filtered.filter(
-        (item) =>
-          item.status &&
-          acceptedStatuses.includes(item.status.trim().toLowerCase())
-      );
-    }
-
-    if (searchTerm.trim() !== "") {
-      const lowerSearch = searchTerm.toLowerCase();
-
-      filtered = filtered.filter((booking) => {
-        const start = new Date(booking.startTime);
-        const end = new Date(booking.endTime);
-
-        return (
-          (booking.user?.fullName || "").toLowerCase().includes(lowerSearch) ||
-          booking.id.toString().includes(lowerSearch) ||
-          start.toLocaleDateString("vi-VN").includes(lowerSearch) ||
-          `${start.toLocaleTimeString("vi-VN", {
-            hour: "2-digit",
-            minute: "2-digit",
-          })} - ${end.toLocaleTimeString("vi-VN", {
-            hour: "2-digit",
-            minute: "2-digit",
-          })}`.includes(lowerSearch) ||
-          (booking.court?.name || "").toLowerCase().includes(lowerSearch) ||
-          (booking.totalPrice?.toString() || "").includes(lowerSearch) ||
-          (booking.status || "").toLowerCase().includes(lowerSearch)
-        );
-      });
-    }
-
-    setFilteredBooking(filtered);
-    const storedOwnerId = localStorage.getItem("ownerId");
-    if (!storedOwnerId) {
+    if (!ownerId) {
       console.warn("Owner ID not found");
       return;
     }
 
-    fetchOwnerCourtsWithBookings(storedOwnerId)
-      .then((courtsWithBookings) => {
-        setCourts(courtsWithBookings);
-      })
-      .catch(console.error);
-
-    fetchOwnerStats(storedOwnerId)
-      .then((data) => {
-        if (data) {
-          setUniquePlayerCount(data.uniquePlayerCount);
-          setTotalCourtBookings(data.totalCourtBookings);
-          setTotalRevenue(data.totalRevenue);
-        }
-      })
-      .catch(console.error);
-
-    fetchMostBookedCourtByOwner(storedOwnerId)
-      .then((data) => {
-        if (data) setMostBookedCourt(data);
-      })
-      .catch(console.error);
-
     fetchBookingHistory(1, 100)
       .then((data) => {
-        console.log("Booking History:", data);
         setBookingHistory(data);
 
+        // Tính doanh thu hôm nay và dữ liệu theo giờ
         const today = new Date();
         const todayStr = today.toDateString();
 
@@ -155,21 +95,10 @@ const Owner = () => {
           return start.toDateString() === todayStr;
         });
 
-        console.log(
-          "Booking sân Hôm Nay:",
-          todayBookings.map((b) => ({
-            id: b.id,
-            courtName: b.court?.name,
-            startTime: b.startTime,
-            totalPrice: b.totalPrice,
-          }))
-        );
-
         const totalRevenueToday = todayBookings.reduce(
           (sum, booking) => sum + (booking.totalPrice || 0),
           0
         );
-        console.log("Doanh thu hôm nay:", totalRevenueToday);
         setTodayRevenue(totalRevenueToday);
 
         const revenueByHour = {};
@@ -205,8 +134,76 @@ const Owner = () => {
         setHourlyData(sortedHourlyData);
       })
       .catch(console.error);
+
+    fetchTotalPriceByOwner(ownerId, "VNPay", 5, 2025)
+      .then((total) => {
+        if (total !== null && total !== undefined) {
+          setTotalPriceByOwner(total);
+        }
+      })
+      .catch(console.error);
+
+    fetchOwnerCourtsWithBookings(ownerId).then(setCourts).catch(console.error);
+
+    fetchOwnerStats(ownerId)
+      .then((data) => {
+        if (data) {
+          setUniquePlayerCount(data.uniquePlayerCount);
+          setTotalCourtBookings(data.totalCourtBookings);
+          setTotalRevenue(data.totalRevenue);
+        }
+      })
+      .catch(console.error);
+
+    fetchMostBookedCourtByOwner(ownerId)
+      .then(setMostBookedCourt)
+      .catch(console.error);
+  }, [ownerId]);
+
+  // 2. useEffect xử lý lọc bookingHistory theo filter và searchTerm
+  useEffect(() => {
+    let filtered = [...bookingHistory];
+
+    if (filter === "Mới nhất") {
+      filtered.sort((a, b) => new Date(b.startTime) - new Date(a.startTime));
+    } else if (filter === "Cũ nhất") {
+      filtered.sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
+    } else if (filter === "Xác nhận") {
+      const acceptedStatuses = ["confirmed", "completed"];
+      filtered = filtered.filter(
+        (item) =>
+          item.status &&
+          acceptedStatuses.includes(item.status.trim().toLowerCase())
+      );
+    }
+
+    if (searchTerm.trim() !== "") {
+      const lowerSearch = searchTerm.toLowerCase();
+      filtered = filtered.filter((booking) => {
+        const start = new Date(booking.startTime);
+        const end = new Date(booking.endTime);
+
+        return (
+          (booking.user?.fullName || "").toLowerCase().includes(lowerSearch) ||
+          booking.id.toString().includes(lowerSearch) ||
+          start.toLocaleDateString("vi-VN").includes(lowerSearch) ||
+          `${start.toLocaleTimeString("vi-VN", {
+            hour: "2-digit",
+            minute: "2-digit",
+          })} - ${end.toLocaleTimeString("vi-VN", {
+            hour: "2-digit",
+            minute: "2-digit",
+          })}`.includes(lowerSearch) ||
+          (booking.court?.name || "").toLowerCase().includes(lowerSearch) ||
+          (booking.totalPrice?.toString() || "").includes(lowerSearch) ||
+          (booking.status || "").toLowerCase().includes(lowerSearch)
+        );
+      });
+    }
+
     setFilteredBooking(filtered);
-  }, [filter, searchTerm, bookingHistory]);
+  }, [bookingHistory, filter, searchTerm]);
+
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
@@ -244,6 +241,7 @@ const Owner = () => {
         },
       ]
     : [];
+
   const getMonthlyRevenue = (bookings) => {
     const now = new Date();
     const currentYear = now.getFullYear();
@@ -260,6 +258,7 @@ const Owner = () => {
       return sum;
     }, 0);
   };
+
   const monthlyRevenue = useMemo(
     () => getMonthlyRevenue(bookingHistory),
     [bookingHistory]
@@ -269,37 +268,37 @@ const Owner = () => {
   const targetPlayerCount = 1000; // Mục tiêu số người tiếp cận
   const targetCourtBookings = 500; // Mục tiêu tổng đơn đặt
   const targetRevenue = 10000000; // Mục tiêu doanh thu (10 triệu VNĐ)
-  const percentage = (monthlyRevenue / targetRevenue) * 100; // Tính phần trăm
   const playerPercentage = (uniquePlayerCount / targetPlayerCount) * 100;
   const courtBookingPercentage =
     (totalCourtBookings / targetCourtBookings) * 100;
   const revenuePercentage = (monthlyRevenue / targetRevenue) * 100;
   const dailyRevenuePercentage = (todayRevenue / targetRevenue) * 100;
+
   return (
     <div className="owner-page">
       <div className="stat-cards flex flex-wrap gap-6">
         <CircleStat
           title="Số người tiếp cận"
           value={uniquePlayerCount}
-          percentage={Math.min(playerPercentage, 100)} // Giới hạn phần trăm không quá 100%
+          percentage={Math.min(playerPercentage, 100)}
         />
 
         <CircleStat
           title="Tổng đơn đặt"
           value={totalCourtBookings}
-          percentage={Math.min(courtBookingPercentage, 100)} // Giới hạn phần trăm không quá 100%
+          percentage={Math.min(courtBookingPercentage, 100)}
         />
 
         <CircleStat
           title="Doanh Thu Tháng"
-          value={`${monthlyRevenue.toLocaleString("vi-VN")} VNĐ`}
-          percentage={Math.min(revenuePercentage, 100)} // Giới hạn phần trăm không quá 100%
+          value={`${totalPriceByOwner.toLocaleString("vi-VN")} VNĐ`}
+          percentage={Math.min(revenuePercentage, 100)}
         />
 
         <CircleStat
-          title="Doanh thu hôm nay"
-          value={`${todayRevenue.toLocaleString("vi-VN")} VNĐ`}
-          percentage={Math.min(dailyRevenuePercentage, 100)} // Giới hạn phần trăm không quá 100%
+          title="Tổng Doanh thu "
+          value={`${totalRevenue.toLocaleString("vi-VN")} VNĐ`}
+          percentage={Math.min(dailyRevenuePercentage, 100)}
         />
       </div>
 

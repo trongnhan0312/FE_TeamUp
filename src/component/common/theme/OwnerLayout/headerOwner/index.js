@@ -1,8 +1,8 @@
-import { memo, useState } from "react";
-import { Link } from "react-router-dom"; // Import Link
-import { logout } from "../../../../../utils/auth"; // Import hàm logout
-import { useNavigate } from "react-router-dom";
-
+import { memo, useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { logout, getUserInfo } from "../../../../../utils/auth";
+import userService from "../../../../../services/userService";
+import { fetchEmployeeById } from "../../../../../services/ownerService";
 import "./style.scss";
 import {
   BsGraphUpArrow,
@@ -17,24 +17,41 @@ import {
   BsSearch,
   BsHouses,
 } from "react-icons/bs";
-import logo from "../../../../../assets/admin/logo.png"; // Import logo
+import logo from "../../../../../assets/admin/logo.png";
 
 const HeaderOwner = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
+  // Lấy user từ localStorage
+  const [user, setUser] = useState(() => getUserInfo());
+  const defaultAvatar = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+
+  useEffect(() => {
+    if (user?.id) {
+      // Gọi API lấy chi tiết nhân viên/owner
+      fetchEmployeeById(user.id)
+        .then((data) => {
+          if (data) {
+            setUser(data); // Cập nhật dữ liệu mới (có avatarUrl, fullName,...)
+          }
+        })
+        .catch((err) => {
+          console.error("Lỗi lấy thông tin employee:", err);
+        });
+    }
+  }, [user?.id]);
+
   const handleSearch = (e) => {
     e.preventDefault();
-    // Xử lý tìm kiếm, ví dụ redirect hoặc gọi API
+    // Xử lý tìm kiếm (nếu cần)
     console.log("Tìm kiếm từ khóa:", searchTerm);
-    // Ví dụ: chuyển trang với từ khóa
-    // navigate(`/search?query=${encodeURIComponent(searchTerm)}`);
-  };
-  const handleLogout = () => {
-    logout(); // gọi hàm logout từ utils
-    navigate("/login", { replace: true }); // chuyển hướng về login
   };
 
+  const handleLogout = () => {
+    logout();
+    navigate("/login", { replace: true });
+  };
   return (
     <>
       <div className="owner-layout">
@@ -103,12 +120,12 @@ const HeaderOwner = () => {
                       <BsCoin />
                     </Link>
                   </li>
-                  <li>
+                  {/* <li>
                     <Link to="/owner/createyard" className="icon-link">
                       <BsHouseAdd />
                       <div className="tooltip-text">Tạo Sân Thể Thao</div>
                     </Link>
-                  </li>
+                  </li> */}
                   <li>
                     <Link to="/owner/reviewyard" className="icon-link">
                       <BsChatHeart />
@@ -156,11 +173,26 @@ const HeaderOwner = () => {
                   </li>
                 </ul>
 
+                {/* Avatar và tên user */}
                 <div
                   className="user"
-                  style={{ display: "flex", alignItems: "center", gap: "8px" }}
+                  onClick={() => navigate("/ownerProfile")}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    marginLeft: "20px",
+                    cursor: "pointer",
+                  }}
                 >
-                  <img src={logo} alt="Avatar" className="avatar" />
+                  <img
+                    src={user?.avatarUrl || user?.avatar || defaultAvatar}
+                    alt="Avatar"
+                    className="avatar"
+                  />
+                  <span className="username">
+                    {user?.fullName || user?.name || "Người dùng"}
+                  </span>
                 </div>
               </div>
             </div>
