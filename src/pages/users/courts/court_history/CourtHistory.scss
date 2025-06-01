@@ -277,8 +277,15 @@
   }
 }
 
+.rating {
+  background-color: purple;
+  &:hover {
+    background-color: rgb(96, 0, 96);
+  }
+}
+
 .create-room {
-  background-color: #2196f3; // xanh dương (Confirm)
+  background-color: #2196f3;
   &:hover {
     background-color: #1976d2;
   }

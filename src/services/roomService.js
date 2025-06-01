@@ -28,6 +28,35 @@ const roomService = {
       console.error("Error fetching courts list:", error);
       throw error.response ? error.response.data : error.message;
     }
+  },
+  create: async (hostId, courtId, name, maxPlayers, description, roomFee, scheduledTime) => {
+    try {
+      const response = await axiosInstance.post(ENDPOINTS.ROOM.CREATE,
+        {
+          hostId,
+          courtId,
+          name,
+          maxPlayers,
+          description,
+          roomFee,
+          scheduledTime
+        })
+
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching courts list:", error);
+      throw error.response ? error.response.data : error.message;
+    }
+  },
+  getById: async (roomId) => {
+    try {
+      const response = await axiosInstance.get(`${ENDPOINTS.ROOM.GET_BY_ID}/${roomId}`)
+
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching courts list:", error);
+      throw error.response ? error.response.data : error.message;
+    }
   }
 }
 

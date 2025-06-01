@@ -68,6 +68,33 @@ const ratingService = {
       };
     }
   },
+  create: async (reviewerId, revieweeId, ratingValue, comment = null) => {
+    try {
+      const formData = new FormData();
+
+      formData.append("ReviewerId", Number(reviewerId));
+      formData.append("RevieweeId", Number(revieweeId));
+      formData.append("RatingValue", Number(ratingValue));
+      if (comment !== null) {
+        formData.append("Comment", comment);
+      }
+
+      const response = await axiosInstance.post(ENDPOINTS.RATING.CREATE, formData);
+
+      return response.data;
+    } catch (error) {
+      throw error.response ? error.response.data : error.message;
+    }
+  },
+  getValueRating: async (reviewerId, revieweeId) => {
+    try {
+      const response = await axiosInstance.get(ENDPOINTS.RATING.LIST, { params: { reviewerId, revieweeId } });
+
+      return response.data;
+    } catch (error) {
+      throw error.response ? error.response.data : error.message;
+    }
+  }
 };
 
 export default ratingService;

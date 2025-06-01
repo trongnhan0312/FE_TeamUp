@@ -14,16 +14,40 @@ const roomJoinRequestService = {
             return response.data;
         } catch (error) {
             console.error("Error create room join request:", error);
-            if (error.response && error.response.data) {
-                throw {
-                    response: error.response,
-                    message:
-                        error.response.data.message,
-                };
-            }
             throw error.response ? error.response.data : error.message;
         }
     },
+    getAll: async (roomId, status = "Pending", pageNumber = 1, pageSize = 5) => {
+        try {
+            const response = await axiosInstance.get(ENDPOINTS.ROOM_JOIN_REQUEST.GET_ALL, {
+                params: {
+                    pageNumber,
+                    pageSize,
+                    status,
+                    roomId
+                },
+            });
+
+            return response.data;
+        } catch (error) {
+            throw error.response ? error.response.data : error.message;
+        }
+    },
+    updateStatus: async (requestId, status) => {
+        try {
+            const response = await axiosInstance.patch(`${ENDPOINTS.ROOM_JOIN_REQUEST.UPDATE_STATUS}/${requestId}`,
+                null,
+                {
+                    params: {
+                        status
+                    }
+                });
+
+            return response.data;
+        } catch (error) {
+            throw error.response ? error.response.data : error.message;
+        }
+    }
 }
 
 export default roomJoinRequestService;

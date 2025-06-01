@@ -3,7 +3,7 @@ import "./RoomCreateHistory.scss";
 import { getUserInfo } from "../../../utils/auth";
 import Swal from "sweetalert2";
 import roomService from "../../../services/roomService";
-import courtBookingService from "../../../services/roomService";
+import { useNavigate } from "react-router-dom";
 
 const statusColors = {
   Pending: "#ff9800",
@@ -19,6 +19,8 @@ const RoomCreateHistory = () => {
   const [bookingHistory, setBookingHistory] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
+
+  const navigate = useNavigate();
 
   const fetchData = async () => {
     const response = await roomService.getRooms({
@@ -66,11 +68,6 @@ const RoomCreateHistory = () => {
     return s;
   };
 
-  // Chưa handle cho nút tạo phòng
-  const handleCreateRoom = (id) => {
-    console.log("Tạo phòng chơi cho booking", id);
-  };
-
   //   const handleComplete = async (id) => {
   //     const result = await Swal.fire({
   //       title: "Xác nhận hoàn thành?",
@@ -95,7 +92,7 @@ const RoomCreateHistory = () => {
   const handleCancel = async (id) => {
     const result = await Swal.fire({
       title: "Xác nhận hủy?",
-      text: "Bạn có chắc muốn hủy đơn đặt sân này?",
+      text: "Bạn có chắc muốn hủy phòng này?",
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: "Hủy đơn",
@@ -104,11 +101,11 @@ const RoomCreateHistory = () => {
 
     if (result.isConfirmed) {
       try {
-        await courtBookingService.updateStatus(id, "Cancelled");
-        Swal.fire("Đã hủy", "Đơn đặt sân đã được hủy", "success");
+        await roomService.updateStatus(id, "Cancelled");
+        Swal.fire("Đã hủy", "Phòng đã được hủy", "success");
         await fetchData();
       } catch (error) {
-        Swal.fire("Lỗi", "Không thể hủy đơn", "error");
+        Swal.fire("Lỗi", "Không thể hủy phòng", "error");
       }
     }
   };
@@ -117,7 +114,7 @@ const RoomCreateHistory = () => {
     <div className="pitchHistory">
       <div className="historySection">
         <div className="header">
-          <h2>Lịch sử đặt sân</h2>
+          <h2>Lịch sử tạo phòng</h2>
           <div className="filters">
             <input
               type="text"
@@ -188,13 +185,14 @@ const RoomCreateHistory = () => {
                     </span>
                   </td>
                   <td>
-                    <button
-                      className="action-button create-room"
-                      onClick={() => handleCreateRoom(item.id)}
-                      aria-label={`Tạo phòng chơi cho booking ${item.id}`}
-                    >
-                      Xem chi tiết
-                    </button>
+                    {(item.status === "Waiting" || item.status === "Full") && (
+                      <button
+                        className="action-button create-room"
+                        onClick={() => navigate(`/room/${item.id}`)}
+                      >
+                        Xem chi tiết
+                      </button>
+                    )}
                     {/* {item.status === "Full" && (
                       <button
                         className="action-button complete"
