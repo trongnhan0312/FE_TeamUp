@@ -7,7 +7,7 @@ import voucherService from "../../../../services/voucherService";
 import coachBookingService from "../../../../services/coachBookingService";
 import { getRatingText } from "../../../../utils/formatUtils";
 import { FaChevronLeft } from "react-icons/fa";
-
+import { getUserInfo } from "../../../../utils/auth";
 const BookingSummary = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -66,74 +66,111 @@ const BookingSummary = () => {
     const subtotal = courtData.pricePerHour * bookingDetails.totalHours;
     return subtotal - calculateDiscount();
   };
+  const userInfo = getUserInfo();
+
+  // ✅ Dùng await để lấy kết quả thực sự
 
   const handleConfirmBooking = async () => {
     try {
       setLoading(true);
 
+      // ✅ TRƯỜNG HỢP 1: ĐẶT HUẤN LUYỆN VIÊN (COACH)
       if (bookingDetails.isMultiBooking) {
-        const response = await coachBookingService.create(
-          Number(bookingDetails.coachId),
-          Number(bookingDetails.playerId),
-          Number(bookingDetails.courtId),
-          bookingDetails.slots,
-          "Pending",
-          bookingDetails.voucherId || null
-        );
+        // 👉 Lấy thông tin người dùng
+        const userInfo = getUserInfo();
+        const userId = userInfo?.userId || bookingDetails.userId;
 
-        if (response?.isSuccessed) {
-          Swal.fire({
-            title: "Thành công!",
-            text: "Đặt lịch huấn luyện thành công",
-            icon: "success",
-            confirmButtonText: "OK",
-          }).then(() => navigate("/home"));
-        } else {
-          throw new Error(
-            response.message || "Không thể tạo booking huấn luyện"
-          );
+        // 👉 Đảm bảo có coachId
+        if (!bookingDetails.coachId) {
+          throw new Error("Thiếu thông tin huấn luyện viên");
         }
-      } else {
+
+        // ✅ Lấy coachBookingId gần nhất (nếu cần dùng ở bước sau)
+        const latestCoachId = await coachBookingService.getLatestCoachBookingId(
+          userId
+        );
+        console.log("Latest Coach ID:", latestCoachId);
+
+        // ✅ Tạo link thanh toán VNPay – KHÔNG tạo booking trước
+        const vnpayUrl = await coachBookingService.createVnpayUrl({
+          userId: userId,
+          coachBookingId: latestCoachId,
+          courtBookingId: null,
+        });
+
+        if (vnpayUrl) {
+          window.location.href = vnpayUrl;
+        } else {
+          Swal.fire({
+            title: "Lỗi tạo link thanh toán!",
+            text: "Không thể chuyển đến VNPay.",
+            icon: "error",
+          });
+        }
+      }
+
+      // ✅ TRƯỜNG HỢP 2: ĐẶT SÂN
+      else {
         if (!bookingDetails?.courtId || !bookingDetails?.userId) {
           setError("Thiếu thông tin cần thiết để đặt sân.");
           return;
         }
 
+        const latestId = await courtService.getLatestBookingId(
+          Number(bookingDetails.userId)
+        );
+
         const bookingRequest = {
-          courtId: Number(bookingDetails.courtId),
+          courtId: latestId,
           userId: Number(bookingDetails.userId),
           startTime: bookingDetails.startTime,
           endTime: bookingDetails.endTime,
-          paymentMethod: "Pending",
+          paymentMethod: "Pending", // Giả sử thanh toán sau
           voucherId: bookingDetails.voucherId || null,
         };
 
         const data = await courtService.handleBooking(bookingRequest);
 
-        if (data.isSuccessed) {
-          Swal.fire({
+        if (data?.isSuccessed) {
+          await Swal.fire({
             title: "Thành công!",
-            text: "Đặt sân thành công",
+            text: "Đặt sân thành công. Chuyển đến trang thanh toán.",
             icon: "success",
-            confirmButtonText: "OK",
-          }).then(() => navigate("/home"));
+            confirmButtonText: "Tiếp tục",
+          });
+
+          const vnpayUrl = await courtService.createVnpayUrl({
+            userId: Number(bookingDetails.userId),
+            courtBookingId: latestId,
+          });
+
+          if (vnpayUrl) {
+            window.location.href = vnpayUrl;
+          } else {
+            Swal.fire({
+              title: "Lỗi tạo link thanh toán!",
+              text: "Không thể chuyển đến VNPay.",
+              icon: "error",
+            });
+          }
         } else {
           Swal.fire({
-            title: data.message,
+            title: "Thất bại!",
+            text: data?.message || "Không thể đặt sân. Vui lòng thử lại.",
             icon: "error",
-            confirmButtonText: "OK",
+            confirmButtonText: "Đóng",
           });
         }
       }
     } catch (err) {
-      console.error("Lỗi đặt sân:", err);
+      console.error("Lỗi đặt lịch:", err);
       Swal.fire({
         title: "Thất bại",
         text: err.message,
         icon: "error",
         confirmButtonText: "OK",
       });
-      setError(err.message || "Đã xảy ra lỗi trong quá trình đặt sân");
+      setError(err.message || "Đã xảy ra lỗi trong quá trình đặt lịch");
     } finally {
       setLoading(false);
     }
@@ -167,6 +204,7 @@ const BookingSummary = () => {
         </button>
         <h1>Xác nhận đặt lịch</h1>
       </div>
+
       <div className="court-header">
         <img
           src={courtData?.imageUrls?.[0] || "https://via.placeholder.com/150"}

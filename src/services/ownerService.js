@@ -142,11 +142,16 @@ export const fetchMostBookedCourtByOwner = async (ownerId) => {
   }
 };
 
-export const fetchBookingHistory = async (pageNumber = 1, pageSize = 5) => {
+export const fetchBookingHistory = async (
+  ownerId,
+  pageNumber = 1,
+  pageSize = 5
+) => {
   try {
     const url = getApiUrl(
-      `${ENDPOINTS.OWNER.BOOKING_HISTORY}?pageNumber=${pageNumber}&pageSize=${pageSize}`
+      `${ENDPOINTS.OWNER.BOOKING_HISTORY}?ownerId=${ownerId}&pageNumber=${pageNumber}&pageSize=${pageSize}`
     );
+    console.log("Calling Booking History API: ", url);
     const response = await axiosInstance.get(url);
     if (response.data.isSuccessed) {
       return response.data.resultObj.items;
