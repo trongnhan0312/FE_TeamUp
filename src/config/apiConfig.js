@@ -97,6 +97,7 @@ export const ENDPOINTS = {
   },
   PAYMENT: {
     CREATE_PAYMENT_VNPay: "payment/create-vnpay-url",
+    CREATE_PAYMENT_PayOS: "payment/create-payos-url",
   },
   VOUCHER: {
     GET_ALL: "/voucher/all",
@@ -111,6 +112,7 @@ export const ENDPOINTS = {
     GET_ALL: "/coachbooking/all",
     GET_TOTAL_PRICE: "/coachbooking/total-price/coach",
     UPDATE_STATUS: "/coachbooking/status",
+    GET_LATEST_BOOKING_ID: "/coachbooking/latest-booking-id",
   },
 
   AI_WEBSITE: {
@@ -119,6 +121,7 @@ export const ENDPOINTS = {
   COURT_BOOKING: {
     GET_ALL: "/courtbooking/all",
     UPDATE_STATUS: "/courtbooking/status",
+    LATEST_BOOKING_ID: "/courtbooking/latest-booking-id",
   },
 
   // Các endpoints khác

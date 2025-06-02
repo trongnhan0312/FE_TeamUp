@@ -82,7 +82,7 @@ const Owner = () => {
       return;
     }
 
-    fetchBookingHistory(1, 100)
+    fetchBookingHistory(ownerId, 1, 100)
       .then((data) => {
         setBookingHistory(data);
 
