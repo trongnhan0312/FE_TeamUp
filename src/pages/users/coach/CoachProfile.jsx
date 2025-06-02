@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   FaStar,
   FaMapMarkerAlt,
@@ -24,8 +24,8 @@ const CoachProfile = () => {
 
   const navigate = useNavigate();
 
-  const handleContract = () => {
-    navigate(`/chat`, { state: { userId: coachId } });
+  const handleContract = () => {    
+    navigate(`/chat`, { state: { userId: coachId, role: "Coach" } });
   };
 
   const handleBooking = () => {

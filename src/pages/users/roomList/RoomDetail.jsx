@@ -175,7 +175,7 @@ const RoomDetail = () => {
             name: request.requester?.fullName,
             avatar: request.requester?.avatarUrl,
             joinTime: new Date(request.requestedAt).toLocaleTimeString(
-              "vi-VN",
+              "vi-VN",  
               {
                 day: "2-digit",
                 month: "2-digit",
@@ -351,7 +351,7 @@ const RoomDetail = () => {
   // };
 
   const handleChatWithPlayer = (playerId) => {
-    navigate(`/chat`, { state: { userId: playerId } });
+    navigate(`/chat`, { state: { userId: playerId, role: "User" } });
   };
 
   const handlePageChange = (newPage) => {
