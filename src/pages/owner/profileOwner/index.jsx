@@ -75,8 +75,6 @@ const ProfileOwnerPage = () => {
 
         await userService.updateUserOwnerProfile(formDataToUpload);
 
-        toast.success("Cập nhật ảnh đại diện thành công!");
-
         setFormData((prev) => ({
           ...prev,
           AvatarUrl: file,

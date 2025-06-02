@@ -130,8 +130,6 @@ const ProfileCoachPage = () => {
           ...formData,
           AvatarUrl: file,
         });
-
-        toast.success("Cập nhật ảnh đại diện thành công!");
       }
     } catch (error) {
       console.error("Lỗi khi cập nhật ảnh:", error);

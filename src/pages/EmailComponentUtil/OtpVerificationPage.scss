@@ -60,7 +60,24 @@
       }
     }
   }
-  
+  .back-button {
+    background: none;
+    border: none;
+    color: #4a90e2;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 16px;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+    
+    &:disabled {
+      color: #aaa;
+      cursor: not-allowed;
+      text-decoration: none;
+    }
+  }
   .verify-button {
     background-color: #4a90e2;
     color: white;

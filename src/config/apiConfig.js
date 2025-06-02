@@ -21,6 +21,8 @@ export const ENDPOINTS = {
   AUTH: {
     LOGIN: "/auth/user-login",
     REGISTER: "/auth/register-user",
+    REGISTER_OWNER: "/auth/register-owner",
+    REGISTER_COACH: "/auth/register-coach",
     FORGOT_PASSWORD: "/auth/forgot-password",
     RESET_PASSWORD: "/auth/reset-password",
     REFRESH_TOKEN: "/auth/refresh-token",
@@ -52,7 +54,7 @@ export const ENDPOINTS = {
     GET_BY_ID: "/rating",
     LIST: "/rating/all",
     AVERAGE: "/rating/average-count/",
-    CREATE: "/rating/create"
+    CREATE: "/rating/create",
   },
   EMPLOYEE: {
     GET_COACHES_PAGINATION: "/employee/get-coaches-pagination",
@@ -63,22 +65,22 @@ export const ENDPOINTS = {
   CHAT: {
     GET_MESSAGE: "/chat/get-message",
     SEND_MESSAGE: "/chat/send-message",
-    GET_PARNERS: "/chat/chat-partners"
+    GET_PARNERS: "/chat/chat-partners",
   },
   ROOM: {
     GET_ALL: "/room/all",
     UPDATE_STATUS: "/room/status",
     CREATE: "/room/create",
     GET_BY_ID: "/room",
-    DELETE: "/room/delete"
+    DELETE: "/room/delete",
   },
   ROOM_JOIN_REQUEST: {
     CREATE_ROOM_JOIN_REQUEST: "/roomjoinrequest/create",
     GET_ALL: "/roomjoinrequest/all",
     UPDATE_STATUS: "roomjoinrequest/status",
   },
-  ROOM_PLAYER:{
-    GET_ALL: "/roomplayer/all"
+  ROOM_PLAYER: {
+    GET_ALL: "/roomplayer/all",
   },
   OWNER: {
     OWNER_STATS: "courtbooking/user-court-totalprice-stats/owner",

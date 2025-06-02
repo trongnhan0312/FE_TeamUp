@@ -1,0 +1,283 @@
+.role-modal-overlay {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    background-color: rgba(0, 0, 0, 0.6) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    z-index: 9999 !important;
+    padding: 20px;
+    backdrop-filter: blur(4px);
+  }
+  
+  .role-modal {
+    background: white !important;
+    border-radius: 16px;
+    max-width: 500px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    position: relative !important;
+    animation: modalSlideIn 0.3s ease-out;
+    z-index: 10000 !important;
+  }
+  
+  @keyframes modalSlideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  
+  .role-modal-header {
+    padding: 32px 32px 24px;
+    text-align: center;
+    border-bottom: 1px solid #f0f0f0;
+    position: relative;
+  
+    h2 {
+      margin: 0 0 12px;
+      font-size: 24px;
+      font-weight: 600;
+      color: #1a1a1a;
+      line-height: 1.3;
+    }
+  
+    p {
+      margin: 0;
+      color: #666;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+  
+    .close-button {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      background: none;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #666;
+      transition: all 0.2s ease;
+  
+      &:hover {
+        background-color: #f5f5f5;
+        color: #333;
+      }
+    }
+  }
+  
+  .role-options {
+    padding: 24px 32px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .role-option {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border: 2px solid #f0f0f0;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: white;
+    position: relative;
+    overflow: hidden;
+  
+    &:hover:not(.disabled) {
+      border-color: var(--role-color);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  
+      .role-icon {
+        transform: scale(1.1);
+      }
+  
+      .role-arrow {
+        transform: translateX(4px);
+        color: var(--role-color);
+      }
+    }
+  
+    &.disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+  
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--role-color);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+  
+    &:hover:not(.disabled)::before {
+      transform: scaleX(1);
+    }
+  }
+  
+  .role-icon {
+    font-size: 32px;
+    margin-right: 16px;
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+  }
+  
+  .role-content {
+    flex: 1;
+  
+    h3 {
+      margin: 0 0 6px;
+      font-size: 18px;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+  
+    p {
+      margin: 0;
+      color: #666;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+  }
+  
+  .role-arrow {
+    color: #ccc;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+  }
+  
+  .loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.95);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    z-index: 10001;
+  
+    p {
+      margin: 16px 0 0;
+      color: #666;
+      font-size: 16px;
+    }
+  }
+  
+  .loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #f0f0f0;
+    border-top: 3px solid #4CAF50;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  // Responsive design
+  @media (max-width: 768px) {
+    .role-modal-overlay {
+      padding: 16px;
+    }
+  
+    .role-modal {
+      max-width: none;
+      margin: 0;
+    }
+  
+    .role-modal-header {
+      padding: 24px 24px 20px;
+  
+      h2 {
+        font-size: 20px;
+      }
+  
+      p {
+        font-size: 14px;
+      }
+  
+      .close-button {
+        top: 16px;
+        right: 16px;
+        width: 28px;
+        height: 28px;
+      }
+    }
+  
+    .role-options {
+      padding: 20px 24px 24px;
+      gap: 12px;
+    }
+  
+    .role-option {
+      padding: 16px;
+  
+      .role-icon {
+        font-size: 28px;
+        margin-right: 12px;
+      }
+  
+      .role-content {
+        h3 {
+          font-size: 16px;
+        }
+  
+        p {
+          font-size: 13px;
+        }
+      }
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .role-option {
+      flex-direction: column;
+      text-align: center;
+      padding: 20px 16px;
+  
+      .role-icon {
+        margin-right: 0;
+        margin-bottom: 12px;
+      }
+  
+      .role-arrow {
+        display: none;
+      }
+    }
+  }
+  
+  // Đảm bảo modal luôn hiển thị trên cùng
+  body.modal-open {
+    overflow: hidden;
+  }
+  

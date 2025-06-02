@@ -78,8 +78,6 @@ const ProfilePage = () => {
         }));
         const previewURL = URL.createObjectURL(file);
         setPreviewAvatar(previewURL);
-
-        toast.success("Cập nhật ảnh đại diện thành công!");
       }
     } catch (error) {
       console.error("Lỗi khi chọn ảnh:", error);
