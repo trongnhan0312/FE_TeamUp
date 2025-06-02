@@ -169,7 +169,7 @@ body {
   .message-container {
     display: flex;
     gap: 10px;
-    max-width: 80%;
+    max-width: 100%;
 
     &.user-message {
       align-self: flex-end;
