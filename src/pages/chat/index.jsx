@@ -9,9 +9,11 @@ import userService from "../../services/userService";
 const ChatPage = () => {
   const location = useLocation();
   const userId = location?.state?.userId;
+  const role = location?.state?.role;
   const [recipientUserId, setRecipientUserId] = useState(userId);
   const currentUserId = getUserInfo().id;
   const [listUsers, setListUsers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState();
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -22,8 +24,17 @@ const ChatPage = () => {
 
         if (userId && !data.some((user) => user.id === userId)) {
           try {
-            const userInfo = await userService.getUserById(userId);
-            updatedListUsers.unshift(userInfo.resultObj);
+            const userInfo = await userService.getUserByRole(userId, role);
+
+            const normalizedUser = {
+              id: userInfo.resultObj.id,
+              fullName: userInfo.resultObj.fullName,
+              avatarUrl: userInfo.resultObj.avatarUrl,
+              email: userInfo.resultObj.email,
+              isTemporary: true,
+            };
+
+            updatedListUsers.unshift(normalizedUser);
           } catch (error) {
             throw error;
           }
@@ -35,7 +46,7 @@ const ChatPage = () => {
       }
     };
     fetchUsers();
-  }, [userId]);
+  }, [userId, role]);
 
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
@@ -49,17 +60,16 @@ const ChatPage = () => {
     scrollToBottom();
   }, [messages]);
 
-  const [channelName, setChannelName] = useState("");
   const [pusherInstance, setPusherInstance] = useState(null);
   const [currentChannel, setCurrentChannel] = useState(null);
 
   // Helper function để format thời gian
   const formatTime = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleTimeString('vi-VN', { 
-      hour: '2-digit', 
-      minute: '2-digit',
-      hour12: false 
+    return date.toLocaleTimeString("vi-VN", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
     });
   };
 
@@ -74,24 +84,24 @@ const ChatPage = () => {
     if (date.toDateString() === today.toDateString()) {
       return "Hôm nay";
     }
-    
+
     // Kiểm tra nếu là hôm qua
     if (date.toDateString() === yesterday.toDateString()) {
       return "Hôm qua";
     }
 
     // Trả về ngày tháng năm
-    return date.toLocaleDateString('vi-VN', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
+    return date.toLocaleDateString("vi-VN", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
     });
   };
 
   // Helper function để nhóm tin nhắn theo ngày
   const groupMessagesByDate = (messages) => {
     const groups = {};
-    
+
     messages.forEach((message) => {
       const date = new Date(message.sendAt).toDateString();
       if (!groups[date]) {
@@ -102,7 +112,7 @@ const ChatPage = () => {
 
     return Object.entries(groups).map(([date, messages]) => ({
       date,
-      messages
+      messages,
     }));
   };
 
@@ -118,16 +128,13 @@ const ChatPage = () => {
     };
   }, []);
 
-  // Tạo channel name mặc định (backup)
-  useEffect(() => {
-    if (recipientUserId) {
-      setChannelName(
-        currentUserId < recipientUserId
-          ? `chat-${currentUserId}-${recipientUserId}`
-          : `chat-${recipientUserId}-${currentUserId}`
-      );
-    }
-  }, [currentUserId, recipientUserId]);
+  // Helper function để tạo channel name chuẩn
+  const generateChannelName = (userId1, userId2) => {
+    if (!userId1 || !userId2) return null;
+    return userId1 < userId2 
+      ? `chat-${userId1}-${userId2}` 
+      : `chat-${userId2}-${userId1}`;
+  };
 
   // Lấy tin nhắn lịch sử
   useEffect(() => {
@@ -154,8 +161,11 @@ const ChatPage = () => {
   const subscribeToChannel = (channelNameToSubscribe) => {
     if (!pusherInstance || !channelNameToSubscribe) return;
 
+    console.log("Subscribing to channel:", channelNameToSubscribe);
+
     // Unsubscribe từ channel cũ nếu có
     if (currentChannel) {
+      console.log("Unsubscribing from old channel:", currentChannel.name);
       currentChannel.unbind_all();
       pusherInstance.unsubscribe(currentChannel.name);
     }
@@ -183,10 +193,13 @@ const ChatPage = () => {
     setCurrentChannel(channel);
   };
 
-  // Subscribe khi có channelName và recipientUserId
+  // Subscribe khi có recipientUserId - tạo channel ngay khi chọn user
   useEffect(() => {
-    if (channelName && recipientUserId) {
-      subscribeToChannel(channelName);
+    if (!recipientUserId || !pusherInstance) return;
+
+    const channelNameToSubscribe = generateChannelName(currentUserId, recipientUserId);
+    if (channelNameToSubscribe) {
+      subscribeToChannel(channelNameToSubscribe);
     }
 
     return () => {
@@ -197,7 +210,7 @@ const ChatPage = () => {
         }
       }
     };
-  }, [channelName, recipientUserId, pusherInstance]);
+  }, [recipientUserId, pusherInstance]); // Loại bỏ channelName dependency
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
@@ -212,16 +225,16 @@ const ChatPage = () => {
 
       console.log("Send message response:", response);
 
-      // Sử dụng channelName từ response nếu có
-      if (response.channelName) {
-        console.log("Using channelName from response:", response.channelName);
+      // Kiểm tra nếu server trả về channelName khác với channelName hiện tại
+      const expectedChannelName = generateChannelName(currentUserId, recipientUserId);
+      const serverChannelName = response.channelName;
 
-        // Cập nhật channelName nếu khác với channelName hiện tại
-        if (response.channelName !== channelName) {
-          setChannelName(response.channelName);
-          // Subscribe to channel mới ngay lập tức
-          subscribeToChannel(response.channelName);
-        }
+      if (serverChannelName && serverChannelName !== expectedChannelName) {
+        console.log("Server returned different channel name:", serverChannelName);
+        console.log("Expected channel name:", expectedChannelName);
+        
+        // Subscribe to channel name từ server
+        subscribeToChannel(serverChannelName);
       }
 
       // Thêm tin nhắn vào danh sách ngay lập tức (optimistic update)
@@ -236,7 +249,6 @@ const ChatPage = () => {
       setMessage("");
 
       // Sau khi gửi tin nhắn đầu tiên thành công, refresh lại danh sách users
-      // để đảm bảo cuộc trò chuyện mới được lưu vào danh sách và cập nhật thông tin user
       if (messages.length === 0) {
         setTimeout(async () => {
           try {
@@ -257,7 +269,7 @@ const ChatPage = () => {
           } catch (error) {
             console.error("Lỗi khi refresh danh sách users:", error);
           }
-        }, 1000); // Delay 1s để đảm bảo backend đã lưu
+        }, 1000);
       }
     } catch (error) {
       console.error("Lỗi gửi tin nhắn:", error);
@@ -265,19 +277,16 @@ const ChatPage = () => {
   };
 
   const handleSelectUser = (userId) => {
+    console.log("Selecting user:", userId);
     setRecipientUserId(userId);
     setMessages([]); // Reset messages khi chọn user mới
-
-    // Reset channelName để tạo lại cho cuộc trò chuyện mới
-    const newChannelName =
-      currentUserId < userId
-        ? `chat-${currentUserId}-${userId}`
-        : `chat-${userId}-${currentUserId}`;
-    setChannelName(newChannelName);
+    
+    // Channel sẽ được tạo tự động trong useEffect khi recipientUserId thay đổi
   };
 
-  // Tìm thông tin user được chọn
-  const selectedUser = listUsers.find((user) => user.id === recipientUserId);
+  useEffect(() => {
+    setSelectedUser(listUsers?.find((user) => user.id === recipientUserId));
+  }, [listUsers, recipientUserId]);
 
   // Nhóm tin nhắn theo ngày
   const groupedMessages = groupMessagesByDate(messages);
@@ -349,7 +358,7 @@ const ChatPage = () => {
                         {formatDate(group.messages[0].sendAt)}
                       </span>
                     </div>
-                    
+
                     {/* Tin nhắn trong ngày */}
                     {group.messages.map((msg, index) => (
                       <div
