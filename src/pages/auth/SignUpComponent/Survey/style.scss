@@ -1,0 +1,85 @@
+.survey-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;  // căn giữa theo chiều dọc
+  align-items: center;      // căn giữa theo chiều ngang
+  min-height: 100vh;
+  padding: 40px 20px;
+  color: white;
+  text-align: center;
+  overflow: hidden;
+  position: relative;
+  background-color: #fff;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url('../../../../assets/admin/logo.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    opacity: 0.05;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  > * {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+.survey-title {
+  font-size: 32px;       // tiêu đề to rõ
+  font-weight: 700;
+  color: #000;
+  margin-bottom: 30px;
+}
+
+.survey-options {
+  display: flex;
+  justify-content: wrap;
+  justify-content: center;
+  gap: 16px;
+}
+
+.option-button {
+  width: 300px;
+  padding: 14px 28px;
+  border: none;
+  border-radius: 6px;
+  font-size: 18px;
+  cursor: pointer;
+  background-color: #f4f4f4;
+  color: #000;
+  transition: background-color 0.3s, color 0.3s, transform 0.2s;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.option-button.selected {
+  background-color: #fff;
+  border: 1px solid #ccc;
+}
+
+.option-button.black {
+  background-color: #1a1a1a;
+  color: #fff;
+}
+
+.option-button.green {
+  background-color: #ccf300;
+  color: #000;
+  font-weight: 600;
+}
+
+.option-button.selected.green {
+  border: 2px solid #aada00;
+}
+
+.option-button.selected.black {
+  outline: 2px solid #000;
+}
