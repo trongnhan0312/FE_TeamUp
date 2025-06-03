@@ -63,9 +63,7 @@ const Header = () => {
                 <li>
                   <Link to="/room">Tìm bạn chơi</Link>
                 </li>
-                <li>
-                  <Link to="/ban-do">Bản đồ</Link>
-                </li>
+
                 <li>
                   <Link to="/blog">Blog</Link>
                 </li>

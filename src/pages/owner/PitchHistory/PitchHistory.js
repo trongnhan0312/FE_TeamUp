@@ -7,17 +7,18 @@ import {
 } from "../../../services/ownerService";
 import { toast } from "react-toastify";
 import { statusColors } from "../../../data";
-
+import { getUserInfo } from "../../../utils/auth";
 const PitchHistory = () => {
   const [filter, setFilter] = useState("Mới nhất");
   const [searchTerm, setSearchTerm] = useState("");
   const [timeFilter, setTimeFilter] = useState("Tuần"); // Thêm state timeFilter
   const [rawData, setRawData] = useState([]);
   const [data, setData] = useState([]);
-
+  const userInfo = getUserInfo();
+  const ownerId = userInfo?.id;
   // Lấy dữ liệu từ API khi mount hoặc timeFilter thay đổi (nếu cần lọc server theo time)
   useEffect(() => {
-    fetchBookingHistory(1, 100, Date.now())
+    fetchBookingHistory(ownerId, 1, 5)
       .then((items) => {
         const formatted = items.map((item) => ({
           id: item.id,
@@ -94,7 +95,7 @@ const PitchHistory = () => {
       console.log(
         `Cập nhật trạng thái booking ${bookingId} thành ${newStatus}`
       );
-      const items = await fetchBookingHistory(1, 100, Date.now());
+      const items = await fetchBookingHistory(ownerId, 1, 5);
 
       const formatted = items.map((item) => ({
         id: item.id,
@@ -121,7 +122,6 @@ const PitchHistory = () => {
     }
   };
   const completedPercentage = (completed / totalOrders) * 100;
-  const inProgressPercentage = (inProgress / totalOrders) * 100;
   const cancelledPercentage = (cancelled / totalOrders) * 100;
   return (
     <div className="pitchHistory">
@@ -136,12 +136,6 @@ const PitchHistory = () => {
           title="Đã hoàn thành"
           value={completed}
           percentage={Math.min(completedPercentage, 100)} // Giới hạn phần trăm không quá 100%
-        />
-
-        <CircleStat
-          title="Đang thực hiện"
-          value={inProgress}
-          percentage={Math.min(inProgressPercentage, 100)} // Giới hạn phần trăm không quá 100%
         />
 
         <CircleStat

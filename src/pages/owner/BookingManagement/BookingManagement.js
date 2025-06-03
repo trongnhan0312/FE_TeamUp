@@ -912,11 +912,6 @@ const BookingManagement = () => {
                           <div
                             key={`slot-${dateIndex}-${timeIndex}`}
                             className={`time-slot ${slotClass}`}
-                            onClick={
-                              isAvailable
-                                ? () => handleSlotClick(date, time)
-                                : undefined
-                            }
                           >
                             {(isStart || isSelectedStart) && (
                               <div className="slot-label">BẮT ĐẦU</div>
@@ -1000,21 +995,9 @@ const BookingManagement = () => {
                 <div className="color-box booked"></div>
                 <span>Đã đặt</span>
               </div>
-              <div className="legend-item">
-                <div className="color-box start-time"></div>
-                <span>Giờ bắt đầu</span>
-              </div>
-              <div className="legend-item">
-                <div className="color-box end-time"></div>
-                <span>Giờ kết thúc</span>
-              </div>
-              <div className="legend-item">
-                <div className="color-box in-range"></div>
-                <span>Thời gian đã chọn</span>
-              </div>
             </div>
 
-            {!isMultiBooking && (
+            {/* {!isMultiBooking && (
               <div className="booking-info">
                 <h3>Thông tin đặt sân</h3>
                 <div className="booking-detail">
@@ -1044,7 +1027,7 @@ const BookingManagement = () => {
                   </div>
                 </div>
               </div>
-            )}
+            )} */}
 
             {isMultiBooking && (
               <div className="booking-info admin-booking-info">
@@ -1126,7 +1109,7 @@ const BookingManagement = () => {
               </div>
             )}
 
-            <div className="time-selection-guide">
+            {/* <div className="time-selection-guide">
               <p>
                 {isMultiBooking ? "Cách đặt sân (Admin):" : "Cách đặt sân:"}
               </p>
@@ -1161,9 +1144,9 @@ const BookingManagement = () => {
                   </li>
                 </ol>
               )}
-            </div>
+            </div> */}
 
-            <button
+            {/* <button
               className="continue-button"
               disabled={
                 isMultiBooking
@@ -1179,7 +1162,7 @@ const BookingManagement = () => {
                 : !startTime || !endTime
                 ? "Vui lòng chọn thời gian đặt sân"
                 : `Tiếp tục với ${bookingDuration} giờ đã chọn`}
-            </button>
+            </button> */}
           </div>
         </div>
       </div>

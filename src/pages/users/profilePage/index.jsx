@@ -194,11 +194,7 @@ const ProfilePage = () => {
             <li onClick={() => navigate("/room-create-history")}>
               Lịch sử tạo phòng
             </li>
-            <li>Lịch sử trận đấu</li>
-            <li>Phòng đã tạo</li>
-            <li>Số dư</li>
-            <li>Đánh giá người chơi</li>
-            <li>Cài đặt</li>
+
             <li
               onClick={handleLogout}
               style={{ cursor: "pointer" }}
