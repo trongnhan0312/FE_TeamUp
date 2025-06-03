@@ -12,6 +12,7 @@ import { formatPrice } from "../../../utils/formatUtils";
 import "./CoachProfile.scss";
 import { useNavigate, useParams } from "react-router-dom";
 import coachService from "../../../services/coachService";
+import CourtReviews from "../courts/court_detail/CourtReviews";
 
 const CoachProfile = () => {
   // Sử dụng useParams để lấy coachId từ URL
@@ -24,7 +25,7 @@ const CoachProfile = () => {
 
   const navigate = useNavigate();
 
-  const handleContract = () => {    
+  const handleContract = () => {
     navigate(`/chat`, { state: { userId: coachId, role: "Coach" } });
   };
 
@@ -245,6 +246,7 @@ const CoachProfile = () => {
           </div>
         </div>
       </div>
+      <CourtReviews revieweeId={coachId} />
     </div>
   );
 };
