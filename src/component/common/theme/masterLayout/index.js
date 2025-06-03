@@ -5,7 +5,14 @@ import ChatWidget from "../../../chatAI/ChatWidget";
 
 const masterLayout = ({ children, ...props }) => {
   return (
-    <div {...props}>
+    <div
+      {...props}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+      }}
+    >
       <Header />
       {children}
       <ChatWidget />;

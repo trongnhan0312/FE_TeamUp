@@ -109,12 +109,12 @@ const HeaderOwner = () => {
                       <BsFileEarmark />
                     </Link>
                   </li>
-                  <li>
+                  {/* <li>
                     <Link to="/owner/humanhabits" className="icon-link">
                       <BsClipboardData />
                       <div className="tooltip-text">Thói Quen Người Dùng</div>
                     </Link>
-                  </li>
+                  </li> */}
                   <li>
                     <Link to="/owner/bookingmanagement" className="icon-link">
                       <BsCoin />
@@ -127,7 +127,7 @@ const HeaderOwner = () => {
                     </Link>
                   </li> */}
                   <li>
-                    <Link to="/owner/reviewyard" className="icon-link">
+                    <Link to="/owner/ReviewOwner" className="icon-link">
                       <BsChatHeart />
                       <div className="tooltip-text">Đánh Giá</div>
                     </Link>
@@ -158,12 +158,6 @@ const HeaderOwner = () => {
                     listStyle: "none",
                   }}
                 >
-                  <li>
-                    <BsFillBellFill />
-                  </li>
-                  <li>
-                    <BsGear />
-                  </li>
                   <li
                     onClick={handleLogout}
                     style={{ cursor: "pointer" }}

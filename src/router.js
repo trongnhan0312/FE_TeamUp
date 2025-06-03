@@ -15,7 +15,7 @@ import HumanHabits from "./pages/owner/HumanHabits/HumanHabits";
 import PitchHistory from "./pages/owner/PitchHistory/PitchHistory";
 import BOOKINGMANAGEMENT from "./pages/owner/BookingManagement/BookingManagement";
 import CreateCourt from "./pages/owner/SportsComplexes/SportsComplexesDetail/CreateCourt/CreateCourt";
-import ReviewYard from "./pages/owner/ReviewYard/ReviewYard";
+import ReviewOwner from "./pages/owner/ReviewOwner/ReviewOwner";
 import CreateSportsComplexes from "./pages/owner/SportsComplexes/CreateSportsComplexes/CreateSportsComplexes";
 import SportsComplexes from "./pages/owner/SportsComplexes/SportsComplexes";
 import SportsComplexDetail from "./pages/owner/SportsComplexes/SportsComplexesDetail/SportsComplexesDetail";
@@ -81,7 +81,7 @@ const RouterCustom = () => {
           element={<BOOKINGMANAGEMENT />}
         />
         <Route path={ROUTER.OWNER.CREATE_COURT} element={<CreateCourt />} />
-        <Route path={ROUTER.OWNER.REVIEWYARD} element={<ReviewYard />} />
+        <Route path={ROUTER.OWNER.REVIEWOWNER} element={<ReviewOwner />} />
         <Route
           path={ROUTER.OWNER.SportsComplexes}
           element={<SportsComplexes />}

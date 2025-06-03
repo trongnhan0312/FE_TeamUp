@@ -37,6 +37,7 @@ const coachService = {
       const response = await axiosInstance.get(
         `${ENDPOINTS.RATING.LIST}?revieweeId=${revieweeId}&pageNumber=${pageNumber}&pageSize=${pageSize}`
       );
+      console.log("Response from getCoachRatings:", response.data);
       return response.data;
     } catch (error) {
       throw error.response ? error.response.data : error.message;

@@ -1,8 +1,11 @@
 import { memo, useState, useEffect } from "react";
 import "./style.scss";
 import coachService from "../../../services/coachService";
+import { getUserInfo } from "../../../utils/auth";
+const user = getUserInfo();
+const ownerId = user?.id;
 
-const ReviewCoach = ({ revieweeId = 1 }) => {
+const ReviewOwner = ({ revieweeId = ownerId }) => {
   const [filter, setFilter] = useState("Mới nhất");
   const [searchValue, setSearchValue] = useState("");
   const [reviews, setReviews] = useState([]);
@@ -35,11 +38,11 @@ const ReviewCoach = ({ revieweeId = 1 }) => {
     try {
       setLoading(true);
       const response = await coachService.getCoachRatings(
-        10,
+        revieweeId,
         pageNumber,
         pagination.pageSize
       );
-      console.log("Response from getCoachRatings:", response);
+
       if (response.isSuccessed) {
         // Transform data từ API response thành format phù hợp với UI
         const transformedReviews = response.resultObj.items.map((item) => ({
@@ -297,4 +300,4 @@ const ReviewCoach = ({ revieweeId = 1 }) => {
   );
 };
 
-export default memo(ReviewCoach);
+export default memo(ReviewOwner);

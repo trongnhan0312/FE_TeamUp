@@ -124,12 +124,6 @@ const HeaderCoach = () => {
                   listStyle: "none",
                 }}
               >
-                <li>
-                  <BsFillBellFill />
-                </li>
-                <li>
-                  <BsGear />
-                </li>
                 <li
                   onClick={handleLogout}
                   style={{ cursor: "pointer" }}

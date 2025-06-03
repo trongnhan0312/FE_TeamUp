@@ -37,7 +37,7 @@ export const ROUTER = {
     HUMANHABITS: "/owner/humanhabits",
     PITCHHISTORY: "/owner/pitchhistory",
     BOOKINGMANAGEMENT: "/owner/bookingmanagement",
-    REVIEWYARD: "/owner/reviewyard",
+    REVIEWOWNER: "/owner/ReviewOwner",
     SportsComplexes: "/owner/sportscomplexes",
     SportsComplexDetail: "/owner/sportscomplexes/:id",
     CourtDetailOwner: "/owner/CourtDetailOwner/:courtId",

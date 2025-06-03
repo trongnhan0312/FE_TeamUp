@@ -39,7 +39,7 @@ export const fetchWeeklyBookedSlots = async (courtId) => {
 export const fetchOwnerCourts = async (
   ownerId,
   pageNumber = 1,
-  pageSize = 10000
+  pageSize = 10
 ) => {
   try {
     const url = getApiUrl(

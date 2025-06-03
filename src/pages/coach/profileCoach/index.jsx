@@ -264,11 +264,16 @@ const ProfileCoachPage = () => {
               </Link>
             </li>
 
-            <li>Lịch sử trận đấu</li>
-            <li>Phòng đã tạo</li>
-            <li>Số dư</li>
-            <li>Đánh giá người chơi</li>
-            <li>Cài đặt</li>
+            <li>
+              <Link
+                to="/coach/CoachHistory"
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                Lịch sử trận đấu
+              </Link>
+            </li>
+            <li>Lịch sử thanh toán</li>
+
             <li
               onClick={handleLogout}
               style={{ cursor: "pointer" }}

@@ -4,9 +4,16 @@ import FooterCoach from "./footerCoach";
 
 const CoachLayout = ({ children, ...props }) => {
   return (
-    <div {...props}>
+    <div
+      {...props}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+      }}
+    >
       <HeaderCoach />
-      {children}
+      <main style={{ flex: 1 }}>{children}</main>
       <FooterCoach />
     </div>
   );
