@@ -17,7 +17,7 @@ const CourtReviews = ({ rating = 0, totalReviews = 0, revieweeId }) => {
 
   // Sử dụng giá trị từ props hoặc từ API
   const displayRating = reviewsData.averageRating || rating || 0;
-  const displayTotalReviews = reviewsData.totalReviews || totalReviews || 0;
+  const displayTotalReviews = reviewsData.totalItems || totalReviews || 0;
 
   useEffect(() => {
     const fetchRatings = async () => {
@@ -30,6 +30,7 @@ const CourtReviews = ({ rating = 0, totalReviews = 0, revieweeId }) => {
           pageSize,
           revieweeId
         );
+        const avgStart = await ratingService.getAverageCount(revieweeId);
 
         if (response.isSuccessed) {
           // Cập nhật state với dữ liệu từ API
@@ -37,8 +38,8 @@ const CourtReviews = ({ rating = 0, totalReviews = 0, revieweeId }) => {
           console.log("repon", response);
           setReviewsData({
             items: items,
-            totalReviews: response.resultObj?.totalCount || totalReviews || 0,
-            averageRating: response.resultObj?.averageRating || rating || 0,
+            totalReviews: avgStart.resultObj?.totalReviewerCount || totalReviews || 0,
+            averageRating: avgStart.resultObj?.averageRating || rating || 0,
           });
 
           setTotalPages(response.resultObj?.totalPages || 1);
@@ -183,7 +184,7 @@ const CourtReviews = ({ rating = 0, totalReviews = 0, revieweeId }) => {
                 : "Trung bình"}
             </span>
             <span className="review-count">
-              {displayTotalReviews} người dùng đã đánh giá
+              {reviewsData.totalReviews} người dùng đã đánh giá
             </span>
           </div>
         </div>
