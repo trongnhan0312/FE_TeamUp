@@ -91,6 +91,38 @@
       }
     }
   }
+
+  // New: Coach details section
+  .coach-details-section {
+    margin-bottom: 24px;
+
+    .section-title {
+      @include heading-3;
+      font-weight: 600;
+      margin: 0 0 16px 0;
+      color: #333;
+    }
+
+    .coach-info-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px; // Slightly less margin for coach details rows
+
+      .coach-label {
+        @include large-text;
+        color: #666;
+        flex: 1; // Allow label to take up space
+      }
+
+      .coach-value {
+        @include large-text;
+        color: #333;
+        font-weight: 500;
+        text-align: right;
+        flex: 2; // Allow value to take more space
+      }
+    }
+  }
   
   // Separator line
   .separator {

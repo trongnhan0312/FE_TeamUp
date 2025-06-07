@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FaChevronLeft, FaMapMarkerAlt, FaClock } from "react-icons/fa";
 import courtService from "../../../../services/courtService";
+import coachBookingService from "../../../../services/coachBookingService"; // Import service for coach
 import { getUserInfo } from "../../../../utils/auth";
 import "./BookingConfirmation.scss";
 import VoucherSelector from "../../voucher/VoucherSelector";
@@ -11,6 +12,7 @@ const BookingConfirmation = () => {
   const location = useLocation();
 
   const [courtData, setCourtData] = useState(null);
+  const [coachData, setCoachData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedVoucher, setSelectedVoucher] = useState(null);
@@ -25,26 +27,47 @@ const BookingConfirmation = () => {
       return;
     }
 
-    const fetchCourt = async () => {
+    const fetchData = async () => {
       try {
-        const courtRes = await courtService.getById(bookingData.courtId);
-        if (courtRes.isSuccessed) setCourtData(courtRes.resultObj);
-        else setError("Không thể lấy thông tin sân");
+        const promises = [courtService.getById(bookingData.courtId)];
+
+        if (isMultiBooking && bookingData.coachId) {
+          promises.push(coachBookingService.getCoachById(bookingData.coachId));
+        }
+
+        const results = await Promise.all(promises);
+
+        const courtRes = results[0];
+        if (courtRes.isSuccessed) {
+          setCourtData(courtRes.resultObj);
+        } else {
+          throw new Error("Không thể lấy thông tin sân");
+        }
+
+        if (isMultiBooking && bookingData.coachId && results[1]) {
+          const coachRes = results[1];
+          if (coachRes) {
+            setCoachData(coachRes);
+          } else {
+            throw new Error("Không thể lấy thông tin huấn luyện viên");
+          }
+        }
       } catch (err) {
-        setError("Lỗi khi tải dữ liệu");
+        setError(err.message || "Lỗi khi tải dữ liệu");
         console.error(err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchCourt();
-  }, [bookingData]);
+    fetchData();
+  }, [bookingData, isMultiBooking]);
 
   const formatCurrency = (amount) =>
     new Intl.NumberFormat("vi-VN").format(amount);
   const formatTime = (time) => time || "";
   const formatDate = (dateString) => {
+    if (!dateString) return "";
     const [year, month, day] = dateString.split("-");
     return `${day}/${month}/${year}`;
   };
@@ -53,19 +76,26 @@ const BookingConfirmation = () => {
     ? bookingData.totalDuration
     : bookingData.duration;
 
+  const calculateBaseAmount = () => {
+    const pricePerHour = courtData?.pricePerHour || 0;
+    let base = pricePerHour * totalDuration;
+
+    if (isMultiBooking && coachData && bookingData.bookings) {
+      const coachPricePerSession = coachData.pricePerSession || 0;
+      base += coachPricePerSession * bookingData.bookings.length;
+    }
+    return base;
+  };
+
   const discount = selectedVoucher
     ? Math.floor(
-        (courtData.pricePerHour *
-          totalDuration *
-          selectedVoucher.discountPercent) /
-          100
+        (calculateBaseAmount() * selectedVoucher.discountPercent) / 100
       )
     : 0;
 
   const calculateTotalPrice = () => {
-    const pricePerHour = courtData.pricePerHour || 0;
-    const subtotal = pricePerHour * totalDuration;
-    return subtotal - discount;
+    const baseAmount = calculateBaseAmount();
+    return Math.max(0, baseAmount - discount);
   };
 
   const handleConfirmBooking = () => {
@@ -77,8 +107,11 @@ const BookingConfirmation = () => {
       const day = String(dateObj.getDate()).padStart(2, "0");
       const hours = String(dateObj.getHours()).padStart(2, "0");
       const minutes = String(dateObj.getMinutes()).padStart(2, "0");
-      return `${year}-${month}-${day} ${hours}:${minutes}`;
+      // SỬA ĐỔI ĐỂ TRẢ VỀ ĐỊNH DẠNG ISO 8601 VỚI 'T'
+      return `${year}-${month}-${day}T${hours}:${minutes}:00`;
     };
+
+    const finalTotalPrice = calculateTotalPrice(); // Lấy giá trị tổng tiền đã tính toán
 
     if (isMultiBooking) {
       const slots = bookingData.bookings.map((item) => {
@@ -91,36 +124,46 @@ const BookingConfirmation = () => {
         };
       });
 
-      const bookingDetails = {
+      const bookingDetailsToSend = {
         courtId: bookingData.courtId,
         playerId: userData.id,
         coachId: bookingData.coachId,
         slots,
         totalHours: totalDuration,
-        totalPrice: calculateTotalPrice(),
         voucherId: selectedVoucher?.id || null,
         isMultiBooking,
       };
 
-      navigate("/booking-summary", { state: { bookingDetails } });
+      navigate("/booking-summary", {
+        state: {
+          bookingDetails: bookingDetailsToSend,
+          totalPriceFromConfirmation: finalTotalPrice, // TRUYỀN TỔNG TIỀN
+          selectedVoucherFromConfirmation: selectedVoucher, // TRUYỀN VOUCHER ĐÃ CHỌN
+        },
+      });
     } else {
       const dateStr = bookingData.date;
       const startTimeISO = `${dateStr}T${bookingData.startTime}:00`;
       const endTimeISO = `${dateStr}T${bookingData.endTime}:00`;
 
-      const bookingDetails = {
+      const bookingDetailsToSend = {
         courtId: bookingData.courtId,
         userId: userData.id,
         startTime: startTimeISO,
         endTime: endTimeISO,
         date: bookingData.date,
         totalHours: totalDuration,
-        totalPrice: calculateTotalPrice(),
         voucherId: selectedVoucher?.id || null,
         isMultiBooking,
       };
 
-      navigate("/booking-summary", { state: { bookingDetails } });
+      navigate("/booking-summary", {
+        state: {
+          bookingDetails: bookingDetailsToSend,
+          totalPriceFromConfirmation: finalTotalPrice, // TRUYỀN TỔNG TIỀN
+          selectedVoucherFromConfirmation: selectedVoucher, // TRUYỀN VOUCHER ĐÃ CHỌN
+        },
+      });
     }
   };
 
@@ -172,6 +215,27 @@ const BookingConfirmation = () => {
               </div>
             </div>
           </div>
+
+          {isMultiBooking && coachData && (
+            <div className="coach-booking-info">
+              <h3>Thông tin huấn luyện viên</h3>
+              <div className="info-item">
+                <div className="label">Tên huấn luyện viên:</div>
+                <div className="value">{coachData.fullName}</div>
+              </div>
+              <div className="info-item">
+                <div className="label">Chuyên môn:</div>
+                <div className="value">{coachData.specialty}</div>
+              </div>
+              <div className="info-item">
+                <div className="label">Giá mỗi buổi:</div>
+                <div className="value">
+                  {formatCurrency(coachData.pricePerSession)}₫
+                </div>
+              </div>
+              <hr />
+            </div>
+          )}
 
           <div className="booking-time-info">
             <h3>Thông tin đặt sân</h3>
@@ -250,7 +314,7 @@ const BookingConfirmation = () => {
             )}
 
             <VoucherSelector
-              totalAmount={courtData.pricePerHour * totalDuration}
+              totalAmount={calculateBaseAmount()}
               onSelectVoucher={setSelectedVoucher}
             />
 
@@ -302,12 +366,23 @@ const BookingConfirmation = () => {
                 <div className="price-item">
                   <div className="label">Tiền sân</div>
                   <div className="value">
-                    {formatCurrency(courtData.pricePerHour)}₫
+                    {formatCurrency(courtData.pricePerHour * totalDuration)}₫
                   </div>
                 </div>
+                {isMultiBooking && coachData && bookingData.bookings && (
+                  <div className="price-item">
+                    <div className="label">Tiền huấn luyện viên</div>
+                    <div className="value">
+                      {formatCurrency(
+                        coachData.pricePerSession * bookingData.bookings.length
+                      )}
+                      ₫
+                    </div>
+                  </div>
+                )}
                 <div className="price-item">
-                  <div className="label">Số giờ</div>
-                  <div className="value">{totalDuration}</div>
+                  <div className="label">Tổng thời lượng</div>
+                  <div className="value">{totalDuration} giờ</div>
                 </div>
                 {discount > 0 && (
                   <div className="price-item discount">

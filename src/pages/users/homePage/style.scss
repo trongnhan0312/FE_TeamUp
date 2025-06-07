@@ -1,4 +1,1097 @@
+.booking-management-wrapper {
+  display: flex;
+  height: 100vh;
+  background-color: #f9f9f9;
+}
+.purple-banner {
+  height: 4px;
+  background-color: #8ad839;
+  width: 100%;
+}
+.sidebar-menu {
+  width: 280px;
+  background-color: #fff;
+  border-right: 1px solid #ddd;
+  padding: 16px;
+  overflow-y: auto;
+  box-shadow: 2px 0 6px rgba(0,0,0,0.05);
+}
+
+.sidebar-title {
+  margin-bottom: 20px;
+  font-weight: 600;
+  font-size: 18px;
+  color: #333;
+  border-bottom: 2px solid #4664e1;
+  padding-bottom: 10px;
+  text-align: center;
+}
+
+.area-section {
+  margin-bottom: 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.area-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background-color: #f8f9fa;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border-bottom: 1px solid #e0e0e0;
+
+  &:hover {
+    background-color: #e9ecef;
+  }
+
+  .area-name {
+    font-weight: 600;
+    font-size: 16px;
+    color: #333;
+  }
+
+  .area-toggle {
+    color: #666;
+    font-size: 14px;
+    transition: transform 0.2s;
+  }
+
+  .area-type {
+    font-size: 12px;
+    color: #888;
+    font-weight: normal;
+    margin-left: 8px;
+  }
+}
+
+.court-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background-color: #fff;
+}
+
+.court-item {
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #555;
+  font-weight: 500;
+  border-bottom: 1px solid #f0f0f0;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background-color: #e6f0ff;
+    color: #0047b3;
+    padding-left: 24px;
+  }
+
+  &.active {
+    background-color: #4664e1;
+    color: #fff;
+    font-weight: 700;
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background-color: #fff;
+    }
+
+    .court-price {
+      color: #e8f4fd;
+    }
+  }
+
+  .court-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    .court-name {
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .court-price {
+      font-size: 12px;
+      color: #888;
+      font-weight: normal;
+    }
+  }
+}
+
+.booking-main-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+.current-court-info {
+  margin-bottom: 20px;
+  padding: 16px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-left: 4px solid #4664e1;
+
+  h2 {
+    margin: 0;
+    color: #333;
+    font-size: 20px;
+    font-weight: 600;
+  }
+}
+
+/* ====================== */
+/* Court Schedule Styles */
+/* ====================== */
+
+.court-schedule {
+  display: flex;
+  max-width: 1200px;
+  margin: 0 auto;
+  gap: 20px;
+  font-family: "Roboto", sans-serif;
+
+  .schedule-container {
+    flex: 3;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+
+    .schedule-header {
+      padding: 15px;
+      border-bottom: 1px solid #eee;
+
+      .week-selector {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .date-range {
+          font-size: 14px;
+          color: #555;
+        }
+
+        .week-nav {
+          display: flex;
+          gap: 10px;
+
+          .nav-button {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 1px solid #ddd;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+
+            &:hover {
+              background: #f5f5f5;
+            }
+          }
+        }
+      }
+    }
+
+    .schedule-grid {
+      display: flex;
+
+      .time-column {
+        width: 80px;
+        flex-shrink: 0;
+        border-right: 1px solid #eee;
+
+        .column-header {
+          height: 45px;
+          border-bottom: 1px solid #eee;
+        }
+
+        .time-cell {
+          height: 40px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 11px;
+          color: #666;
+          border-bottom: 1px solid #eee;
+        }
+      }
+
+      .day-column {
+        flex: 1;
+        border-right: 1px solid #eee;
+
+        &:last-child {
+          border-right: none;
+        }
+
+        .column-header {
+          height: 45px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          border-bottom: 1px solid #eee;
+
+          .day-name {
+            font-size: 11px;
+            color: #666;
+          }
+
+          .day-number {
+            font-size: 14px;
+            font-weight: 500;
+          }
+        }
+
+        .time-slot {
+          height: 40px;
+          border-bottom: 1px solid #eee;
+          position: relative;
+
+          .slot-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 10px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.5);
+            white-space: nowrap;
+          }
+
+          &.available {
+            background-color: #b9e255;
+            cursor: pointer;
+
+            &:hover {
+              filter: brightness(95%);
+            }
+          }
+
+          &.booked {
+            background-color: #666;
+          }
+
+          &.start-time {
+            background-color: #3d9140;
+            cursor: pointer;
+
+            &:hover {
+              filter: brightness(95%);
+            }
+          }
+
+          &.end-time {
+            background-color: #e74c3c;
+            cursor: pointer;
+
+            &:hover {
+              filter: brightness(95%);
+            }
+          }
+
+          &.in-range {
+            background-color: #7fb3d5;
+            cursor: pointer;
+
+            &:hover {
+              filter: brightness(95%);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .calendar-panel {
+    flex: 1;
+    min-width: 300px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+
+    .month-header {
+      border-bottom: 3px solid #e5e7eb;
+      padding-bottom: 10px;
+      margin-bottom: 15px;
+
+      h2 {
+        font-size: 28px;
+        color: #666;
+        margin: 0 0 8px 0;
+        font-weight: 500;
+      }
+
+      p {
+        font-size: 14px;
+        color: #888;
+        margin: 0;
+      }
+    }
+
+    .month-navigation {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 15px;
+
+      h3 {
+        font-size: 18px;
+        font-weight: 500;
+        color: #555;
+        margin: 0;
+      }
+
+      .month-nav-btn {
+        width: 35px;
+        height: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #4664e1;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+
+        &:hover {
+          background-color: #3b57d4;
+        }
+      }
+    }
+
+    .month-calendar {
+      margin-bottom: 20px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 15px;
+
+      .weekday-row {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        text-align: center;
+        margin-bottom: 8px;
+
+        .weekday-cell {
+          padding: 5px 0;
+          color: #666;
+          font-size: 14px;
+        }
+      }
+
+      .calendar-days {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        grid-auto-rows: 35px;
+        gap: 4px;
+
+        .calendar-day {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 50%;
+          cursor: pointer;
+          font-size: 14px;
+
+          &:hover {
+            background-color: #f5f5f5;
+          }
+
+          &.other-month {
+            color: #ccc;
+          }
+
+          &.today {
+            font-weight: bold;
+          }
+
+          &.selected {
+            background-color: #4664e1;
+            color: white;
+
+            &:hover {
+              background-color: #4664e1;
+            }
+          }
+        }
+      }
+    }
+
+    .legend {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #eee;
+
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        .color-box {
+          width: 25px;
+          height: 25px;
+          border-radius: 4px;
+
+          &.available {
+            background-color: #b9e255;
+          }
+
+          &.booked {
+            background-color: #666;
+          }
+
+          &.start-time {
+            background-color: #3d9140;
+          }
+
+          &.end-time {
+            background-color: #e74c3c;
+          }
+
+          &.in-range {
+            background-color: #7fb3d5;
+          }
+        }
+      }
+    }
+
+    .booking-info {
+      background-color: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+
+      h3 {
+        font-size: 18px;
+        color: #333;
+        margin-top: 0;
+        margin-bottom: 15px;
+      }
+
+      .booking-detail {
+        display: flex;
+        margin-bottom: 10px;
+
+        .label {
+          flex: 1;
+          font-weight: 500;
+          color: #555;
+        }
+
+        .value {
+          flex: 1;
+          color: #333;
+          font-weight: 600;
+        }
+      }
+    }
+
+    .time-selection-guide {
+      margin-bottom: 20px;
+      padding: 15px;
+      background-color: #e8f4fd;
+      border-radius: 8px;
+      border-left: 4px solid #4664e1;
+
+      p {
+        margin-top: 0;
+        margin-bottom: 10px;
+        font-weight: 500;
+      }
+
+      ol {
+        margin: 0;
+        padding-left: 20px;
+
+        li {
+          margin-bottom: 5px;
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
+      }
+    }
+
+    .continue-button {
+      padding: 12px;
+      background-color: #3d9140;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      margin-top: auto;
+
+      &:hover:not(:disabled) {
+        background-color: #357a36;
+      }
+
+      &:disabled {
+        background-color: #e0e0e0;
+        color: #999;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  .admin-booking-info {
+    .current-selection {
+      background: #e3f2fd;
+      border: 1px solid #2196f3;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 16px;
+
+      h4 {
+        margin: 0 0 8px 0;
+        color: #1976d2;
+        font-size: 14px;
+      }
+
+      .booking-detail {
+        margin-bottom: 4px;
+        font-size: 13px;
+      }
+
+      .reset-selection-btn {
+        background: #ff5722;
+        color: white;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 4px;
+        font-size: 12px;
+        cursor: pointer;
+        margin-top: 8px;
+
+        &:hover {
+          background: #d84315;
+        }
+      }
+    }
+
+    .selected-bookings-list {
+      max-height: 200px;
+      overflow-y: auto;
+      margin-bottom: 16px;
+
+      .no-bookings {
+        text-align: center;
+        color: #666;
+        font-style: italic;
+        padding: 20px;
+        background: #f5f5f5;
+        border-radius: 8px;
+      }
+
+      .booking-item {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        margin-bottom: 8px;
+
+        .booking-info-row {
+          display: flex;
+          align-items: center;
+          padding: 12px;
+          gap: 12px;
+
+          .booking-number {
+            background: #28a745;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            flex-shrink: 0;
+          }
+
+          .booking-details {
+            flex: 1;
+
+            .booking-date {
+              font-weight: 600;
+              color: #333;
+              font-size: 14px;
+            }
+
+            .booking-time {
+              color: #666;
+              font-size: 13px;
+              margin-top: 2px;
+            }
+          }
+
+          .remove-booking-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s;
+
+            &:hover {
+              background: #c82333;
+            }
+
+            svg {
+              font-size: 14px;
+            }
+          }
+        }
+      }
+    }
+
+    .booking-summary {
+      background: #e8f5e8;
+      border: 1px solid #28a745;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 16px;
+
+      .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 4px;
+
+        &:last-child {
+          margin-bottom: 0;
+          font-weight: 600;
+          padding-top: 4px;
+          border-top: 1px solid #28a745;
+        }
+
+        .label {
+          color: #155724;
+        }
+
+        .value {
+          color: #155724;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 1024px) {
+    flex-direction: column;
+
+    .schedule-container {
+      flex: none;
+    }
+
+    .calendar-panel {
+      flex: none;
+      min-width: auto;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .admin-booking-info {
+      .selected-bookings-list {
+        max-height: 150px;
+
+        .booking-item .booking-info-row {
+          padding: 8px;
+          gap: 8px;
+
+          .booking-number {
+            width: 20px;
+            height: 20px;
+            font-size: 10px;
+          }
+
+          .booking-details {
+            .booking-date {
+              font-size: 13px;
+            }
+
+            .booking-time {
+              font-size: 12px;
+            }
+          }
+
+          .remove-booking-btn {
+            width: 28px;
+            height: 28px;
+
+            svg {
+              font-size: 12px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.upcoming_matches {
+  .section_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+
+    h2 {
+      margin: 0;
+    }
+
+    .navigation_buttons {
+      display: flex;
+      gap: 10px;
+
+      .nav_button {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 2px solid #8ad839;
+        background: white;
+        color: #8ad839;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 18px;
+
+        &:hover:not(:disabled) {
+          background: #8ad839;
+          color: white;
+          transform: scale(1.1);
+        }
+
+        &:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+          transform: none;
+        }
+
+        &.prev {
+          margin-right: 5px;
+        }
+
+        &.next {
+          margin-left: 5px;
+        }
+      }
+    }
+  }
+
+  .pagination_dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 20px;
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: none;
+      background: #ddd;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &.active {
+        background: #8ad839;
+        transform: scale(1.2);
+      }
+
+      &:hover {
+        background: #8ad839;
+        opacity: 0.7;
+      }
+    }
+  }
+
+  .matches_container {
+    transition: transform 0.3s ease;
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .upcoming_matches {
+    .section_header {
+      flex-direction: column;
+      gap: 15px;
+      text-align: center;
+
+      .navigation_buttons {
+        .nav_button {
+          width: 35px;
+          height: 35px;
+          font-size: 16px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .upcoming_matches {
+    .section_header {
+      .navigation_buttons {
+        .nav_button {
+          width: 30px;
+          height: 30px;
+          font-size: 14px;
+        }
+      }
+    }
+
+    .pagination_dots {
+      .dot {
+        width: 10px;
+        height: 10px;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .booking-management-wrapper {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .sidebar-menu {
+    width: 100%;
+    height: auto;
+    max-height: 300px;
+    border-right: none;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .booking-main-content {
+    padding: 16px;
+  }
+
+  .current-court-info {
+    h2 {
+      font-size: 18px;
+    }
+  }
+}
+
+.error-complexes {
+  text-align: center;
+  padding: 20px;
+  color: #dc3545;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 8px;
+  margin-bottom: 16px;
+
+  p {
+    margin: 0 0 12px 0;
+    font-size: 14px;
+  }
+
+  .retry-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: #c82333;
+    }
+  }
+}
+
+.loading-complexes {
+  color: #4664e1;
+  text-align: center;
+  padding: 20px;
+  font-style: italic;
+}
+
+.no-complexes {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+  font-style: italic;
+}
+
+.no-courts {
+  padding: 12px 20px;
+  color: #999;
+  font-style: italic;
+  text-align: center;
+}
+
+.loading-courts {
+  padding: 12px 20px;
+  color: #4664e1;
+  font-style: italic;
+  text-align: center;
+  font-size: 14px;
+}
+
+.survey-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  position: relative;
+  z-index: 1;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Ccircle cx='100' cy='100' r='80' fill='%23e9f5c9' opacity='0.6'/%3E%3Ccircle cx='70' cy='70' r='30' fill='%23e9f5c9' opacity='0.4'/%3E%3Ccircle cx='130' cy='130' r='30' fill='%23e9f5c9' opacity='0.4'/%3E%3Ccircle cx='130' cy='70' r='30' fill='%23e9f5c9' opacity='0.4'/%3E%3Ccircle cx='70' cy='130' r='30' fill='%23e9f5c9' opacity='0.4'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: -1;
+    opacity: 0.7;
+  }
+}
+
+.survey-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #222;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.survey-options {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.option-button {
+  min-width: 200px;
+  padding: 15px 30px;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  outline: none;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+  
+  &.pickleball {
+    background-color: #f5f5f5;
+    color: #333;
+    
+    &.selected {
+      background-color: #e0e0e0;
+      box-shadow: 0 0 0 2px #ccc;
+    }
+  }
+  
+  &.soccer {
+    background-color: #222;
+    color: white;
+    
+    &.selected {
+      background-color: #000;
+      box-shadow: 0 0 0 2px #555;
+    }
+  }
+  
+  &.badminton {
+    background-color: #b4e33d;
+    color: #333;
+    
+    &.selected {
+      background-color: #a3d234;
+      box-shadow: 0 0 0 2px #8bba25;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .survey-options {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .option-button {
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .survey-title {
+    font-size: 24px;
+  }
+}
+
+// Thêm các styles mới cho phần coach info vào cuối file
 .homepage {
+  .coach_info {
+    text-align: center;
+    margin-top: 8px;
+  }
+  
+  .coach_name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .coach_specialty {
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 4px;
+  }
+  
+  
   .content_wrapper {
    display: flex;
     align-items: center;      // Căn chỉnh nội dung giữa các cột
@@ -223,7 +1316,7 @@
       justify-content: space-between; /* Căn chỉnh các phần tử có khoảng cách đều */
       padding: 13px;
       width: 60%;
-      height: 92%; /* Đảm bảo nội dung chiếm hết chiều cao của thẻ */
+      height: 100%; /* Đảm bảo nội dung chiếm hết chiều cao của thẻ */
   
       h2 {
         font-size: 32px;
@@ -445,8 +1538,11 @@
     width: 92%;
     margin: 0 auto;
     position: relative;
-    height: 500px;  /* Căn giữa phần tử */
-    
+    height: auto; // Để nội dung tự giãn
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  
     h2 {
       font-size: 33px;
       font-weight: bold;
@@ -458,10 +1554,53 @@
       display: flex;
       gap: 20px;
       justify-content: center;
+      flex-wrap: wrap;
+    }
+  
+    .navigation_buttons {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 25px;
+  
+      .nav_button {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 2px solid #8ad839;
+        background: white;
+        color: #8ad839;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 18px;
+  
+        &:hover:not(:disabled) {
+          background: #8ad839;
+          color: white;
+          transform: scale(1.1);
+        }
+  
+        &:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+          transform: none;
+        }
+  
+        &.prev {
+          margin-right: 5px;
+        }
+  
+        &.next {
+          margin-left: 5px;
+        }
+      }
     }
   
     .court_card {
-      position: relative; /* Đảm bảo các phần tử con có thể được căn chỉnh theo vị trí tuyệt đối bên trong */
+      position: relative;
       width: 21%;
       border-radius: 8px;
       overflow: hidden;
@@ -474,35 +1613,32 @@
       height: 381px;
       transition: transform 0.3s ease;
   
-      /* Hình ảnh */
       .court_image {
         width: 100%;
         height: 189px;
         object-fit: cover;
       }
   
-      /* Tên sân */
       h3 {
         font-size: 27px;
         font-weight: bold;
         margin: 26px 0px 0px 23px;
       }
   
-      /* Đánh giá */
       .rating {
         font-size: 14px;
         color: #ffd700;
         margin-bottom: 10px;
+        margin-left: 23px;
       }
   
-      /* Overlay mờ */
       .card_overlay {
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0, 0, 0, 0.4);  /* Nền mờ */
+        background: rgba(0, 0, 0, 0.4);
         opacity: 0;
         display: flex;
         justify-content: center;
@@ -510,17 +1646,16 @@
         gap: 10px;
         transition: opacity 0.3s ease;
         z-index: 5;
-        border-radius: 8px; /* Bo góc overlay giống thẻ */
+        border-radius: 8px;
       }
   
-      /* Các biểu tượng ở góc dưới bên phải */
       .card_icons {
         position: absolute;
         bottom: 10px;
         right: 10px;
         display: flex;
         gap: 10px;
-        z-index: 10;  /* Đảm bảo các biểu tượng không bị che khuất */
+        z-index: 10;
       }
   
       .icon-heart,
@@ -535,17 +1670,16 @@
         color: #76b429;
       }
   
-      /* Hover làm overlay hiện */
       &:hover .card_overlay {
         opacity: 1;
       }
   
-      /* Hiệu ứng hover cho thẻ */
       &:hover {
         transform: translateY(-10px);
       }
     }
   }
+  
   
   /* Nút "Xem thêm" */
   .view_more {
@@ -566,4 +1700,3 @@
       background-color: #76b429;
     }
   }
-  
