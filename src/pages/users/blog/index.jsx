@@ -1,5 +1,4 @@
 import "./style.scss";
-
 import racket from "../../../assets/user/badminton-racket.png";
 import blog1 from "../../../assets/user/blog1.png";
 import blog2 from "../../../assets/user/blog2.png";
@@ -33,76 +32,112 @@ const Blog = () => {
 
   return (
     <div className="blog-page">
-      <div className="container">
+      <div className="blog-container">
         <main className="main-content">
           <article className="article">
             <section className="racket-comparison">
-              <h1 className="main-title">
-                So sánh vợt cầu lông Yonex & Victor : Những gợi ý cho người mới
-                bắt đầu
-              </h1>
+              <div className="title-wrapper">
+                <h1 className="main-title">
+                  So sánh vợt cầu lông Yonex & Victor
+                </h1>
+                <p className="subtitle">Những gợi ý cho người mới bắt đầu</p>
+              </div>
 
               <div className="rackets-container">
                 <div className="racket-item">
-                  <img
-                    src={racket}
-                    alt="Vợt cầu lông"
-                    className="racket-image"
-                  />
+                  <div className="racket-card">
+                    <img
+                      src={racket || "/placeholder.svg"}
+                      alt="Vợt cầu lông"
+                      className="racket-image"
+                    />
+                    <div className="racket-overlay">
+                      <h3>Vợt Chuyên Nghiệp</h3>
+                      <p>Phù hợp cho mọi trình độ</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </section>
 
             <section className="clothing-section">
-              <h2 className="section-title">
-                Quần Áo Chơi Cầu Lông: Mặc Gì Để Thoải Mái & Linh Hoạt?
-              </h2>
+              <div className="section-header">
+                <h2 className="section-title">Quần Áo Chơi Cầu Lông</h2>
+                <p className="section-description">
+                  Mặc gì để thoải mái & linh hoạt?
+                </p>
+              </div>
 
-              <div className="clothing-images">
+              <div className="clothing-grid">
                 <div className="clothing-item">
-                  <img
-                    src={cloth1}
-                    alt="Trang phục cầu lông nữ"
-                    className="clothing-image"
-                  />
+                  <div className="clothing-card">
+                    <img
+                      src={cloth1 || "/placeholder.svg"}
+                      alt="Trang phục cầu lông nữ"
+                      className="clothing-image"
+                    />
+                    <div className="clothing-info">
+                      <h4>Trang phục nữ</h4>
+                      <p>Thiết kế năng động</p>
+                    </div>
+                  </div>
                 </div>
                 <div className="clothing-item">
-                  <img
-                    src={cloth2}
-                    alt="Trang phục cầu lông nam"
-                    className="clothing-image"
-                  />
+                  <div className="clothing-card">
+                    <img
+                      src={cloth2 || "/placeholder.svg"}
+                      alt="Trang phục cầu lông nam"
+                      className="clothing-image"
+                    />
+                    <div className="clothing-info">
+                      <h4>Trang phục nam</h4>
+                      <p>Chất liệu thoáng mát</p>
+                    </div>
+                  </div>
                 </div>
                 <div className="clothing-item">
-                  <img
-                    src={cloth3}
-                    alt="Trang phục cầu lông chuyên nghiệp"
-                    className="clothing-image"
-                  />
+                  <div className="clothing-card">
+                    <img
+                      src={cloth3 || "/placeholder.svg"}
+                      alt="Trang phục cầu lông chuyên nghiệp"
+                      className="clothing-image"
+                    />
+                    <div className="clothing-info">
+                      <h4>Trang phục chuyên nghiệp</h4>
+                      <p>Công nghệ hiện đại</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </section>
 
-            <SimilarCourts />
+            <div className="similar-courts-wrapper">
+              <SimilarCourts />
+            </div>
           </article>
         </main>
 
         <aside className="sidebar">
+          <div className="sidebar-header">
+            <h3 className="sidebar-title">Bài viết liên quan</h3>
+            <div className="sidebar-divider"></div>
+          </div>
+
           <div className="related-articles">
             {titles.map((title, idx) => (
-              <div
+              <article
                 key={idx}
                 className="related-article"
                 onClick={handleRedirect(urls[idx])}
-                style={{ cursor: "pointer" }}
               >
                 <div className="article-content">
                   <h4 className="article-title">{title}</h4>
+                  <span className="read-more">Đọc thêm →</span>
                 </div>
                 <div className="article-image">
-                  <img src={images[idx]} alt={title} />
+                  <img src={images[idx] || "/placeholder.svg"} alt={title} />
                 </div>
-              </div>
+              </article>
             ))}
           </div>
         </aside>

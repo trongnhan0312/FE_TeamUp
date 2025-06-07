@@ -42,7 +42,7 @@ const PaymentSuccess = () => {
           />
         </svg>
       </div>
-      <div className="text-success">THAM GIA THÀNH CÔNG</div>
+      <div className="text-success">THANH TOÁN THÀNH CÔNG</div>
     </div>
   );
 };

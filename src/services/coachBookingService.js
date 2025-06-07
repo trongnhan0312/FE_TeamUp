@@ -1,3 +1,4 @@
+// src/services/coachBookingService.js
 import { ENDPOINTS } from "../config/apiConfig";
 import axiosInstance from "../config/axiosConfig";
 
@@ -11,7 +12,6 @@ const coachBookingService = {
     voucherId = null
   ) => {
     try {
-      // Tạo request object chỉ với các field bắt buộc
       const requestBody = {
         coachId,
         playerId,
@@ -20,7 +20,6 @@ const coachBookingService = {
         paymentMethod,
       };
 
-      // Chỉ thêm voucherId nếu có giá trị (khác null hoặc undefined)
       if (voucherId != null) {
         requestBody.voucherId = voucherId;
       }
@@ -201,6 +200,26 @@ const coachBookingService = {
       return null;
     } catch (error) {
       console.error("Lỗi khi tạo link thanh toán VNPay:", error);
+      throw error.response ? error.response.data : error.message;
+    }
+  },
+  // SỬA ĐỔI QUAN TRỌNG TẠI ĐÂY
+  getCoachById: async (coachId) => {
+    try {
+      // Sử dụng GET_COACH_PROFILE hoặc GET_EMPLOYEE_BY_ID tùy theo backend của bạn
+      const response = await axiosInstance.get(
+        `${ENDPOINTS.EMPLOYEE.GET_COACH_PROFILE}/${coachId}`
+      );
+
+      if (response.data.isSuccessed) {
+        return response.data.resultObj;
+      }
+
+      // Trả về null nếu isSuccessed là false nhưng không có lỗi
+      return null;
+    } catch (error) {
+      // Log lỗi cụ thể hơn
+      console.error("Error fetching coach by ID:", error);
       throw error.response ? error.response.data : error.message;
     }
   },
