@@ -4,7 +4,7 @@ import logo from "../../../../../assets/admin/logo.png"; // Import logo
 import { Link } from "react-router-dom";
 import { ROUTER } from "../../../../../utils/router";
 
-const footerOwner = () => {
+const footerCoach = () => {
   return (
     <div className="footer_coach">
       <div className="footer">
@@ -28,9 +28,12 @@ const footerOwner = () => {
             <div className="footer_center">
               <div className="footer_title">Công ty</div>
               <ul className="footer_list">
-                <li>Trang chủ</li>
-                <li>Về chúng tôi</li>
-                <li>Sản phẩm</li>
+                <li>
+                  <Link to="/home">Trang chủ</Link>
+                </li>
+                <li>
+                  <Link to="/about-us">Về chúng tôi</Link>
+                </li>
               </ul>
             </div>
 
@@ -38,10 +41,18 @@ const footerOwner = () => {
             <div className="footer_right">
               <div className="footer_title">Hỗ trợ khách hàng</div>
               <ul className="footer_list">
-                <li>Trung tâm hỗ trợ khách hàng</li>
-                <li>Hoàn tiền</li>
-                <li>Chính sách bảo mật</li>
-                <li>Terms of Use</li>
+                <li>
+                  <Link to="/support-center">Trung tâm hỗ trợ khách hàng</Link>
+                </li>
+
+                <li>
+                  <Link to="/privacy-policy">Chính sách bảo mật</Link>
+                </li>
+                <li>
+                  <Link to="https://qhdn-hcmuni.fpt.edu.vn/2025/04/14/teamup-cham-la-choi-dua-dam-me-the-thao-den-gan-ban-hon-bao-gio-het/">
+                    Terms of Use
+                  </Link>
+                </li>
               </ul>
             </div>
 
@@ -49,9 +60,9 @@ const footerOwner = () => {
             <div className="footer_contact">
               <div className="footer_title">Liên hệ với chúng tôi</div>
               <ul className="footer_list">
-                <li>8383838383</li>
-                <li>fpt.com</li>
-                <li>484N Nơ Trang Long, Bình Thạnh</li>
+                <li>0941.616.499</li>
+                <li>teamupsystemfpt@gmail.com</li>
+                <li>7 Đ. D1, Long Thạnh Mỹ, Thủ Đức, Hồ Chí Minh 700000</li>
               </ul>
             </div>
           </div>
@@ -61,4 +72,4 @@ const footerOwner = () => {
   );
 };
 
-export default footerOwner;
+export default footerCoach;

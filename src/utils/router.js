@@ -46,6 +46,9 @@ export const ROUTER = {
     OWNER_PACKAGE: "/owner/package",
     PAYMENT_SUCCESS: "/payment-success",
     PAYMENT_FAIL: "/payment-fail",
+    ABOUT_US: "/about-us",
+    SUPPORT_CENTER: "/support-center",
+    PRIVACY_POLICY: "/privacy-policy",
   },
   COACH: {
     HOME: "/coach",
@@ -56,5 +59,8 @@ export const ROUTER = {
     COACH_PACKAGE: "/coach/package",
     PAYMENT_SUCCESS: "/payment-success",
     PAYMENT_FAIL: "/payment-fail",
+    ABOUT_US: "/about-us",
+    SUPPORT_CENTER: "/support-center",
+    PRIVACY_POLICY: "/privacy-policy",
   },
 };
