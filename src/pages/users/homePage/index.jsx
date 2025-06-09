@@ -10,7 +10,6 @@ import { useEffect, useState } from "react";
 import employeeService from "../../../services/coachService";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import courtService from "../../../services/courtService";
-import { getUserInfo } from "../../../utils/auth";
 import banner from "../../../assets/admin/banner.png";
 import bongda from "../../../assets/admin/bongda.png";
 import pickleball from "../../../assets/admin/pickleball.png";
@@ -21,17 +20,42 @@ const HomePage = () => {
   const navigate = useNavigate();
   const [coaches, setCoaches] = useState([]);
   const [currentCoachIndex, setCurrentCoachIndex] = useState(0);
-  const [coachesPerPage] = useState(4); // Số huấn luyện viên hiển thị mỗi lần
+  const [coachesPerPage] = useState(4);
 
   // State cho phần courts
   const [courts, setCourts] = useState([]);
   const [currentCourtIndex, setCurrentCourtIndex] = useState(0);
-  const [courtsPerPage] = useState(4); // Số sân hiển thị mỗi lần
+  const [courtsPerPage] = useState(4);
+
+  // State cho sân featured (sân chính hiển thị ở banner)
+  const [featuredCourt, setFeaturedCourt] = useState(null);
+  const [loadingFeaturedCourt, setLoadingFeaturedCourt] = useState(true);
+
+  // Fetch sân featured (sân đầu tiên hoặc sân có ID cụ thể)
+  useEffect(() => {
+    const fetchFeaturedCourt = async () => {
+      try {
+        setLoadingFeaturedCourt(true);
+        // Lấy sân đầu tiên từ danh sách, hoặc bạn có thể chỉ định ID cụ thể
+        const result = await courtService.getList(1, 1);
+        const firstCourt = result?.resultObj?.items?.[0];
+
+        if (firstCourt) {
+          setFeaturedCourt(firstCourt);
+        }
+      } catch (err) {
+        console.error("Lỗi khi tải thông tin sân featured:", err);
+      } finally {
+        setLoadingFeaturedCourt(false);
+      }
+    };
+    fetchFeaturedCourt();
+  }, []);
 
   useEffect(() => {
     const fetchCourts = async () => {
       try {
-        const result = await courtService.getList(1, 12); // Tăng từ 4 lên 12 để có thể carousel
+        const result = await courtService.getList(1, 12);
         setCourts(result?.resultObj?.items || []);
       } catch (err) {
         console.error("Lỗi khi tải danh sách sân:", err);
@@ -43,7 +67,7 @@ const HomePage = () => {
   useEffect(() => {
     const fetchCoaches = async () => {
       try {
-        const result = await employeeService.getCoachesPagination("", 1, 12); // Tăng từ 4 lên 12
+        const result = await employeeService.getCoachesPagination("", 1, 12);
         setCoaches(result?.resultObj?.items || []);
       } catch (err) {
         console.error("Lỗi khi tải danh sách HLV:", err);
@@ -53,7 +77,8 @@ const HomePage = () => {
   }, []);
 
   const handleBookingClick = () => {
-    const courtId = 2;
+    // Sử dụng ID của sân featured thay vì hardcode
+    const courtId = featuredCourt?.id;
     navigate(`/courts/${courtId}`);
   };
 
@@ -65,9 +90,11 @@ const HomePage = () => {
   const handleCourtDetailClick = (id) => {
     navigate(`/courts/${id}`);
   };
+
   const handleCoachDetailClick = (coachId) => {
     navigate(`/coaches/profile/${coachId}`);
   };
+
   // Handlers cho coaches carousel
   const handlePrevCoaches = () => {
     setCurrentCoachIndex((prev) =>
@@ -109,29 +136,61 @@ const HomePage = () => {
 
   return (
     <div className="homepage">
-      {/* <div className="purple-banner"></div> */}
       <div className="content_wrapper">
         {/* Cột bên trái - hình ảnh */}
         <div className="bg">
           <div className="left_column">
             <img
-              src={banner || "/placeholder.svg"}
-              alt="Logo"
+              src={
+                featuredCourt?.imageUrls?.[0] || banner || "/placeholder.svg"
+              }
+              alt="Banner sân"
               className="banner_image"
             />
           </div>
 
           {/* Cột bên phải - thông tin */}
           <div className="right_column">
-            <h1>Sân cầu lông Bình Lợi</h1>
-            <div className="rating">
-              <span>Đặt sân</span>
-              <span className="star">⭐ 4.9 </span>
-              <span>đánh giá</span>
-            </div>
-            <button className="booking_button" onClick={handleBookingClick}>
-              Đặt sân
-            </button>{" "}
+            {loadingFeaturedCourt ? (
+              <div className="loading">
+                <h1>Đang tải thông tin sân...</h1>
+              </div>
+            ) : featuredCourt ? (
+              <>
+                <h1>{featuredCourt.name || "Sân cầu lông Bình Lợi"}</h1>
+                <div className="rating">
+                  <span>Đặt sân</span>
+                  <span className="star">
+                    ⭐{" "}
+                    {featuredCourt.ratingSummaryModelView?.averageRating?.toFixed(
+                      1
+                    ) || "4.9"}
+                  </span>
+                  <span>
+                    (
+                    {featuredCourt.ratingSummaryModelView?.totalReviewerCount ||
+                      0}{" "}
+                    đánh giá)
+                  </span>
+                </div>
+
+                <button className="booking_button" onClick={handleBookingClick}>
+                  Đặt sân
+                </button>
+              </>
+            ) : (
+              <>
+                <h1>Sân cầu lông Bình Lợi</h1>
+                <div className="rating">
+                  <span>Đặt sân</span>
+                  <span className="star">⭐ 4.9</span>
+                  <span>đánh giá</span>
+                </div>
+                <button className="booking_button" onClick={handleBookingClick}>
+                  Đặt sân
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -220,7 +279,7 @@ const HomePage = () => {
         <div className="matches_container">
           {visibleCoaches.length > 0 ? (
             visibleCoaches.map((coach, index) => {
-              console.log(coach); // debug xem có id không
+              console.log(coach);
               return (
                 <div
                   className="match_card"
@@ -239,6 +298,9 @@ const HomePage = () => {
                     <p className="coach_specialty">
                       {coach.specialty || "Chưa rõ chuyên môn"}
                     </p>
+                    <h1 className="coach_specialty">
+                      Bằng Cấp: {coach.certificate || "Chưa rõ"}
+                    </h1>
                   </div>
                 </div>
               );

@@ -108,6 +108,9 @@ const RouterCustom = () => {
           element={<PaymentFailOwner />}
         />
         <Route path="*" element={<Navigate to="/owner" replace />} />
+        <Route path={ROUTER.USER.ABOUT_US} element={<AboutUs />} />
+        <Route path={ROUTER.USER.SUPPORT_CENTER} element={<SupportCenter />} />
+        <Route path={ROUTER.USER.PRIVACY_POLICY} element={<PrivacyPolicy />} />
       </Routes>
     </OwnerLayout>
   );
@@ -134,6 +137,9 @@ const RouterCustom = () => {
           element={<PaymentFailCoach />}
         />
         <Route path={ROUTER.COACH.COACH_PACKAGE} element={<CoachPackage />} />
+        <Route path={ROUTER.USER.ABOUT_US} element={<AboutUs />} />
+        <Route path={ROUTER.USER.SUPPORT_CENTER} element={<SupportCenter />} />
+        <Route path={ROUTER.USER.PRIVACY_POLICY} element={<PrivacyPolicy />} />
         {/* <Route path="*" element={<Navigate to="/coach" replace />} /> */}
       </Routes>
     </CoachLayout>

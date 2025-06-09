@@ -7,7 +7,6 @@ import coachBookingService from "../../../../services/coachBookingService";
 import { getRatingText } from "../../../../utils/formatUtils";
 import { FaChevronLeft } from "react-icons/fa";
 import { getUserInfo } from "../../../../utils/auth";
-import courtBookingService from "../../../../services/courtBookingService"; // Thêm import này nếu chưa có
 
 const BookingSummary = () => {
   const navigate = useNavigate();
@@ -115,21 +114,6 @@ const BookingSummary = () => {
       console.error("Error formatting time for display:", e, isoTime);
     }
     return isoTime;
-  };
-
-  const formatDateDisplay = (isoDate) => {
-    if (!isoDate) return "";
-    try {
-      const dateObj = new Date(isoDate);
-      if (isNaN(dateObj.getTime())) return isoDate;
-      const year = dateObj.getFullYear();
-      const month = String(dateObj.getMonth() + 1).padStart(2, "0");
-      const day = String(dateObj.getDate()).padStart(2, "0");
-      return `${day}/${month}/${year}`;
-    } catch (e) {
-      console.error("Error formatting date for display:", e, isoDate);
-    }
-    return isoDate;
   };
 
   // Tính toán lại tiền sân và tiền huấn luyện viên cho hiển thị
@@ -345,18 +329,19 @@ const BookingSummary = () => {
         // Nếu courtService.createCourtBooking cũng có signature như coachBookingService.create,
         // bạn cũng sẽ phải gọi nó với các tham số riêng lẻ.
         // TẠM THỜI GIỮ NGUYÊN GỌI VỚI OBJECT NẾU BẠN CHƯA CUNG CẤP HÀM `createCourtBooking` CỦA `courtService`
-        const response = await courtService.createCourtBooking(
-          courtBookingRequest
-        );
-
+        const response = await courtService.handleBooking(courtBookingRequest);
+        console.log("Court booking response:", response);
         if (response?.isSuccessed) {
           console.log("Court booking successful, creating payment URL...");
 
-          const latestCourtBookingId = response.resultObj.id;
-          if (!latestCourtBookingId) {
-            throw new Error("Không nhận được ID booking từ server");
+          if (userId && userId > 0) {
+            console.log("User ID is valid:", userId);
           }
 
+          const latestCourtBookingId = await courtService.getLatestBookingId(
+            userId
+          );
+          console.log("Latest Court Booking ID:", latestCourtBookingId);
           const vnpayUrl = await courtService.createVnpayUrl({
             userId: Number(currentUserId),
             courtBookingId: Number(latestCourtBookingId),
@@ -538,55 +523,6 @@ const BookingSummary = () => {
             {formatCurrency(finalDisplayTotalPrice)} VNĐ
           </div>
         </div>
-      </div>
-
-      <div className="summary-info">
-        <h3>Thông tin đặt lịch</h3>
-        {isMultiBooking ? (
-          slots && slots.length > 0 ? (
-            slots.map((slot, index) => (
-              <div key={index} className="info-block">
-                <div className="info-row">
-                  <span className="label">Ngày:</span>
-                  <span className="value">
-                    {formatDateDisplay(slot.startTime?.split("T")[0])}
-                  </span>
-                </div>
-                <div className="info-row">
-                  <span className="label">Thời gian:</span>
-                  <span className="value">
-                    {formatTimeDisplay(slot.startTime)} -{" "}
-                    {formatTimeDisplay(slot.endTime)}
-                  </span>
-                </div>
-                <hr className="separator-line-dotted" />
-              </div>
-            ))
-          ) : (
-            <div className="info-block">
-              <p>Không có khung giờ được chọn.</p>
-            </div>
-          )
-        ) : (
-          <div className="info-block">
-            <div className="info-row">
-              <span className="label">Ngày đặt sân:</span>
-              <span className="value">{formatDateDisplay(date)}</span>
-            </div>
-            <div className="info-row">
-              <span className="label">Giờ bắt đầu:</span>
-              <span className="value">{formatTimeDisplay(startTime)}</span>
-            </div>
-            <div className="info-row">
-              <span className="label">Giờ kết thúc:</span>
-              <span className="value">{formatTimeDisplay(endTime)}</span>
-            </div>
-            <div className="info-row">
-              <span className="label">Tổng thời gian:</span>
-              <span className="value">{totalHours} giờ</span>
-            </div>
-          </div>
-        )}
       </div>
 
       <div className="payment-options">
