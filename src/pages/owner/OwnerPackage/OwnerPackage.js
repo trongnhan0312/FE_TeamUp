@@ -54,7 +54,7 @@ export default function OwnerPackage() {
           </div>
           <div className="automatic-payment">automatic payment</div>
           <div className="subtitle">Basic features and:</div>
-          <ul className="feature-list">
+          <ul className="feature-list" style={{ marginBottom: "71px" }}>
             <li>✓ Revenue Management,</li>
             <li>✓ Revenue Performance Tracking</li>
             <li>✓ Data storage up to 1 years</li>
@@ -95,7 +95,7 @@ export default function OwnerPackage() {
             disabled={loading}
             onClick={() => handleRegister(2)} // 2 là packageId Premium
           >
-            {loading ? "Đang xử lý..." : "REGISTER"}
+            <div>{loading ? "Đang xử lý..." : "REGISTER"}</div>
           </button>
         </div>
       </div>

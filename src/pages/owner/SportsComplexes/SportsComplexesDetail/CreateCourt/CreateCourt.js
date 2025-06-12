@@ -5,7 +5,7 @@ import Map from "../../../../../component/map";
 import { getUserInfo } from "../../../../../utils/auth";
 import { toast, ToastContainer } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
-
+import courtService from "../../../../../services/courtService";
 const CreateCourt = () => {
   const [selectedPosition, setSelectedPosition] = useState(null);
   const [address, setAddress] = useState("");
@@ -111,10 +111,7 @@ const CreateCourt = () => {
       toast.error("Id của chủ sân không hợp lệ.");
       return;
     }
-    if (!selectedPosition) {
-      toast.error("Vui lòng chọn vị trí trên bản đồ.");
-      return;
-    }
+
     if (!bigImageFile && smallImageFiles.every((f) => !f)) {
       toast.error("Vui lòng tải lên ít nhất một hình ảnh.");
       return;
@@ -137,13 +134,9 @@ const CreateCourt = () => {
         if (file) formData.append("ImageUrls", file);
       });
 
-      const response = await axios.post(
-        "https://localhost:7286/api/court/create",
-        formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
+      const response = await courtService.createCourt(formData);
 
-      if (response.data.isSuccessed) {
+      if (response.isSuccessed) {
         toast.success("Tạo sân thành công!");
         setTimeout(() => {
           navigate(`/owner/sportscomplexes/${sportsComplexId}`);
@@ -304,7 +297,7 @@ const CreateCourt = () => {
         />
       </div>
       {/* Map Section */}
-      <div className="location-section">
+      {/* <div className="location-section">
         <Map
           selectable={true}
           onSelect={setSelectedPosition}
@@ -325,7 +318,7 @@ const CreateCourt = () => {
             <b>Địa chỉ:</b> {address}
           </div>
         )}
-      </div>
+      </div> */}
       {/* Button Create */}
       <div style={{ textAlign: "center", marginTop: 20 }}>
         <button

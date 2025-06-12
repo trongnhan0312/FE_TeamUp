@@ -294,9 +294,10 @@ export const fetchCourtsBySportsComplexId = async (
 ) => {
   try {
     const url = getApiUrl(
-      `${ENDPOINTS.OWNER.SPORTS_COMPLEXES_DETAIL}?pageNumber=${pageNumber}&pageSize=${pageSize}`
+      `${ENDPOINTS.OWNER.SPORTS_COMPLEXES_DETAIL}?sportId=${sportsComplexId}&pageNumber=${pageNumber}&pageSize=${pageSize}`
     );
     console.log("Gọi API lấy sân:", url);
+
     const response = await axiosInstance.get(url);
 
     if (
@@ -304,18 +305,13 @@ export const fetchCourtsBySportsComplexId = async (
       response.data.resultObj?.items &&
       Array.isArray(response.data.resultObj.items)
     ) {
-      // Lọc các sân thuộc sportsComplexId
-      const filteredCourts = response.data.resultObj.items.filter(
-        (court) =>
-          court.sportsComplexModelView?.id?.toString() ===
-          sportsComplexId.toString()
-      );
       console.log(
         `Tổng sân trong khu thể thao ${sportsComplexId}:`,
-        filteredCourts.length
+        response.data.resultObj.items.length
       );
-      return filteredCourts;
+      return response.data.resultObj.items;
     }
+
     return [];
   } catch (error) {
     console.error("Lỗi khi lấy sân theo SportsComplexId:", error);
@@ -378,49 +374,53 @@ export const fetchEmployeeById = async (employeeId) => {
 
 /**
  * Tạo khu thể thao mới
- * @param {Object} payload
- * @param {string} payload.Type - Loại sân (ví dụ "Bóng đá")
- * @param {string} payload.Name - Tên khu thể thao
- * @param {string} payload.Address - Địa chỉ khu thể thao
- * @param {string[]} payload.ImageUrls - Mảng URL ảnh (string)
- * @param {number} payload.OwnerId - ID chủ sở hữu
- * @param {number} [payload.Latitude] - Tọa độ vĩ độ, có thể null hoặc undefined
- * @param {number} [payload.Longitude] - Tọa độ kinh độ, có thể null hoặc undefined
+ * @param {FormData} formData - Đối tượng FormData chứa tất cả dữ liệu, bao gồm cả file ảnh.
  * @returns {Promise<Object>} Kết quả API trả về
  */
-export const createSportsComplex = async ({
-  Type,
-  Name,
-  Address,
-  ImageUrls,
-  OwnerId,
-  Latitude = null,
-  Longitude = null,
-}) => {
+export const createSportsComplex = async (formData) => {
+  // <--- Accept FormData directly
   try {
     const url = getApiUrl(ENDPOINTS.OWNER.CREATE_SPORTS_COMPLEX);
 
-    const payload = {
-      Type,
-      Name,
-      Address,
-      ImageUrls,
-      OwnerId,
-      Latitude,
-      Longitude,
-    };
+    console.log("Calling createSportsComplex API with FormData:");
+    // For debugging, you can log formData entries (for inspection in console)
+    for (let [key, value] of formData.entries()) {
+      console.log(`${key}:`, value);
+    }
 
-    console.log("Calling createSportsComplex API with payload:", payload);
+    // Axios automatically sets Content-Type to multipart/form-data when sending FormData
+    const response = await axiosInstance.post(url, formData); // <--- Send FormData directly
 
-    const response = await axiosInstance.post(url, payload);
-
-    if (response.data.isSuccessed) {
-      return response.data.resultObj;
+    // Assuming your API returns { isSuccessed: true, resultObj: {...} } on success
+    // Or just the result object directly if isSuccessed is implied by 2xx status code
+    if (response.status >= 200 && response.status < 300) {
+      // Check if response.data has 'isSuccessed' property, or just return the data
+      if (
+        response.data &&
+        typeof response.data === "object" &&
+        "isSuccessed" in response.data
+      ) {
+        if (response.data.isSuccessed) {
+          return response.data.resultObj || response.data;
+        } else {
+          throw new Error(
+            response.data.message || "Tạo khu thể thao thất bại (API báo lỗi)"
+          );
+        }
+      } else {
+        // If isSuccessed is not present, assume 2xx means success and return the data
+        return response.data;
+      }
     } else {
-      throw new Error(response.data.message || "Tạo khu thể thao thất bại");
+      // For non-2xx status codes, throw an error
+      throw new Error(`Request failed with status code ${response.status}`);
     }
   } catch (error) {
-    console.error("Lỗi khi gọi createSportsComplex:", error);
+    console.error(
+      "Lỗi khi gọi createSportsComplex:",
+      error.response?.data || error.message || error
+    );
+    // Re-throw the error so the calling component can handle specific error messages
     throw error;
   }
 };

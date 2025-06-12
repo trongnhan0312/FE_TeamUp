@@ -1,7 +1,7 @@
 // src/config/apiConfig.js
 
 // Lấy BASE_URL từ biến môi trường nếu có, nếu không dùng giá trị mặc định
-const BASE_URL = process.env.REACT_APP_API_URL || "https://localhost:7286/api";
+const BASE_URL = "https://miraculous-clarity-production.up.railway.app";
 
 export const API_CONFIG = {
   BASE_URL,

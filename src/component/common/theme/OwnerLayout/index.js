@@ -4,14 +4,7 @@ import FooterOwner from "./footerOwner";
 
 const OwnerLayout = ({ children, ...props }) => {
   return (
-    <div
-      {...props}
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        minHeight: "100vh",
-      }}
-    >
+    <div {...props}>
       <HeaderOwner />
       {children}
       <FooterOwner />

@@ -1,65 +1,86 @@
-import HomePage from "./pages/users/homePage";
+// ======================= REACT / ROUTER / AUTH =======================
+import { useEffect, useState } from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { isAuthenticated, hasRole, getUserRoles } from "./utils/auth";
+import { ROUTER } from "./utils/router";
+
+// ======================= LAYOUT =======================
 import MasterLayout from "./component/common/theme/masterLayout";
 import OwnerLayout from "./component/common/theme/OwnerLayout";
 import CoachLayout from "./component/common/theme/CoachLayout";
-import ProfilePage from "./pages/users/profilePage";
+
+// ======================= AUTH =======================
 import LoginPage from "./pages/auth/LoginPage";
 import SignupPage from "./pages/auth/SignUpComponent/SignupPage";
-import { useEffect, useState } from "react";
-import { isAuthenticated, hasRole, getUserRoles } from "./utils/auth";
+import OtpVerificationPage from "./pages/EmailComponentUtil/OtpVerificationPage";
 
+// ======================= SURVEY =======================
+import Survey from "./pages/auth/SignUpComponent/Survey/Survey";
+import Question1 from "./pages/auth/SignUpComponent/Survey/Question1/question1";
+import Question2 from "./pages/auth/SignUpComponent/Survey/Question2/question2";
+
+// ======================= USER =======================
+import HomePage from "./pages/users/homePage";
+import ProfilePage from "./pages/users/profilePage";
+import CourtListing from "./pages/users/courts/homepage_court/CourtListing";
 import CourtDetailPage from "./pages/users/courts/court_detail/CourtDetailPage";
+import CourtSchedule from "./pages/users/courts/court_schedule/CourtSchedule";
+import CourtHistory from "./pages/users/courts/court_history/CourtHistory";
+import CourtSelector from "./pages/users/courts/booking_court/CourtSelector";
+import BookingConfirmation from "./pages/users/courts/booking_court/BookingConfirmation";
+import BookingSummary from "./pages/users/courts/booking_court/BookingSummary";
+
+import CoachListing from "./pages/users/coach/CoachListing";
+import CoachProfile from "./pages/users/coach/CoachProfile";
+import CoachBookingHistory from "./pages/users/coach/CoachBookingHistory";
+
+import RoomList from "./pages/users/roomList";
+import RoomCreateHistory from "./pages/users/roomList/RoomCreateHistory";
+import CreateRoomForm from "./pages/users/roomList/CreateRoomForm";
+import RoomDetail from "./pages/users/roomList/RoomDetail";
+
+// ======================= USER - PAYMENT =======================
+import PaymentSuccess from "./pages/users/Payment/PaymentSucces/PaymentSuccess";
+import PaymentFail from "./pages/users/Payment/PaymentFail/PaymentFail";
+
+// ======================= OWNER =======================
 import Owner from "./pages/owner";
+import ProfileOwner from "./pages/owner/profileOwner";
 import HumanHabits from "./pages/owner/HumanHabits/HumanHabits";
 import PitchHistory from "./pages/owner/PitchHistory/PitchHistory";
 import BOOKINGMANAGEMENT from "./pages/owner/BookingManagement/BookingManagement";
-import CreateCourt from "./pages/owner/SportsComplexes/SportsComplexesDetail/CreateCourt/CreateCourt";
 import ReviewOwner from "./pages/owner/ReviewOwner/ReviewOwner";
-import CreateSportsComplexes from "./pages/owner/SportsComplexes/CreateSportsComplexes/CreateSportsComplexes";
+import OwnerPackage from "./pages/owner/OwnerPackage/OwnerPackage";
+
 import SportsComplexes from "./pages/owner/SportsComplexes/SportsComplexes";
 import SportsComplexDetail from "./pages/owner/SportsComplexes/SportsComplexesDetail/SportsComplexesDetail";
+import CreateSportsComplexes from "./pages/owner/SportsComplexes/CreateSportsComplexes/CreateSportsComplexes";
+import CreateCourt from "./pages/owner/SportsComplexes/SportsComplexesDetail/CreateCourt/CreateCourt";
 import CourtDetailOwner from "./pages/owner/SportsComplexes/SportsComplexesDetail/CourtDetailOwner/court_detail/CourtDetailPage";
-import ProfileOwner from "./pages/owner/profileOwner";
-import OwnerPackage from "./pages/owner/OwnerPackage/OwnerPackage";
+
+// ======================= OWNER - PAYMENT =======================
+import PaymentSuccessOwner from "./pages/owner/Payment/PaymentSucces/PaymentSuccess";
+import PaymentFailOwner from "./pages/owner/Payment/PaymentFail/PaymentFail";
+
+// ======================= COACH =======================
 import Coach from "./pages/coach";
 import ProfileByCoach from "./pages/coach/profileCoach";
 import ReviewCoach from "./pages/coach/ReviewCoach/ReviewCoach";
 import CoachHistory from "./pages/coach/CoachHistory/CoachHistory";
-import { ROUTER } from "./utils/router";
-import OtpVerificationPage from "./pages/EmailComponentUtil/OtpVerificationPage";
-import CourtSchedule from "./pages/users/courts/court_schedule/CourtSchedule";
-import BookingConfirmation from "./pages/users/courts/booking_court/BookingConfirmation";
-import BookingSummary from "./pages/users/courts/booking_court/BookingSummary";
-import CourtListing from "./pages/users/courts/homepage_court/CourtListing";
-import CoachListing from "./pages/users/coach/CoachListing";
-import CoachProfile from "./pages/users/coach/CoachProfile";
 import CoachPackage from "./pages/coach/CoachPackage/CoachPackage";
+
+// ======================= COACH - PAYMENT =======================
+import PaymentSuccessCoach from "./pages/coach/Payment/PaymentSucces/PaymentSuccess";
+import PaymentFailCoach from "./pages/coach/Payment/PaymentFail/PaymentFail";
+
+// ======================= COMMON / STATIC PAGES =======================
 import PrivacyPolicy from "./pages/users/privacyPolicy";
 import AboutUs from "./pages/users/aboutUs";
 import SupportCenter from "./pages/users/supportCenter";
 import Blog from "./pages/users/blog";
-import RoomList from "./pages/users/roomList";
-import CourtSelector from "./pages/users/courts/booking_court/CourtSelector";
-import CourtHistory from "./pages/users/courts/court_history/CourtHistory";
-import CoachBookingHistory from "./pages/users/coach/CoachBookingHistory";
-//User
-import PaymentSuccess from "./pages/users/Payment/PaymentSucces/PaymentSuccess";
-import PaymentFail from "./pages/users/Payment/PaymentFail/PaymentFail";
-import Survey from "./pages/auth/SignUpComponent/Survey/Survey";
-//Owner
-import PaymentSuccessOwner from "./pages/owner/Payment/PaymentSucces/PaymentSuccess";
-import PaymentFailOwner from "./pages/owner/Payment/PaymentFail/PaymentFail";
-//Coach
-import PaymentSuccessCoach from "./pages/coach/Payment/PaymentSucces/PaymentSuccess";
-import PaymentFailCoach from "./pages/coach/Payment/PaymentFail/PaymentFail";
-import RoomCreateHistory from "./pages/users/roomList/RoomCreateHistory";
-import CreateRoomForm from "./pages/users/roomList/CreateRoomForm";
-import RoomDetail from "./pages/users/roomList/RoomDetail";
+
+// ======================= CHAT =======================
 import ChatPage from "./pages/chat";
-//survey
-import Question1 from "./pages/auth/SignUpComponent/Survey/Question1/question1";
-import Question2 from "./pages/auth/SignUpComponent/Survey/Question2/question2";
 
 const RouterCustom = () => {
   const location = useLocation();

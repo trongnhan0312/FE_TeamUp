@@ -101,7 +101,20 @@ const courtService = {
       throw error.response ? error.response.data : error.message;
     }
   },
-
+  createCourt: async (formData) => {
+    try {
+      const response = await axiosInstance.post(
+        ENDPOINTS.OWNER.CREATE_COURT,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      throw error.response ? error.response.data : error.message;
+    }
+  },
   getLatestBookingId: async (userId) => {
     try {
       const response = await axiosInstance.get(

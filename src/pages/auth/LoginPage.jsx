@@ -27,7 +27,7 @@ const LoginPage = () => {
     try {
       // Gọi API đăng nhập
       const response = await authService.login(email, password);
-
+      console.log("Login response:", response);
       // Kiểm tra response thành công
       if (!response.isSuccessed) {
         throw new Error(response.message || "Đăng nhập thất bại");
@@ -86,7 +86,7 @@ const LoginPage = () => {
         given_name: decoded.given_name,
         name: decoded.name,
         picture: decoded.picture,
-        sub: decoded.sub
+        sub: decoded.sub,
       });
 
       if (!response.isSuccessed) {
@@ -226,7 +226,9 @@ const LoginPage = () => {
 
           {/* Social login */}
           <div className="social-login">
-            <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
+            <GoogleOAuthProvider
+              clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+            >
               <GoogleLogin
                 onSuccess={handleGoogleSuccess}
                 onError={() => {
