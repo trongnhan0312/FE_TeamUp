@@ -64,6 +64,32 @@ const CoachProfile = () => {
       fetchCoachData();
     }
   }, [coachId]);
+  useEffect(() => {
+    const fetchRating = async () => {
+      try {
+        const res = await coachService.getRatingAvarage(coachId);
+        if (res.isSuccessed) {
+          const averageRating = parseFloat(
+            res.resultObj?.averageRating || 0
+          ).toFixed(1);
+          const totalReviews = res.resultObj?.totalReviewerCount || 0;
+
+          setCoach((prev) => ({
+            ...prev,
+            rating: averageRating,
+            totalReviews,
+          }));
+        }
+      } catch (err) {
+        console.error("Lỗi khi tải đánh giá huấn luyện viên:", err);
+        // Không cần setError vì đây chỉ là phụ trợ
+      }
+    };
+
+    if (!loading && coach && typeof coach.rating === "undefined") {
+      fetchRating();
+    }
+  }, [loading, coach, coachId]);
 
   // Hiển thị trạng thái loading
   if (loading) {

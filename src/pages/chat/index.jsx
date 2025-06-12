@@ -18,7 +18,7 @@ const ChatPage = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const data = await chatService.getParners(getUserInfo().id);
+        const data = await chatService.getPartners(getUserInfo().id);
 
         let updatedListUsers = [...data];
 
@@ -131,8 +131,8 @@ const ChatPage = () => {
   // Helper function để tạo channel name chuẩn
   const generateChannelName = (userId1, userId2) => {
     if (!userId1 || !userId2) return null;
-    return userId1 < userId2 
-      ? `chat-${userId1}-${userId2}` 
+    return userId1 < userId2
+      ? `chat-${userId1}-${userId2}`
       : `chat-${userId2}-${userId1}`;
   };
 
@@ -197,7 +197,10 @@ const ChatPage = () => {
   useEffect(() => {
     if (!recipientUserId || !pusherInstance) return;
 
-    const channelNameToSubscribe = generateChannelName(currentUserId, recipientUserId);
+    const channelNameToSubscribe = generateChannelName(
+      currentUserId,
+      recipientUserId
+    );
     if (channelNameToSubscribe) {
       subscribeToChannel(channelNameToSubscribe);
     }
@@ -226,13 +229,19 @@ const ChatPage = () => {
       console.log("Send message response:", response);
 
       // Kiểm tra nếu server trả về channelName khác với channelName hiện tại
-      const expectedChannelName = generateChannelName(currentUserId, recipientUserId);
+      const expectedChannelName = generateChannelName(
+        currentUserId,
+        recipientUserId
+      );
       const serverChannelName = response.channelName;
 
       if (serverChannelName && serverChannelName !== expectedChannelName) {
-        console.log("Server returned different channel name:", serverChannelName);
+        console.log(
+          "Server returned different channel name:",
+          serverChannelName
+        );
         console.log("Expected channel name:", expectedChannelName);
-        
+
         // Subscribe to channel name từ server
         subscribeToChannel(serverChannelName);
       }
@@ -280,7 +289,7 @@ const ChatPage = () => {
     console.log("Selecting user:", userId);
     setRecipientUserId(userId);
     setMessages([]); // Reset messages khi chọn user mới
-    
+
     // Channel sẽ được tạo tự động trong useEffect khi recipientUserId thay đổi
   };
 

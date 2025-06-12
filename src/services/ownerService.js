@@ -358,7 +358,7 @@ export const fetchTotalPriceByOwner = async (
 export const fetchEmployeeById = async (employeeId) => {
   try {
     const url = getApiUrl(
-      `${ENDPOINTS.EMPLOYEE.GET_EMPLOYEE_BY_ID}/${employeeId}`
+      `${ENDPOINTS.EMPLOYEE.GET_OWNER_PROFILE}/${employeeId}`
     );
     console.log("Calling Employee Detail API:", url);
     const response = await axiosInstance.get(url);

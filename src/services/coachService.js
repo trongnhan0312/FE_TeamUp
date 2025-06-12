@@ -31,7 +31,16 @@ const coachService = {
       throw error.response ? error.response.data : error.message;
     }
   },
-
+  getRatingAvarage: async (revieweeId) => {
+    try {
+      const response = await axiosInstance.get(
+        `${ENDPOINTS.RATING.AVERAGE}${revieweeId}`
+      );
+      return response.data;
+    } catch (error) {
+      throw error.response ? error.response.data : error.message;
+    }
+  },
   getCoachRatings: async (revieweeId, pageNumber = 1, pageSize = 5) => {
     try {
       const response = await axiosInstance.get(

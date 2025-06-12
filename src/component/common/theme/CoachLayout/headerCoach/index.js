@@ -60,7 +60,7 @@ const HeaderCoach = () => {
                   <span className="logo_text">TeamUp</span>
                 </Link>
               </div>
-              <form className="search_form" onSubmit={handleSearch}>
+              {/* <form className="search_form" onSubmit={handleSearch}>
                 <input
                   type="text"
                   placeholder="Tìm kiếm..."
@@ -71,7 +71,7 @@ const HeaderCoach = () => {
                 <button type="submit" className="search_button">
                   <BsSearch />
                 </button>
-              </form>
+              </form> */}
             </div>
 
             <div
