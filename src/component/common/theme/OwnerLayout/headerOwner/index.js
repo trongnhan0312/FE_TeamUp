@@ -66,7 +66,7 @@ const HeaderOwner = () => {
                     <span className="logo_text">TeamUp</span>
                   </Link>
                 </div>
-                <form className="search_form" onSubmit={handleSearch}>
+                {/* <form className="search_form" onSubmit={handleSearch}>
                   <input
                     type="text"
                     placeholder="Tìm kiếm..."
@@ -78,7 +78,7 @@ const HeaderOwner = () => {
                     {" "}
                     <BsSearch />
                   </button>
-                </form>
+                </form> */}
               </div>
 
               <div
