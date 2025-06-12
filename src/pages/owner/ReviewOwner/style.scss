@@ -273,10 +273,10 @@
       display: flex;
       align-items: center;
       gap: 8px;
-
+      color: #000;
       &:hover:not(:disabled) {
         background-color: #94d82d;
-        color: #fff;
+        color: #000000;
         border-color: #94d82d;
         transform: translateY(-1px);
       }

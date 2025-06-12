@@ -43,6 +43,16 @@ const coachService = {
       throw error.response ? error.response.data : error.message;
     }
   },
+  getRatingById: async (ratingId) => {
+    try {
+      const response = await axiosInstance.get(
+        `${ENDPOINTS.RATING.GET_BY_ID}/${ratingId}`
+      );
+      return response.data;
+    } catch (error) {
+      throw error.response ? error.response.data : error.message;
+    }
+  },
   updateCoachProfile: async (data) => {
     /**
      * data là object có các key tương ứng với các trường API PUT nhận

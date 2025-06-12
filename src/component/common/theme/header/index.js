@@ -78,7 +78,7 @@ const Header = () => {
                 <li onClick={() => navigate("/chat")}>
                   <BsChat />
                 </li>
-                <li onClick={() => navigate("/cart")}>
+                <li onClick={() => navigate("/court-booking-history")}>
                   <BsCart3 />
                 </li>
                 <li>

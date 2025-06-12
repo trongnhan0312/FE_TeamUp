@@ -1,16 +1,17 @@
 import { memo, useState } from "react";
-import axios from "axios";
-import "./style.scss";
-import Map from "../../../../component/map";
-import { getUserInfo } from "../../../../utils/auth";
+import "./style.scss"; // Assuming this path is correct for your styling
+import Map from "../../../../component/map"; // Assuming this path is correct
+import { getUserInfo } from "../../../../utils/auth"; // Assuming this path is correct
 import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; // Don't forget to import the CSS for react-toastify
 import { useNavigate } from "react-router-dom";
+import { createSportsComplex } from "../../../../services/ownerService"; // Assuming this path is correct
 
 const CreateSportsComplexes = () => {
   const [selectedPosition, setSelectedPosition] = useState(null);
   const [address, setAddress] = useState("");
-  const [price, setPrice] = useState("");
-  const [editing, setEditing] = useState(false);
+  // const [price, setPrice] = useState(""); // This state is commented out in JSX, consider removing if not used
+  // const [editing, setEditing] = useState(false); // This state is commented out in JSX, consider removing if not used
 
   // Giá trị mặc định tên khu thể thao
   const [title, setTitle] = useState("Khu thể thao mới - Chưa đặt tên");
@@ -18,9 +19,10 @@ const CreateSportsComplexes = () => {
 
   const navigate = useNavigate();
   const storedOwnerInfo = getUserInfo();
+  // Ensure ownerId is a number if the backend expects it that way
   const ownerId = storedOwnerInfo?.id || storedOwnerInfo?.userId;
 
-  const [type, setType] = useState();
+  const [type, setType] = useState(""); // Initialize with empty string, not undefined for controlled component
   const [showTypeOptions, setShowTypeOptions] = useState(false);
 
   const [bigImageFile, setBigImageFile] = useState(null);
@@ -41,20 +43,20 @@ const CreateSportsComplexes = () => {
 
   const [loading, setLoading] = useState(false);
 
-  // Format tiền VND có dấu phẩy
-  const formatVND = (value) => {
-    if (!value) return "";
-    const numericValue = value.replace(/\D/g, "");
-    return numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  };
+  // Format tiền VND có dấu phẩy - commented out in JSX
+  // const formatVND = (value) => {
+  //   if (!value) return "";
+  //   const numericValue = value.replace(/\D/g, "");
+  //   return numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  // };
 
-  // Xử lý giá tiền
-  const handleChangePrice = (e) => {
-    const formatted = formatVND(e.target.value);
-    setPrice(formatted);
-  };
-  const handleBlurPrice = () => setEditing(false);
-  const handleKeyDownPrice = (e) => e.key === "Enter" && setEditing(false);
+  // Xử lý giá tiền - commented out in JSX
+  // const handleChangePrice = (e) => {
+  //   const formatted = formatVND(e.target.value);
+  //   setPrice(formatted);
+  // };
+  // const handleBlurPrice = () => setEditing(false);
+  // const handleKeyDownPrice = (e) => e.key === "Enter" && setEditing(false);
 
   // Xử lý tên khu thể thao
   const handleTitleChange = (e) => setTitle(e.target.value);
@@ -71,7 +73,8 @@ const CreateSportsComplexes = () => {
 
   // Khi click vào tên mặc định sẽ xoá để nhập mới
   const handleTitleFocus = () => {
-    if (title === "Khu thể thao mới ") {
+    if (title === "Khu thể thao mới - Chưa đặt tên") {
+      // Use the full default string for comparison
       setTitle("");
     }
     setEditingTitle(true);
@@ -83,21 +86,27 @@ const CreateSportsComplexes = () => {
     if (file) {
       setBigImageFile(file);
       setBigImagePreview(URL.createObjectURL(file));
+    } else {
+      setBigImageFile(null);
+      setBigImagePreview(null);
     }
   };
 
   // Xử lý ảnh nhỏ
   const handleSmallImageChange = (index, e) => {
     const file = e.target.files[0];
-    if (file) {
-      const newFiles = [...smallImageFiles];
-      newFiles[index] = file;
-      setSmallImageFiles(newFiles);
+    const newFiles = [...smallImageFiles];
+    const newPreviews = [...smallImagePreviews];
 
-      const newPreviews = [...smallImagePreviews];
+    if (file) {
+      newFiles[index] = file;
       newPreviews[index] = URL.createObjectURL(file);
-      setSmallImagePreviews(newPreviews);
+    } else {
+      newFiles[index] = null;
+      newPreviews[index] = null;
     }
+    setSmallImageFiles(newFiles);
+    setSmallImagePreviews(newPreviews);
   };
 
   const typeOptions = ["Bóng đá", "Cầu lông", "Pickleball"];
@@ -109,7 +118,8 @@ const CreateSportsComplexes = () => {
 
   // Xử lý tạo khu thể thao gửi lên API
   const handleCreateSportsComplex = async () => {
-    if (!title.trim() || title === "Khu thể thao mới") {
+    // Client-side validation
+    if (!title.trim() || title === "Khu thể thao mới - Chưa đặt tên") {
       toast.error("Tên khu thể thao không được để trống.");
       return;
     }
@@ -117,8 +127,9 @@ const CreateSportsComplexes = () => {
       toast.error("Loại khu thể thao không được để trống.");
       return;
     }
+    // Ensure ownerId is a valid number before proceeding
     if (!ownerId || isNaN(Number(ownerId))) {
-      toast.error("Id của chủ sân không hợp lệ.");
+      toast.error("ID của chủ sân không hợp lệ. Vui lòng đăng nhập lại.");
       return;
     }
     if (!selectedPosition) {
@@ -135,44 +146,61 @@ const CreateSportsComplexes = () => {
     try {
       const formData = new FormData();
 
+      // Append data to FormData
       formData.append("Type", type);
       formData.append("Name", title.trim());
-      formData.append("Address", address || "Địa chỉ chưa xác định");
-      formData.append("OwnerId", String(ownerId));
+      formData.append("Address", address || "Địa chỉ chưa xác định"); // Provide a fallback
+      formData.append("OwnerId", ownerId.toString()); // Ensure OwnerId is sent as string for FormData
       formData.append("Latitude", selectedPosition.latitude.toString());
       formData.append("Longitude", selectedPosition.longitude.toString());
 
+      // Append images to FormData
       if (bigImageFile) {
-        formData.append("ImageUrls", bigImageFile);
+        formData.append("ImageUrls", bigImageFile); // "ImageUrls" is the expected key for multiple files
       }
       smallImageFiles.forEach((file) => {
         if (file) {
-          formData.append("ImageUrls", file);
+          formData.append("ImageUrls", file); // Append each small image under the same key
         }
       });
 
-      const response = await axios.post(
-        "https://localhost:7286/api/sportscomplex/create",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      // Call the service function with the FormData object
+      const response = await createSportsComplex(formData);
 
-      if (response.data.isSuccessed) {
+      if (response) {
+        // Check for a successful response (e.g., if it returns the created ID)
         toast.success("Tạo khu thể thao thành công!");
         setTimeout(() => {
-          navigate("/owner/sportscomplexes"); // Đường dẫn bạn muốn chuyển sau tạo thành công
+          navigate("/owner/sportscomplexes"); // Navigate after successful creation
         }, 1500);
       } else {
-        toast.error(response.data.message || "Tạo khu thể thao thất bại");
+        // This 'else' block might be hit if isSuccessed is false but data is present
+        toast.error("Tạo khu thể thao thất bại");
       }
     } catch (err) {
-      toast.error(
-        err.response?.data || err.message || "Lỗi khi tạo khu thể thao"
-      );
+      console.error("Lỗi đầy đủ khi tạo khu thể thao:", err);
+      // More specific error handling from the backend's validation response
+      if (err.response && err.response.data && err.response.data.errors) {
+        // Handle specific validation errors
+        const errors = err.response.data.errors;
+        let errorMessage = "Đã xảy ra lỗi: ";
+        for (const key in errors) {
+          if (errors.hasOwnProperty(key)) {
+            errorMessage += `${key}: ${errors[key].join(", ")}. `;
+          }
+        }
+        toast.error(errorMessage.trim());
+      } else if (
+        err.response &&
+        err.response.data &&
+        err.response.data.message
+      ) {
+        toast.error(err.response.data.message);
+      } else if (err.message) {
+        toast.error(err.message);
+      } else {
+        toast.error("Lỗi không xác định khi tạo khu thể thao.");
+      }
     } finally {
       setLoading(false);
     }
@@ -214,33 +242,33 @@ const CreateSportsComplexes = () => {
             />
           )}
         </div>
-
-        <div>
-          {!editing ? (
-            <span
-              onClick={() => setEditing(true)}
-              style={{
-                cursor: "pointer",
-                padding: "5px",
-                border: "1px solid #ccc",
-              }}
-              title="Nhấn để sửa giá"
-            >
-              {price ? `${price} VND/giờ` : "Chưa nhập giá"}
-            </span>
-          ) : (
-            <input
-              type="text"
-              value={price}
-              onChange={handleChangePrice}
-              onBlur={handleBlurPrice}
-              onKeyDown={handleKeyDownPrice}
-              autoFocus
-              style={{ width: "150px" }}
-              placeholder="Nhập giá tiền"
-            />
-          )}
-        </div>
+        {/* Price input section is commented out in your original code */}
+        {/* <div>
+           {!editing ? (
+             <span
+               onClick={() => setEditing(true)}
+               style={{
+                 cursor: "pointer",
+                 padding: "5px",
+                 border: "1px solid #ccc",
+               }}
+               title="Nhấn để sửa giá"
+             >
+               {price ? `${price} VND/giờ` : "Chưa nhập giá"}
+             </span>
+           ) : (
+             <input
+               type="text"
+               value={price}
+               onChange={handleChangePrice}
+               onBlur={handleBlurPrice}
+               onKeyDown={handleKeyDownPrice}
+               autoFocus
+               style={{ width: "150px" }}
+               placeholder="Nhập giá tiền"
+             />
+           )}
+         </div> */}
       </div>
 
       {/* Image section */}
@@ -307,13 +335,13 @@ const CreateSportsComplexes = () => {
         </div>
       </div>
 
-      {/* Description
-      <div className="description">
-        <p>
-          Lorem ipsum dolor sit amet consectetur. Gravida sapien facilisis
-          consectetur vitae tellus...
-        </p>
-      </div> */}
+      {/* Description section is commented out in your original code */}
+      {/* <div className="description">
+         <p>
+           Lorem ipsum dolor sit amet consectetur. Gravida sapien facilisis
+           consectetur vitae tellus...
+         </p>
+       </div> */}
 
       {/* Utilities & Type and Price */}
       <div className="utility-price">
@@ -380,12 +408,13 @@ const CreateSportsComplexes = () => {
           </div>
         </div>
 
-        <div className="price-info">
-          {price ? `${price} VND/giờ` : "Chưa nhập giá"}
-          {/* <button className="btn-book" disabled>
-            Đặt ngay
-          </button> */}
-        </div>
+        {/* Price info section is commented out in your original code */}
+        {/* <div className="price-info">
+           {price ? `${price} VND/giờ` : "Chưa nhập giá"}
+           <button className="btn-book" disabled>
+             Đặt ngay
+           </button>
+         </div> */}
       </div>
 
       {/* Location & Map */}
