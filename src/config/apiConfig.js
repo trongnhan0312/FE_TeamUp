@@ -5,7 +5,7 @@ const BASE_URL = "https://miraculous-clarity-production.up.railway.app";
 
 export const API_CONFIG = {
   BASE_URL,
-  TIMEOUT: 60000, // 30 giây timeout cho API calls
+  TIMEOUT: 30000, // 30 giây timeout cho API calls
 };
 
 // Tạo full URL với path đã cho
@@ -59,13 +59,12 @@ export const ENDPOINTS = {
   EMPLOYEE: {
     GET_COACHES_PAGINATION: "/employee/get-coaches-pagination",
     GET_COACH_PROFILE: "/employee",
-    GET_OWNER_PROFILE: "employee",
     UPDATE_COACH_PROFILE: "/employee/update-coach-profile",
   },
   CHAT: {
     GET_MESSAGE: "/chat/get-message",
     SEND_MESSAGE: "/chat/send-message",
-    GET_PARTNERS: "/chat/chat-partners",
+    GET_PARNERS: "/chat/chat-partners",
   },
   ROOM: {
     GET_ALL: "/room/all",
