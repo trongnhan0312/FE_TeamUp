@@ -24,22 +24,9 @@
   align-items: flex-start;
 }
 
-/* Main Content */
 .main-content {
   flex: 1;
-  min-width: 0; // Prevents flex item from overflowing
-}
-
-.article {
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  overflow: hidden;
-  transition: box-shadow 0.3s ease;
-
-  &:hover {
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  }
+  min-width: 0;
 }
 
 /* Title Section */
@@ -49,18 +36,18 @@
   background: linear-gradient(135deg, #2eda31 0%, #73d0ba 100%);
   color: white;
   position: relative;
+}
 
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60px;
-    height: 4px;
-    background: rgba(255, 255, 255, 0.8);
-    border-radius: 2px;
-  }
+.title-wrapper::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 2px;
 }
 
 .main-title {
@@ -85,13 +72,17 @@
 .rackets-container {
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
   padding: 3rem 2rem;
-  width: 1000px;
+  width: 100%;
+  max-width: 1000px;
+  gap: 2rem;
 }
 
 .racket-item {
   position: relative;
   max-width: 400px;
+  width: 100%;
 }
 
 .racket-card {
@@ -102,21 +93,21 @@
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
   overflow: hidden;
+}
 
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, #667eea, #764ba2);
-  }
+.racket-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+}
 
-  &:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-  }
+.racket-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
 }
 
 .racket-image {
@@ -124,10 +115,10 @@
   height: 400px;
   object-fit: contain;
   transition: transform 0.3s ease;
+}
 
-  .racket-card:hover & {
-    transform: scale(1.05);
-  }
+.racket-card:hover .racket-image {
+  transform: scale(1.05);
 }
 
 .racket-overlay {
@@ -135,18 +126,18 @@
   margin-top: 1.5rem;
   padding-top: 1.5rem;
   border-top: 1px solid #e2e8f0;
+}
 
-  h3 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #2d3748;
-    margin-bottom: 0.5rem;
-  }
+.racket-overlay h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 0.5rem;
+}
 
-  p {
-    color: #718096;
-    font-size: 0.875rem;
-  }
+.racket-overlay p {
+  color: #718096;
+  font-size: 0.875rem;
 }
 
 /* Clothing Section */
@@ -166,18 +157,18 @@
   margin-bottom: 0.75rem;
   position: relative;
   display: inline-block;
+}
 
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: -8px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 50px;
-    height: 3px;
-    background: linear-gradient(90deg, #667eea, #764ba2);
-    border-radius: 2px;
-  }
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 3px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  border-radius: 2px;
 }
 
 .section-description {
@@ -200,12 +191,12 @@
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
   border: 1px solid #e2e8f0;
+}
 
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-    border-color: #667eea;
-  }
+.clothing-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  border-color: #667eea;
 }
 
 .clothing-image {
@@ -213,35 +204,27 @@
   height: 240px;
   object-fit: cover;
   transition: transform 0.3s ease;
+}
 
-  .clothing-card:hover & {
-    transform: scale(1.1);
-  }
+.clothing-card:hover .clothing-image {
+  transform: scale(1.1);
 }
 
 .clothing-info {
   padding: 1.5rem;
   text-align: center;
-
-  h4 {
-    font-size: 1.125rem;
-    font-weight: 600;
-    color: #2d3748;
-    margin-bottom: 0.5rem;
-  }
-
-  p {
-    color: #718096;
-    font-size: 0.875rem;
-  }
 }
 
-/* Similar Courts Wrapper */
-.similar-courts-wrapper {
-  margin-top: 3rem;
-  padding: 2rem;
-  background: #f7fafc;
-  border-radius: 0 0 16px 16px;
+.clothing-info h4 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 0.5rem;
+}
+
+.clothing-info p {
+  color: #718096;
+  font-size: 0.875rem;
 }
 
 /* Sidebar */
@@ -284,25 +267,25 @@
   transition: all 0.3s ease;
   border: 1px solid #e2e8f0;
   gap: 1rem;
+}
 
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-    border-color: #667eea;
+.related-article:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  border-color: #667eea;
+}
 
-    .article-title {
-      color: #667eea;
-    }
+.related-article:hover .article-title {
+  color: #667eea;
+}
 
-    .read-more {
-      opacity: 1;
-      transform: translateX(4px);
-    }
+.related-article:hover .read-more {
+  opacity: 1;
+  transform: translateX(4px);
+}
 
-    .article-image img {
-      transform: scale(1.1);
-    }
-  }
+.related-article:hover .article-image img {
+  transform: scale(1.1);
 }
 
 .article-content {
@@ -340,13 +323,13 @@
   border-radius: 8px;
   overflow: hidden;
   flex-shrink: 0;
+}
 
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-  }
+.article-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
 }
 
 /* Responsive Design */
@@ -354,9 +337,14 @@
   .blog-container {
     flex-direction: column;
     gap: 2rem;
+    align-items: center;
   }
 
   .sidebar {
+    width: 100%;
+  }
+
+  .main-content {
     width: 100%;
   }
 
@@ -368,12 +356,7 @@
 
 @media (max-width: 768px) {
   .blog-page {
-    padding: 1rem 0;
-  }
-
-  .blog-container {
-    padding: 0 1rem;
-    gap: 1.5rem;
+   
   }
 
   .main-title {
@@ -420,36 +403,65 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 580px) {
   .main-title {
     font-size: 1.5rem;
-  }
-
-  .clothing-section {
-    padding: 0 1rem 2rem;
   }
 
   .title-wrapper {
     padding: 1.5rem 1rem;
   }
 
+  .clothing-section {
+    padding: 0 0rem 0rem;
+  }
+
   .rackets-container {
     padding: 2rem 1rem;
+  }
+
+  .racket-image {
+    height: 220px;
+  }
+
+  .clothing-image {
+    height: 200px;
   }
 
   .related-article {
     flex-direction: column;
     text-align: center;
+  }
 
-    .article-image {
-      width: 100%;
-      height: 120px;
-      order: -1;
-    }
+  .article-image {
+    width: 100%;
+    height: 120px;
+    order: -1;
+  }
+
+  .clothing-info {
+    padding: 1rem;
+  }
+
+  .clothing-info h4 {
+    font-size: 1rem;
+  }
+
+  .clothing-info p {
+    font-size: 0.8rem;
+  }
+
+  .read-more {
+    font-size: 0.85rem;
+    padding: 0.5rem;
+  }
+
+  .related-articles {
+    gap: 1rem;
   }
 }
 
-/* Animation cho loading states */
+/* Loading shimmer animation */
 @keyframes shimmer {
   0% {
     background-position: -200px 0;

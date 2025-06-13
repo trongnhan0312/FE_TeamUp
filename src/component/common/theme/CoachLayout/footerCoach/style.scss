@@ -6,63 +6,82 @@
 }
 
 .footer_coach{
-.footer {
-    flex-shrink: 0; // Prevent the footer from shrinking
+  @font-face {
+    font-family: "Debata";
+    src: url("./fonts/Debata-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+  .footer {
+    flex-shrink: 0;
     width: 100%;
-    padding: 1.5rem 0;
-    border-top: 1px solid #e5e7eb;
+    padding: 60px 20px;
     background: #202524;
-    color: white;
-    padding: 40px 0;
+    color: #fff;
+    font-family: "Inter", sans-serif;
   
     .footer_wrapper {
+      max-width: 1200px;
+      margin: 0 auto;
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
-      gap: 30px;  // Khoảng cách giữa các cột
+      flex-wrap: wrap;
+      gap: 40px;
     }
   
     .footer_left {
-      flex: 1;
+      flex: 1 1 191px;
+  
       .footer_logo {
         display: flex;
-        align-items: center;
-        margin-bottom: 20px;
         flex-direction: column;
-        margin-left: -91px;
+        align-items: center;
+        margin-bottom: 24px;
   
         .footer_logo_img {
           max-width: 100px;
           height: auto;
-         
+          margin-bottom: 10px;
         }
   
         .footer_logo_text {
           font-family: "Debata", serif;
           color: #8ad839;
-          font-size: 23px;
+          font-size: 26px;
+          line-height: 1;
         }
       }
   
       .footer_signup {
         display: flex;
+        flex-direction: row;
+        align-items: center;
         gap: 10px;
-        
+        padding-top: 10px;
+  
         input {
-          padding: 10px;
+          padding: 10px 14px;
           border: none;
           border-radius: 20px;
-          width: 110px;
+          width: 140px;
           font-size: 14px;
+          outline: none;
         }
   
         button {
           background-color: #8ad839;
-          color: white;
+          color: #fff;
           border: none;
           border-radius: 20px;
           padding: 10px 20px;
+          font-size: 14px;
           cursor: pointer;
+          transition: background 0.3s;
+  
+          &:hover {
+            background-color: #74b816;
+          }
         }
       }
     }
@@ -70,26 +89,84 @@
     .footer_center,
     .footer_right,
     .footer_contact {
-      flex: 1;
+      flex: 1 1 180px;
+  
       .footer_title {
         font-weight: bold;
         font-size: 18px;
-        margin-bottom: 10px;
+        margin-bottom: 12px;
       }
   
       .footer_list {
         list-style: none;
         padding: 0;
+        margin: 0;
   
         li {
-          margin: 5px 0;
-          cursor: pointer;
+          margin: 6px 0;
   
-          &:hover {
-            text-decoration: underline;
+          a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 14px;
+  
+            &:hover {
+              text-decoration: underline;
+              color: #8ad839;
+            }
           }
         }
       }
     }
+  
+    // Responsive
+    @media (max-width: 1024px) {
+      .footer_wrapper {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+  
+      .footer_left,
+      .footer_center,
+      .footer_right,
+      .footer_contact {
+        align-items: center;
+      }
+  
+      .footer_left {
+        .footer_logo {
+          align-items: center;
+        }
+  
+        .footer_signup {
+          flex-direction: column;
+          width: 100%;
+  
+          input,
+          button {
+            width: 100%;
+            max-width: 300px;
+          }
+        }
+      }
+    }
+  
+    @media (max-width: 600px) {
+      padding: 40px 20px;
+  
+      .footer_logo_text {
+        font-size: 22px;
+      }
+  
+      .footer_title {
+        font-size: 16px;
+      }
+  
+      .footer_list li a {
+        font-size: 13px;
+      }
+    }
   }
+  
 }

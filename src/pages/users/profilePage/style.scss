@@ -143,3 +143,107 @@
     
   }
  
+  @media (max-width: 1024px) {
+    .profile-container {
+      flex-direction: column;
+      padding: 16px;
+  
+      .sidebar {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 20px;
+  
+        .avatar-section {
+          img {
+            width: 100px;
+            height: 100px;
+          }
+  
+          .name {
+            font-size: 16px;
+          }
+  
+          .stats > div {
+            font-size: 13px;
+          }
+        }
+  
+        .menu {
+          ul li {
+            font-size: 13px;
+          }
+        }
+      }
+  
+      .profile-form {
+        .form-section {
+          h3 {
+            font-size: 15px;
+          }
+  
+          .form-group input {
+            font-size: 13px;
+          }
+  
+          .buttons {
+            flex-direction: column;
+  
+            .save,
+            .cancel {
+              width: 100%;
+              padding: 10px;
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  @media (max-width: 600px) {
+    .profile-container {
+      padding: 12px;
+  
+      .sidebar {
+        padding: 16px;
+  
+        .avatar-section {
+          img {
+            width: 80px;
+            height: 80px;
+          }
+  
+          .name {
+            font-size: 15px;
+          }
+        }
+      }
+  
+      .profile-form {
+        gap: 16px;
+  
+        .form-section {
+          padding: 16px;
+  
+          h3 {
+            font-size: 14px;
+          }
+  
+          .form-group input {
+            font-size: 12px;
+            padding: 8px;
+          }
+  
+          .buttons {
+            gap: 8px;
+  
+            .save,
+            .cancel {
+              font-size: 13px;
+              padding: 8px;
+            }
+          }
+        }
+      }
+    }
+  }
+  

@@ -304,3 +304,124 @@
     background-color: #d32f2f;
   }
 }
+@media (max-width: 768px) {
+  .pitchHistory {
+    flex-direction: column;
+    padding: 16px;
+    gap: 20px;
+
+    .summary {
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .card {
+      width: 100%;
+      padding: 16px;
+      height: auto;
+
+      h3 {
+        font-size: 14px;
+      }
+
+      p {
+        font-size: 22px;
+      }
+    }
+
+    .summaryItem {
+      width: 100%;
+      padding: 16px;
+
+      .summaryValue {
+        font-size: 22px;
+        line-height: 28px;
+      }
+
+      .summaryTitle {
+        font-size: 14px;
+        text-align: center;
+      }
+
+      svg.progressCircle {
+        width: 36px;
+        height: 36px;
+      }
+    }
+
+    .historySection {
+      padding: 20px;
+
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+
+        h2 {
+          font-size: 20px;
+        }
+
+        .filters {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 8px;
+
+          .searchInput,
+          .statusFilter {
+            width: 100%;
+          }
+        }
+
+        .timeFilter {
+          flex-wrap: wrap;
+          button {
+            font-size: 13px;
+            padding: 5px 10px;
+          }
+        }
+      }
+
+      .tableWrapper {
+        overflow-x: auto;
+
+        table {
+          min-width: 600px;
+          font-size: 13px;
+
+          th,
+          td {
+            padding: 10px 12px;
+            font-size: 13px;
+          }
+        }
+      }
+
+      .statusLabel {
+        font-size: 12px;
+        padding: 4px 10px;
+      }
+    }
+  }
+
+  .pagination {
+    flex-direction: column;
+    gap: 0.75rem;
+
+    .pagination-info {
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .pagination-button {
+      width: 36px;
+      height: 36px;
+      font-size: 18px;
+    }
+  }
+
+  .action-button {
+    font-size: 13px;
+    padding: 5px 10px;
+    margin-bottom: 6px;
+  }
+}

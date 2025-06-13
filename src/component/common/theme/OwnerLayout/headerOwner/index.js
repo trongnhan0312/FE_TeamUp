@@ -118,6 +118,7 @@ const HeaderOwner = () => {
                   <li>
                     <Link to="/owner/bookingmanagement" className="icon-link">
                       <BsCoin />
+                      <div className="tooltip-text">Quản Lí Đặt Sân</div>
                     </Link>
                   </li>
                   {/* <li>

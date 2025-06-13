@@ -11,25 +11,23 @@ import {
   BsBoxArrowRight,
   BsSearch,
   BsChat,
+  BsHouse,
 } from "react-icons/bs";
 import logo from "../../../../../assets/admin/logo.png";
 
 const HeaderCoach = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
-
-  // Lấy user hiện tại (đã login)
   const [user, setUser] = useState(() => getUserInfo());
   const defaultAvatar = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
   useEffect(() => {
     if (user?.id) {
-      // Gọi API lấy profile coach theo user.id
       coachService
         .getCoachProfile(user.id)
         .then((response) => {
           if (response.isSuccessed && response.resultObj) {
-            setUser(response.resultObj); // Cập nhật profile coach
+            setUser(response.resultObj);
           }
         })
         .catch((err) => {
@@ -60,90 +58,40 @@ const HeaderCoach = () => {
                   <span className="logo_text">TeamUp</span>
                 </Link>
               </div>
-              {/* <form className="search_form" onSubmit={handleSearch}>
-                <input
-                  type="text"
-                  placeholder="Tìm kiếm..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="search_input"
-                />
-                <button type="submit" className="search_button">
-                  <BsSearch />
-                </button>
-              </form> */}
             </div>
 
-            <div
-              className="header_right"
-              style={{ display: "flex", alignItems: "center" }}
-            >
-              <ul
-                className="icons"
-                style={{
-                  display: "flex",
-                  gap: "20px",
-                  margin: 0,
-                  padding: 0,
-                  listStyle: "none",
-                }}
-              >
+            <div className="header_right">
+              <ul className="icons">
+                <li>
+                  <Link to="/coach" className="icon-link">
+                    <BsHouse />
+                    <div className="tooltip-text">Trang Chủ</div>
+                  </Link>
+                </li>
                 <li>
                   <Link to="/coach/chat" className="icon-link">
                     <BsChat />
+                    <div className="tooltip-text">Trò Truyện</div>
                   </Link>
                 </li>
                 <li>
                   <Link to="/coach/reviewCoach" className="icon-link">
                     <BsChatHeart />
+                    <div className="tooltip-text">Đánh Giá</div>
                   </Link>
                 </li>
                 <li>
                   <Link to="/coach/CoachHistory" className="icon-link">
                     <BsClipboardData />
+                    <div className="tooltip-text">Lịch Sử</div>
                   </Link>
                 </li>
-              </ul>
-
-              <div
-                style={{
-                  width: "1px",
-                  height: "30px",
-                  backgroundColor: "#ccc",
-                  margin: "0 15px",
-                }}
-              ></div>
-
-              <ul
-                className="icons"
-                style={{
-                  display: "flex",
-                  gap: "20px",
-                  margin: 0,
-                  padding: 0,
-                  listStyle: "none",
-                }}
-              >
-                <li
-                  onClick={handleLogout}
-                  style={{ cursor: "pointer" }}
-                  title="Logout"
-                >
+                <li onClick={handleLogout} title="Logout">
                   <BsBoxArrowRight />
                 </li>
               </ul>
 
-              <div
-                className="user"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  marginLeft: "20px",
-                  cursor: "pointer",
-                }}
-                onClick={() => navigate("/coachProfile")}
-              >
+              <div className="user" onClick={() => navigate("/coachProfile")}>
                 <img
                   src={user?.avatarUrl || user?.avatar || defaultAvatar}
                   alt="Avatar"

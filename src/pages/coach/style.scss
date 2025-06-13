@@ -387,3 +387,159 @@
     }
   }
 }
+@media (max-width: 1024px) {
+  .coach-container {
+    padding: 16px;
+
+    .stats-top {
+      flex-direction: column;
+    }
+
+    .mid-section {
+      flex-direction: column;
+
+      .left-panel {
+        width: 100%;
+        padding: 20px;
+        align-items: center;
+
+        .total-week-container .total-week-number {
+          font-size: 36px;
+        }
+
+        .rating-box .stars svg {
+          width: 24px;
+          height: 24px;
+        }
+      }
+
+      .right-panel {
+        width: 100%;
+        padding: 16px;
+        overflow-x: auto;
+
+        .schedule .schedule-grid {
+          min-width: unset;
+          grid-template-columns: 100px repeat(7, 1fr);
+        }
+      }
+    }
+
+    .bottom-section {
+      flex-direction: column;
+
+      .payment-history {
+        width: 100%;
+      }
+
+      .students-list {
+        width: 100%;
+      }
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .coach-container {
+    padding: 12px;
+
+    .stats-top {
+      gap: 8px;
+
+      .stat-card {
+        padding: 10px 14px;
+
+        .stat-title {
+          font-size: 11px;
+        }
+
+        .stat-value {
+          font-size: 18px;
+        }
+      }
+    }
+
+    .mid-section {
+      .left-panel {
+        padding: 16px;
+
+        .total-week-container .total-week-number {
+          font-size: 30px;
+        }
+
+        .rating-box .rating-label {
+          font-size: 14px;
+        }
+
+        .rating-box .stars svg {
+          width: 20px;
+          height: 20px;
+        }
+      }
+
+      .right-panel {
+        padding: 14px;
+
+        .schedule .schedule-grid {
+          font-size: 12px;
+          grid-auto-rows: 40px;
+        }
+      }
+    }
+
+    .payment-history {
+      padding: 16px;
+
+      .payment-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+
+        .search-input {
+          width: 100%;
+        }
+
+        .sort-button {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+
+      table.payment-table {
+        font-size: 13px;
+
+        th, td {
+          padding: 10px 6px;
+        }
+      }
+    }
+
+    .students-list {
+      padding: 16px;
+
+      .student-item {
+        font-size: 14px;
+        img {
+          width: 34px;
+          height: 34px;
+        }
+      }
+    }
+
+    .bottom-section .payment-history .header-search {
+      flex-direction: column;
+      align-items: stretch;
+
+      input {
+        width: 100%;
+        border-radius: 6px;
+        margin-bottom: 6px;
+      }
+
+      button {
+        width: 100%;
+        border-radius: 6px;
+      }
+    }
+  }
+}

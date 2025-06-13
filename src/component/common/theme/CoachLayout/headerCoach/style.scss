@@ -5,47 +5,28 @@
   font-style: normal;
 }
 
-.coach-layout{
-.header_top {
+.coach-layout {
+  .header_top {
     background: #202524;
     color: white;
     padding: 10px 0;
-    .search_form {
-      display: flex;
-      align-items: center;
-    }
-    
-    .search_input {
-      padding: 6px 10px;
-      border: 1px solid #ccc;
-      border-radius: 4px 0 0 4px;
-      outline: none;
-      width: 300px;
-    }
-    
-    .search_button {
-      padding: 6px 12px;
-      border: 1px solid #ccc;
-      border-left: none;
-      border-radius: 0 4px 4px 0;
-      background-color: #B0DF21;
-      color: white;
-      cursor: pointer;
-    }
-    
-    .search_button:hover {
-      background-color: #B0DF21;
-    }
-    
+
     .header_wrapper {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: nowrap; // Giữ các thành phần trên cùng 1 hàng
+    }
+
+    .header_left,
+    .header_right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: nowrap; // Ngăn xuống dòng
     }
 
     .header_left {
-      display: flex;
-      align-items: center;
       .logo {
         display: flex;
         align-items: center;
@@ -55,18 +36,16 @@
         text-decoration: none;
 
         .logo_img {
-            max-width: 35px;  // Tăng kích thước logo
-            height: auto;
-            
+          max-width: 35px;
+          height: auto;
         }
+
         .logo_text {
           font-family: "Debata", serif;
           font-size: 15px;
           margin: 5px;
         }
-        
       }
-      
 
       .menu {
         display: flex;
@@ -76,74 +55,238 @@
         li {
           cursor: pointer;
           color: white;
+
           &:hover {
-            text-decoration: none; 
+            text-decoration: none;
           }
         }
-     
-      }
-      .menu a {
-        color: white;          // Đổi màu chữ thành trắng
-        text-decoration: none; // Bỏ gạch chân
-        transition: color 0.3s ease;
-      
-        &:hover {
-          color: #8ad839; 
-          text-decoration: none;      // Màu xanh khi hover (bạn có thể đổi màu khác)
+
+        a {
+          color: white;
+          text-decoration: none;
+          transition: color 0.3s ease;
+
+          &:hover {
+            color: #8ad839;
+            text-decoration: none;
+          }
         }
       }
-      
     }
 
     .header_right {
-      display: flex;
-      align-items: center;
-
       .icons {
         display: flex;
         gap: 20px;
         list-style: none;
-        margin-right: 20px;
-        
+        margin: 0;
+        padding: 0;
+
         li {
           cursor: pointer;
           font-size: 18px;
+
           &:hover {
             color: #8ad839;
           }
         }
-        
       }
-      
 
       .user {
         display: flex;
         align-items: center;
-        background: none;
+        background: white;
         padding: 5px 10px;
         color: black;
-        background: white;
+        border-radius: 20px;
 
         .avatar {
-          width: 35px;  // Đảm bảo kích thước avatar phù hợp
+          width: 35px;
           height: 35px;
-         
+          border-radius: 50%;
           margin-right: 8px;
         }
 
         .username {
           font-weight: 500;
+          white-space: nowrap;
         }
       }
     }
+
+    .search_form {
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+
+      .search_input {
+        padding: 6px 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px 0 0 4px;
+        outline: none;
+        width: 300px;
+      }
+
+      .search_button {
+        padding: 6px 12px;
+        border: 1px solid #ccc;
+        border-left: none;
+        border-radius: 0 4px 4px 0;
+        background-color: #B0DF21;
+        color: white;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #a5cc1d;
+        }
+      }
+    }
+
     .icon-link {
-      color: white;          /* Màu mặc định */
+      position: relative;
+      color: white;
       transition: color 0.3s ease;
+
+      &:hover {
+        color: #8ad839;
+      }
+
+      .tooltip-text {
+        visibility: hidden;
+        width: max-content;
+        background-color: #333;
+        color: #fff;
+        font-size: 10px;
+        text-align: center;
+        border-radius: 4px;
+        padding: 3px 6px;
+        position: absolute;
+        z-index: 1000;
+        top: 110%;
+        right: 0;
+        opacity: 0;
+        transition: opacity 0.3s;
+        white-space: nowrap;
+        pointer-events: none;
+
+        &::after {
+          content: "";
+          position: absolute;
+          top: 0;
+          right: 8px;
+          border-width: 5px;
+          border-style: solid;
+          border-color: transparent transparent #333 transparent;
+        }
+      }
+
+      &:hover .tooltip-text {
+        visibility: visible;
+        opacity: 1;
+      }
     }
-    
-    .icon-link:hover {
-      color: #8ad839;            /* Màu khi hover */
+  }
+
+  // RESPONSIVE TABLET
+  @media (max-width: 1024px) {
+    .header_top {
+      .header_wrapper {
+     
+        gap: 12px;
+      }
+
+      .header_left,
+      .header_right {
+        
+        align-items: flex-start;
+        gap: 132px;
+      }
+
+      .icons {
+        gap: 16px;
+        margin-right: 0;
+      }
+
+      .user {
+        .avatar {
+          width: 32px;
+          height: 32px;
+        }
+
+        .username {
+          font-size: 14px;
+        }
+      }
+
+      .search_form {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+
+        .search_input,
+        .search_button {
+          width: 100%;
+        }
+      }
     }
-    
+  }
+
+  // RESPONSIVE MOBILE
+  @media (max-width: 600px) {
+    .header_top {
+      padding: 8px 0;
+
+      .header_wrapper {
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .header_left .menu {
+        flex-direction: column;
+        gap: 6px;
+
+        li {
+          font-size: 14px;
+        }
+      }
+
+      .logo {
+        .logo_text {
+          font-size: 13px;
+        }
+
+        .logo_img {
+          max-width: 28px;
+        }
+      }
+
+      .icons {
+        font-size: 16px;
+      }
+
+      .user {
+        padding: 4px 8px;
+
+        .avatar {
+          width: 30px;
+          height: 30px;
+        }
+
+        .username {
+          font-size: 13px;
+        }
+      }
+
+      .search_input,
+      .search_button {
+        width: 100%;
+        font-size: 14px;
+      }
+
+      .icon-link .tooltip-text {
+        font-size: 9px;
+        padding: 2px 4px;
+      }
+    }
   }
 }
