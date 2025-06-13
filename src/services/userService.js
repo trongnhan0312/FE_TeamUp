@@ -76,7 +76,7 @@ const userService = {
   },
   getUserByRole: async (userId, role) => {
     try {
-      const endpoint = role === "User" ? ENDPOINTS.USER.GET_USER_BY_ID : ENDPOINTS.EMPLOYEE.UPDATE_COACH_PROFILE;
+      const endpoint = role === "User" ? ENDPOINTS.USER.GET_USER_BY_ID : ENDPOINTS.EMPLOYEE.GET_COACH_PROFILE;
       
       const response = await axiosInstance.get(
         `${endpoint}/${userId}`
