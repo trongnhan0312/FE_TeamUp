@@ -28,7 +28,7 @@ const chatService = {
   },
   getPartners: async (senderId) => {
     try {
-      const response = await axiosInstance.get(ENDPOINTS.CHAT.GET_PARTNERS, {
+      const response = await axiosInstance.get(ENDPOINTS.CHAT.GET_PARNERS, {
         params: {
           senderId,
         },
