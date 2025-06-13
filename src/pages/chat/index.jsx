@@ -22,7 +22,8 @@ const ChatPage = () => {
 
         let updatedListUsers = [...data];
 
-        if (userId && !data.some((user) => user.id === userId)) {
+        // CHỈ thêm user mới nếu userId tồn tại VÀ không có trong danh sách partners
+        if (userId && !data.some((user) => user.id ===  parseInt(userId))) {
           try {
             const userInfo = await userService.getUserByRole(userId, role);
 
@@ -36,13 +37,21 @@ const ChatPage = () => {
 
             updatedListUsers.unshift(normalizedUser);
           } catch (error) {
-            throw error;
+            console.error("Lỗi khi lấy thông tin user:", error);
           }
         }
 
         setListUsers(updatedListUsers);
+
+        // Nếu userId được truyền vào và đã có trong danh sách, set làm recipient
+        if (userId) {
+          const existingUser = updatedListUsers.find(user => user.id === userId);
+          if (existingUser) {
+            setRecipientUserId(userId);
+          }
+        }
       } catch (error) {
-        throw error;
+        console.error("Lỗi khi lấy danh sách partners:", error);
       }
     };
     fetchUsers();
@@ -146,7 +155,7 @@ const ChatPage = () => {
           currentUserId,
           recipientUserId
         );
-        setMessages(data);
+        setMessages(data || []); // Đảm bảo luôn có array
       } catch (error) {
         console.error("Lỗi khi lấy tin nhắn:", error);
         // Nếu không có tin nhắn nào (cuộc trò chuyện mới), set messages rỗng
@@ -193,7 +202,7 @@ const ChatPage = () => {
     setCurrentChannel(channel);
   };
 
-  // Subscribe khi có recipientUserId - tạo channel ngay khi chọn user
+  // Subscribe khi có recipientUserId
   useEffect(() => {
     if (!recipientUserId || !pusherInstance) return;
 
@@ -213,7 +222,7 @@ const ChatPage = () => {
         }
       }
     };
-  }, [recipientUserId, pusherInstance]); // Loại bỏ channelName dependency
+  }, [recipientUserId, pusherInstance]);
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
@@ -257,24 +266,16 @@ const ChatPage = () => {
       setMessages((prev) => [...prev, newMessage]);
       setMessage("");
 
-      // Sau khi gửi tin nhắn đầu tiên thành công, refresh lại danh sách users
-      if (messages.length === 0) {
+      // Chỉ refresh danh sách users nếu đây là tin nhắn đầu tiên với user tạm thời
+      const isTemporaryUser = listUsers.find(
+        user => user.id === recipientUserId && user.isTemporary
+      );
+      
+      if (isTemporaryUser && messages.length === 0) {
         setTimeout(async () => {
           try {
-            const updatedUsers = await chatService.getParners(getUserInfo().id);
-            setListUsers((prevUsers) => {
-              // Giữ lại user tạm thời nếu không có trong danh sách mới
-              const tempUser = prevUsers.find(
-                (u) => u.id === recipientUserId && u.isTemporary
-              );
-              if (
-                tempUser &&
-                !updatedUsers.some((u) => u.id === recipientUserId)
-              ) {
-                return [tempUser, ...updatedUsers];
-              }
-              return updatedUsers;
-            });
+            const updatedUsers = await chatService.getPartners(getUserInfo().id);
+            setListUsers(updatedUsers);
           } catch (error) {
             console.error("Lỗi khi refresh danh sách users:", error);
           }
@@ -288,9 +289,7 @@ const ChatPage = () => {
   const handleSelectUser = (userId) => {
     console.log("Selecting user:", userId);
     setRecipientUserId(userId);
-    setMessages([]); // Reset messages khi chọn user mới
-
-    // Channel sẽ được tạo tự động trong useEffect khi recipientUserId thay đổi
+    // KHÔNG reset messages ở đây - để useEffect xử lý việc load messages
   };
 
   useEffect(() => {
@@ -299,6 +298,10 @@ const ChatPage = () => {
 
   // Nhóm tin nhắn theo ngày
   const groupedMessages = groupMessagesByDate(messages);
+
+  // Kiểm tra xem có phải cuộc trò chuyện mới không
+  const isNewConversation = messages.length === 0 && recipientUserId;
+  const isTemporaryUser = selectedUser?.isTemporary;
 
   return (
     <div className="chat-app">
@@ -319,8 +322,8 @@ const ChatPage = () => {
                 {user.fullName}
                 {user.isTemporary && <span className="loading-dots">...</span>}
               </span>
-              {/* Hiển thị indicator cho cuộc trò chuyện mới */}
-              {user.id === userId && messages.length === 0 && (
+              {/* Chỉ hiển thị badge "Mới" cho user tạm thời và chưa có tin nhắn */}
+              {user.isTemporary && user.id === recipientUserId && isNewConversation && (
                 <span className="new-conversation-badge">Mới</span>
               )}
             </li>
@@ -340,8 +343,8 @@ const ChatPage = () => {
                   className="recipient-avatar"
                 />
                 <span className="recipient-name">{selectedUser.fullName}</span>
-                {/* Hiển thị trạng thái cuộc trò chuyện mới */}
-                {messages.length === 0 && (
+                {/* Chỉ hiển thị trạng thái mới cho user tạm thời */}
+                {isNewConversation && isTemporaryUser && (
                   <span className="new-conversation-status">
                     Cuộc trò chuyện mới
                   </span>
@@ -354,8 +357,10 @@ const ChatPage = () => {
               {messages.length === 0 ? (
                 <div className="no-messages-placeholder">
                   <div className="placeholder-content">
-                    <h4>Chưa có tin nhắn nào</h4>
-                    <p>Hãy gửi tin nhắn đầu tiên để bắt đầu cuộc trò chuyện!</p>
+                    <h4>
+                      {isTemporaryUser ? "Cuộc trò chuyện mới" : "Chưa có tin nhắn nào"}
+                    </h4>
+                    <p>Hãy gửi tin nhắn để bắt đầu cuộc trò chuyện!</p>
                   </div>
                 </div>
               ) : (
@@ -400,7 +405,7 @@ const ChatPage = () => {
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder={
-                    messages.length === 0
+                    isNewConversation
                       ? "Gửi tin nhắn đầu tiên..."
                       : "Nhập tin nhắn..."
                   }
