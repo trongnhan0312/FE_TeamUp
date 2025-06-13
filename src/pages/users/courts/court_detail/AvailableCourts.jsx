@@ -62,6 +62,7 @@ const AvailableCourts = ({ sportId, currentCourtId }) => {
   const handleBooking = (courtId) => {
     console.log(`Đặt sân có ID: ${courtId}`);
     // Thêm logic xử lý đặt sân ở đây
+    window.scrollTo(0, 0); // Cuộn lên đầu trang
     navigate(`/courts/${courtId}`);
   };
 

@@ -5,108 +5,172 @@
   font-style: normal;
 }
 
-
 .header_top {
-    background: #202524;
-    color: white;
-    padding: 10px 0;
-  
-    .header_wrapper {
+  background: #202524;
+  color: white;
+  padding: 10px 0;
+
+  .header_wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .header_left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+
+    .logo {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      font-weight: bold;
+      color: #8ad839;
+      text-decoration: none;
+
+      .logo_img {
+        max-width: 35px;
+        height: auto;
+      }
+
+      .logo_text {
+        font-family: "Debata", serif;
+        font-size: 16px;
+        margin-left: 6px;
+      }
     }
 
-    .header_left {
-      display: flex;
-      align-items: center;
-      .logo {
-        display: flex;
-        align-items: center;
-        font-weight: bold;
-        color: #8ad839;
-        margin-right: 30px;
-        text-decoration: none;
+    .menu-toggle {
+      display: none;
+      font-size: 24px;
+      color: white;
+      background: none;
+      border: none;
+      cursor: pointer;
 
-        .logo_img {
-            max-width: 35px;  // Tăng kích thước logo
-            height: auto;
-        }
-        .logo_text {
-          font-family: "Debata", serif;
-          font-size: 15px;
-          margin: 5px;
-        }
-        
+      @media (max-width: 768px) {
+        display: block;
       }
-      
-
-      .menu {
-        display: flex;
-        list-style: none;
-        gap: 20px;
-
-        li {
-          cursor: pointer;
-          border-bottom: 0px;
-          
-          &:hover {
-            text-decoration: none; 
-          }
-        }
-      }
-      .menu a {
-        color: white;          // Đổi màu chữ thành trắng
-        text-decoration: none; // Bỏ gạch chân
-        transition: color 0.3s ease;
-      
-        &:hover {
-          color: #8ad839; 
-          text-decoration: none;      // Màu xanh khi hover (bạn có thể đổi màu khác)
-        }
-      }
-      
     }
 
-    .header_right {
+    .menu {
       display: flex;
-      align-items: center;
+      list-style: none;
+      gap: 20px;
 
-      .icons {
-        display: flex;
-        gap: 20px;
-        list-style: none;
-        margin-right: 20px;
+      li {
+        cursor: pointer;
 
-        li {
-          cursor: pointer;
-          font-size: 18px;
+        a {
+          color: white;
+          text-decoration: none;
+          transition: color 0.3s ease;
+
           &:hover {
             color: #8ad839;
           }
         }
       }
 
-      .user {
-        display: flex;
-        align-items: center;
-        background: white;
-        border-radius: 20px;
-        padding: 5px 10px;
-        color: black;
-        cursor: pointer;
+      @media (max-width: 768px) {
+        display: none;
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+        margin-top: 10px;
 
-        .avatar {
-          width: 35px;  // Đảm bảo kích thước avatar phù hợp
-          height: 35px;
-          border-radius: 50%;
-          margin-right: 8px;
-          object-fit: cover;
-        }
-
-        .username {
-          font-weight: 500;
+        &.active {
+          display: flex;
         }
       }
     }
   }
+
+  .header_right {
+    display: flex;
+    align-items: center;
+    gap: 17px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    @media (max-width: 768px) {
+      gap: 132px;
+    }
+    .icons {
+      display: flex;
+      gap: 15px;
+      list-style: none;
+      position: relative;
+
+      li {
+        position: relative;
+        cursor: pointer;
+        font-size: 18px;
+        color: white;
+
+        &:hover {
+          color: #8ad839;
+        }
+
+        .tooltip-text {
+          visibility: hidden;
+          opacity: 0;
+          width: max-content;
+          background-color: #333;
+          color: #fff;
+          font-size: 11px;
+          text-align: center;
+          border-radius: 4px;
+          padding: 4px 8px;
+          position: absolute;
+          z-index: 1000;
+          bottom: -30px;
+          left: 50%;
+          transform: translateX(-50%);
+          transition: opacity 0.3s ease;
+          white-space: nowrap;
+
+          &::after {
+            content: "";
+            position: absolute;
+            top: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 5px;
+            border-style: solid;
+            border-color: transparent transparent #333 transparent;
+          }
+        }
+
+        &:hover .tooltip-text {
+          visibility: visible;
+          opacity: 1;
+        }
+      }
+    }
+
+    .user {
+      display: flex;
+      align-items: center;
+      background: white;
+      border-radius: 20px;
+      padding: 5px 10px;
+      color: black;
+      cursor: pointer;
+
+      .avatar {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        margin-right: 8px;
+        object-fit: cover;
+      }
+
+      .username {
+        font-weight: 500;
+        font-size: 14px;
+      }
+    }
+  }
+}

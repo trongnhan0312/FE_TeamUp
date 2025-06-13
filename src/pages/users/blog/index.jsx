@@ -34,7 +34,7 @@ const Blog = () => {
     <div className="blog-page">
       <div className="blog-container">
         <main className="main-content">
-          <article className="article">
+          <article className="article" style={{ background: "#ffffff" }}>
             <section className="racket-comparison">
               <div className="title-wrapper">
                 <h1 className="main-title">
@@ -109,11 +109,10 @@ const Blog = () => {
                   </div>
                 </div>
               </div>
+              <div className="similar-courts-wrapper">
+                <SimilarCourts />
+              </div>
             </section>
-
-            <div className="similar-courts-wrapper">
-              <SimilarCourts />
-            </div>
           </article>
         </main>
 

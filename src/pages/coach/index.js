@@ -122,7 +122,7 @@ const Coach = () => {
   const [coachMonthlyTotal, setCoachMonthlyTotal] = useState(null);
   const [weeklyBookedSlots, setWeeklyBookedSlots] = useState([]);
   const [coachBookingData, setCoachBookingData] = useState(null);
-  const [revenueInMonth, setRevenueInMonth] = useState(0)
+  const [revenueInMonth, setRevenueInMonth] = useState(0);
   const [page, setPage] = useState(1);
   const pageSize = 10;
 
@@ -170,26 +170,30 @@ const Coach = () => {
       } catch (error) {
         console.error("Lỗi khi lấy thông tin coach booking:", error);
       }
-    }
+    };
 
     fetchCoachTotalPriceStats();
     fetchPlayerList();
     fetchMonthlyTotal();
     fetchWeeklyBookedSlots();
     fetchTotalPriceInMonth();
-  }, [coachId])
+  }, [coachId]);
 
   useEffect(() => {
     const fetchCoachBooking = async () => {
       try {
-        const data = await coachBookingService.getAllByCoachId(coachId, page, pageSize);
+        const data = await coachBookingService.getAllByCoachId(
+          coachId,
+          page,
+          pageSize
+        );
         setCoachBookingData(data.resultObj);
       } catch (error) {
         console.error("Lỗi khi lấy thông tin coach booking:", error);
       }
-    }
+    };
     fetchCoachBooking();
-  }, [coachId, page])
+  }, [coachId, page]);
 
   function getTimeSlotsFromRange(range) {
     const [start, end] = range.split(" - ");
@@ -208,7 +212,9 @@ const Coach = () => {
 
   const allTimeSlots = Array.from(
     new Set(
-      weeklyBookedSlots.flatMap((item) => getTimeSlotsFromRange(item.bookedSlot))
+      weeklyBookedSlots.flatMap((item) =>
+        getTimeSlotsFromRange(item.bookedSlot)
+      )
     )
   ).sort();
 
@@ -245,7 +251,9 @@ const Coach = () => {
         </div>
         <div className="stat-card no-progress">
           <div className="stat-title">Tổng doanh thu</div>
-          <div className="stat-value">{coachStatsData?.totalRevenue}</div>
+          <div className="stat-value">
+            {coachStatsData?.totalRevenue.toLocaleString("vi-VN")} VNĐ
+          </div>
         </div>
       </div>
 
@@ -282,7 +290,9 @@ const Coach = () => {
                   strokeDasharray="65 100"
                 />
               </svg>
-              <div className="total-week-number">{coachMonthlyTotal?.totalBookings}</div>
+              <div className="total-week-number">
+                {coachMonthlyTotal?.totalBookings}
+              </div>
             </div>
           </div>
 
@@ -319,10 +329,15 @@ const Coach = () => {
                 {allTimeSlots.map((time, rowIndex) => {
                   const startHour = time;
                   const [h, m] = time.split(":").map(Number);
-                  const endHour = `${(h + 1).toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}`;
+                  const endHour = `${(h + 1).toString().padStart(2, "0")}:${m
+                    .toString()
+                    .padStart(2, "0")}`;
 
                   const rowCells = [
-                    <div key={`label-${time}`} className="cell time-label sticky-left">
+                    <div
+                      key={`label-${time}`}
+                      className="cell time-label sticky-left"
+                    >
                       {startHour} - {endHour}
                     </div>,
                   ];
@@ -339,7 +354,9 @@ const Coach = () => {
                     const key = `${dayNum}-${time}`;
 
                     if (matchedSchedule) {
-                      const slots = getTimeSlotsFromRange(matchedSchedule.bookedSlot);
+                      const slots = getTimeSlotsFromRange(
+                        matchedSchedule.bookedSlot
+                      );
                       const firstSlot = slots[0];
 
                       if (time === firstSlot) {
@@ -354,7 +371,9 @@ const Coach = () => {
                         );
                       } else {
                         // slot nằm giữa block => bỏ qua (đã merge rồi)
-                        rowCells.push(<div key={key} style={{ display: "none" }} />);
+                        rowCells.push(
+                          <div key={key} style={{ display: "none" }} />
+                        );
                       }
                     } else {
                       rowCells.push(
@@ -369,7 +388,6 @@ const Coach = () => {
 
                   return rowCells;
                 })}
-
               </div>
             </div>
           </div>
@@ -417,7 +435,9 @@ const Coach = () => {
             <tbody>
               {coachBookingData?.items
                 .filter((p) =>
-                  p?.player.fullName.toLowerCase().includes(search.toLowerCase())
+                  p?.player.fullName
+                    .toLowerCase()
+                    .includes(search.toLowerCase())
                 )
                 .map((item, i) => (
                   <tr key={i}>
@@ -445,7 +465,9 @@ const Coach = () => {
               >
                 &laquo;
               </button>
-              <span>{page} / {coachBookingData.totalPages}</span>
+              <span>
+                {page} / {coachBookingData.totalPages}
+              </span>
               <button
                 onClick={() => handlePageChange(page + 1)}
                 disabled={!coachBookingData.hasNextPage}
