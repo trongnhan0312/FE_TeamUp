@@ -198,8 +198,7 @@
       .header_left,
       .header_right {
         
-        align-items: flex-start;
-        gap: 132px;
+       display: grid;
       }
 
       .icons {
