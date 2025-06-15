@@ -58,7 +58,6 @@
     }
   }
 
-  // Loading styles
   .loading-container {
     display: flex;
     flex-direction: column;
@@ -88,7 +87,6 @@
     100% { transform: rotate(360deg); }
   }
 
-  // Bulk actions
   .bulk-actions {
     margin-bottom: 16px;
     padding: 12px;
@@ -130,7 +128,7 @@
       align-items: flex-start;
       border-bottom: 1px solid #ddd;
       padding-bottom: 16px;
-      transition: background-color 0.2s ease;
+      transition: all 0.3s ease;
 
       .checkbox-wrapper {
         margin-right: 12px;
@@ -174,7 +172,7 @@
 
         &.no-image {
           background: linear-gradient(45deg, #94d82d, #74b816);
-          
+
           &::after {
             content: attr(data-initial);
             font-size: 24px;
@@ -251,7 +249,6 @@
     }
   }
 
-  // Pagination styles
   .pagination {
     display: flex;
     justify-content: center;
@@ -327,23 +324,33 @@
   }
 }
 
-// Responsive design
+// Responsive Design
 @media (max-width: 768px) {
   .review-yard-container {
-    margin: 10px;
-    max-width: none;
+    margin: 12px;
+    padding: 0 8px;
+    max-width: 100%;
 
     .header {
       flex-direction: column;
-      gap: 12px;
       align-items: stretch;
+      gap: 12px;
 
       .search-and-filter {
+        flex-direction: row;
+        flex-wrap: wrap;
         justify-content: space-between;
+        gap: 8px;
 
         input[type="search"] {
           flex: 1;
-          max-width: 200px;
+          min-width: 160px;
+          max-width: 100%;
+        }
+
+        .filter-btn {
+          padding: 6px 10px;
+          font-size: 13px;
         }
       }
     }
@@ -352,15 +359,17 @@
       .review-item {
         flex-direction: column;
         gap: 12px;
+        padding: 12px 0;
 
         .checkbox-wrapper {
           align-self: flex-start;
-          margin: 0;
+          margin: 0 0 8px 0;
         }
 
         .avatar {
-          align-self: center;
-          margin: 0;
+          width: 50px;
+          height: 50px;
+          margin: 0 auto 8px auto;
         }
 
         .info {
@@ -369,7 +378,12 @@
           text-align: center;
 
           .name {
-            font-size: 16px;
+            font-size: clamp(14px, 4vw, 16px);
+            margin-bottom: 4px;
+          }
+
+          .date {
+            font-size: 12px;
           }
         }
 
@@ -377,11 +391,16 @@
           margin: 0;
           max-width: none;
           text-align: left;
+          font-size: 14px;
         }
 
         .rating-wrapper {
           align-self: center;
           align-items: center;
+
+          .rating-value {
+            font-size: 16px;
+          }
         }
       }
     }
@@ -389,6 +408,7 @@
     .pagination {
       flex-direction: column;
       gap: 12px;
+      margin-top: 24px;
 
       .pagination-info {
         order: -1;
@@ -402,19 +422,46 @@
     .header {
       .search-and-filter {
         flex-direction: column;
-        gap: 8px;
+        align-items: stretch;
+        gap: 6px;
 
         input[type="search"] {
-          max-width: none;
+          width: 100%;
+        }
+
+        .filter-btn {
+          width: 100%;
+          justify-content: center;
         }
       }
     }
 
     .bulk-actions {
-      padding: 8px;
+      padding: 10px;
+      font-size: 13px;
 
       .select-all {
         font-size: 13px;
+      }
+    }
+
+    .review-list {
+      .review-item {
+        padding-bottom: 16px;
+
+        .content {
+          font-size: 13px;
+        }
+
+        .rating-wrapper {
+          .rating-value {
+            font-size: 15px;
+          }
+
+          .stars {
+            font-size: 14px;
+          }
+        }
       }
     }
   }

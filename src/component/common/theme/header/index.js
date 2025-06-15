@@ -38,6 +38,7 @@ const Header = () => {
   const defaultAvatar = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
   return (
+    <div className="user-layout">
     <div className="header_top">
       <div className="container">
         <div className="header_wrapper">
@@ -114,6 +115,7 @@ const Header = () => {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 };

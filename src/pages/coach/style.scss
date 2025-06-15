@@ -5,6 +5,8 @@
   background: #f9f9fb;
   padding: 20px 24px;
   color: #222;
+  max-width: 1400px;
+  margin: 0 auto;
 
   .stats-top {
     display: flex;
@@ -71,7 +73,6 @@
 
         .total-week-circle {
           position: relative;
-
           height: 110px;
 
           svg.big-circle-svg {
@@ -128,11 +129,12 @@
       .schedule {
         background-color: white;
         .schedule-grid-wrapper {
-          overflow: visible;
+          overflow-x: auto;
           border: none;
           border-radius: 8px;
           background-color: white;
           padding: 8px;
+          -webkit-overflow-scrolling: touch;
         }
 
         .schedule-grid {
@@ -387,39 +389,89 @@
     }
   }
 }
+
+/* Enhanced Large Desktop */
+@media (min-width: 1400px) {
+  .coach-container {
+    padding: 24px 32px;
+    
+    .mid-section {
+      gap: 24px;
+      
+      .left-panel {
+        width: 300px;
+        padding: 35px;
+      }
+    }
+    
+    .bottom-section {
+      gap: 24px;
+    }
+  }
+}
+
+/* Improved Large Tablet */
+@media (max-width: 1200px) {
+  .coach-container {
+    .mid-section {
+      .left-panel {
+        width: 260px;
+        padding: 25px;
+      }
+      
+      .right-panel {
+        .schedule .schedule-grid {
+          min-width: 700px;
+        }
+      }
+    }
+  }
+}
+
+/* Enhanced Tablet */
 @media (max-width: 1024px) {
   .coach-container {
     padding: 16px;
 
     .stats-top {
-      flex-direction: column;
+      flex-wrap: wrap;
+      gap: 10px;
+      
+      .stat-card {
+        min-width: 200px;
+        
+        &.no-progress {
+          min-width: 240px;
+        }
+      }
     }
 
     .mid-section {
       flex-direction: column;
+      gap: 16px;
 
       .left-panel {
         width: 100%;
-        padding: 20px;
-        align-items: center;
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 25px;
 
         .total-week-container .total-week-number {
-          font-size: 36px;
+          font-size: 40px;
         }
 
         .rating-box .stars svg {
-          width: 24px;
-          height: 24px;
+          width: 26px;
+          height: 26px;
         }
       }
 
       .right-panel {
         width: 100%;
         padding: 16px;
-        overflow-x: auto;
 
         .schedule .schedule-grid {
-          min-width: unset;
+          min-width: 600px;
           grid-template-columns: 100px repeat(7, 1fr);
         }
       }
@@ -427,6 +479,7 @@
 
     .bottom-section {
       flex-direction: column;
+      gap: 16px;
 
       .payment-history {
         width: 100%;
@@ -439,12 +492,49 @@
   }
 }
 
+/* Medium Tablet */
+@media (max-width: 768px) {
+  .coach-container {
+    .stats-top {
+      .stat-card {
+        min-width: 150px;
+        
+        &.no-progress {
+          min-width: 180px;
+        }
+      }
+    }
+    
+    .mid-section {
+      .right-panel {
+        .schedule .schedule-grid {
+          min-width: 550px;
+        }
+      }
+    }
+    
+    .bottom-section {
+      .payment-history {
+        .payment-header {
+          flex-wrap: wrap;
+          gap: 10px;
+          
+          .search-input {
+            min-width: 200px;
+          }
+        }
+      }
+    }
+  }
+}
+
+/* ORIGINAL MOBILE STYLES - UNCHANGED */
 @media (max-width: 600px) {
   .coach-container {
     padding: 12px;
 
     .stats-top {
-      gap: 8px;
+      gap: 22px;
 
       .stat-card {
         padding: 10px 14px;
@@ -489,7 +579,7 @@
 
     .payment-history {
       padding: 16px;
-
+      width: auto;
       .payment-header {
         flex-direction: column;
         align-items: flex-start;
@@ -513,10 +603,14 @@
         }
       }
     }
-
+    .payment-history-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
     .students-list {
       padding: 16px;
-
+      width: -webkit-fill-available;
       .student-item {
         font-size: 14px;
         img {
