@@ -1108,7 +1108,7 @@
       .banner_image {
         max-width: 100%; 
         width: 583px;      // Hình ảnh chiếm toàn bộ chiều rộng của cột
-        height: auto;          // Giữ tỷ lệ cho hình ảnh
+        height: 350px;          // Giữ tỷ lệ cho hình ảnh
         border-radius: 8px;    // Thêm bo góc nếu cần
       }
     }
@@ -2205,7 +2205,7 @@
       .matches_container {
         .match_card {
           max-width: 250px;
-          height: 250px;
+          height: 296px;
           
           .match_image {
             height: 130px;
