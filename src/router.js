@@ -13,7 +13,8 @@ import CoachLayout from "./component/common/theme/CoachLayout";
 import LoginPage from "./pages/auth/LoginPage";
 import SignupPage from "./pages/auth/SignUpComponent/SignupPage";
 import OtpVerificationPage from "./pages/EmailComponentUtil/OtpVerificationPage";
-
+import ForgotPasswordPage from "./pages/auth/ForgetPassword/ForgotPassword";
+import ResetPassword from "./pages/auth/ForgetPassword/ResetPassword/ResetPassword";
 // ======================= SURVEY =======================
 import Survey from "./pages/auth/SignUpComponent/Survey/Survey";
 import Question1 from "./pages/auth/SignUpComponent/Survey/Question1/question1";
@@ -291,7 +292,38 @@ const RouterCustom = () => {
           )
         }
       />
-
+      <Route
+        path="/forgot-password"
+        element={
+          isLoggedIn ? (
+            isOwner ? (
+              <Navigate to="/owner" replace />
+            ) : isCoach ? (
+              <Navigate to="/coach" replace />
+            ) : (
+              <Navigate to="/home" replace />
+            )
+          ) : (
+            <ForgotPasswordPage /> // <-- sửa chỗ này
+          )
+        }
+      />
+      <Route
+        path="/reset-password"
+        element={
+          isLoggedIn ? (
+            isOwner ? (
+              <Navigate to="/owner" replace />
+            ) : isCoach ? (
+              <Navigate to="/coach" replace />
+            ) : (
+              <Navigate to="/home" replace />
+            )
+          ) : (
+            <ResetPassword /> // <-- sửa chỗ này
+          )
+        }
+      />
       <Route
         path="/*"
         element={

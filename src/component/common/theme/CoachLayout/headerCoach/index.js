@@ -6,10 +6,7 @@ import "./style.scss";
 import {
   BsClipboardData,
   BsChatHeart,
-  BsFillBellFill,
-  BsGear,
   BsBoxArrowRight,
-  BsSearch,
   BsChat,
   BsHouse,
 } from "react-icons/bs";
@@ -61,7 +58,17 @@ const HeaderCoach = () => {
             </div>
 
             <div className="header_right">
-              <ul className="icons">
+              <ul
+                className="icons"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "20px",
+                  margin: 0,
+                  padding: 0,
+                  listStyle: "none",
+                }}
+              >
                 <li>
                   <Link to="/coach" className="icon-link">
                     <BsHouse />
@@ -86,12 +93,42 @@ const HeaderCoach = () => {
                     <div className="tooltip-text">Lịch Sử</div>
                   </Link>
                 </li>
-                <li onClick={handleLogout} title="Logout">
+              </ul>
+              {/* Dấu gạch đứng phân cách */}
+              <div
+                style={{
+                  width: "1px",
+                  height: "30px",
+                  backgroundColor: "#ccc",
+                  margin: "0 10px",
+                }}
+              ></div>
+              <ul
+                className="icons"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "20px",
+                  margin: 0,
+                  padding: 0,
+                  listStyle: "none",
+                }}
+              >
+                <li
+                  onClick={handleLogout}
+                  title="Logout"
+                  style={{ cursor: "pointer" }}
+                >
                   <BsBoxArrowRight />
                 </li>
               </ul>
 
-              <div className="user" onClick={() => navigate("/coachProfile")}>
+              {/* Avatar và tên người dùng */}
+              <div
+                className="user"
+                onClick={() => navigate("/coachProfile")}
+                style={{ marginLeft: "20px", cursor: "pointer" }}
+              >
                 <img
                   src={user?.avatarUrl || user?.avatar || defaultAvatar}
                   alt="Avatar"

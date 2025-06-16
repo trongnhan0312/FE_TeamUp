@@ -96,12 +96,10 @@ const HeaderOwner = () => {
                   }}
                 >
                   <li>
-                    <li>
-                      <Link to="/owner/" className="icon-link">
-                        <BsGraphUpArrow />
-                        <div className="tooltip-text">Thống kê tăng trưởng</div>
-                      </Link>
-                    </li>
+                    <Link to="/owner" className="icon-link">
+                      <div className="tooltip-text">Thống Kê Tăng Trưởng</div>
+                      <BsGraphUpArrow />
+                    </Link>
                   </li>
                   <li>
                     <Link to="/owner/pitchhistory" className="icon-link">
