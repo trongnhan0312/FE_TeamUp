@@ -61,11 +61,13 @@ const authService = {
     }
   },
 
-  resetPassword: async (token, newPassword) => {
+  resetPassword: async ({ email, code, password, confirmPassword }) => {
     try {
       const response = await axiosInstance.post(ENDPOINTS.AUTH.RESET_PASSWORD, {
-        token,
-        password: newPassword,
+        email,
+        code,
+        password,
+        confirmPassword,
       });
       return response.data;
     } catch (error) {

@@ -29,6 +29,8 @@ export const ROUTER = {
   AUTH: {
     LOGIN: "/login",
     REGISTER: "/register",
+    FORGET_PASSWORD: "/forgot-password",
+    RESET_PASSWORD: "/reset-password/",
   },
   OTP_VERIFICATION: "/verify-otp",
   OWNER: {

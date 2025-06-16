@@ -107,7 +107,7 @@
         list-style: none;
 
         li {
-          font-size: 20px;
+          font-size: 24px;
           color: white;
           cursor: pointer;
           transition: transform 0.2s, color 0.3s;
@@ -152,6 +152,7 @@
       }
 
       .tooltip-text {
+        
         visibility: hidden;
         opacity: 0;
         position: absolute;
@@ -179,6 +180,7 @@
       &:hover .tooltip-text {
         visibility: visible;
         opacity: 1;
+       font-size: 14px;
       }
     }
   }

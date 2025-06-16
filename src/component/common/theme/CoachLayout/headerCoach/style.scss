@@ -22,7 +22,7 @@
     .header_right {
       display: flex;
       align-items: center;
-      gap: 20px;
+      gap: 5px;
       flex-wrap: nowrap; // Ngăn xuống dòng
     }
 
@@ -55,7 +55,7 @@
         li {
           cursor: pointer;
           color: white;
-
+          
           &:hover {
             text-decoration: none;
           }
@@ -81,11 +81,11 @@
         list-style: none;
         margin: 0;
         padding: 0;
-
+        
         li {
           cursor: pointer;
           font-size: 18px;
-
+          font-size: 24px;
           &:hover {
             color: #8ad839;
           }
@@ -183,6 +183,7 @@
       &:hover .tooltip-text {
         visibility: visible;
         opacity: 1;
+        font-size: 14px;
       }
     }
   }
