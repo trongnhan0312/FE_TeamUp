@@ -5,7 +5,7 @@ const BASE_URL = "https://miraculous-clarity-production.up.railway.app";
 
 export const API_CONFIG = {
   BASE_URL,
-  TIMEOUT: 60000, // 30 giây timeout cho API calls
+  TIMEOUT: 30000, // 30 giây timeout cho API calls
 };
 
 // Tạo full URL với path đã cho
