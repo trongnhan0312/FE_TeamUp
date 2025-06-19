@@ -14,6 +14,17 @@ const courtService = {
       throw error.response ? error.response.data : error.message;
     }
   },
+  countViews: async (ownerId) => {
+    try {
+      // Sử dụng phương thức POST với endpoint đúng
+      const response = await axiosInstance.post(
+        `${ENDPOINTS.COURT_BOOKING.COUNT_VIEW}/${ownerId}`
+      );
+      return response.data;
+    } catch (error) {
+      throw error.response ? error.response.data : error.message;
+    }
+  },
 
   getFreeHours: async (courtId, startDate) => {
     try {
@@ -82,12 +93,16 @@ const courtService = {
 
       formData.append("PaymentMethod", bookingData.paymentMethod || "Pending");
 
+      // ✅ Thêm dòng này để gửi ghi chú
+      formData.append("Note", bookingData.note || "");
+
       console.log("Sending booking formData with fields:", {
         CourtId: courtId,
         UserId: userId,
         StartTime: bookingData.startTime,
         EndTime: bookingData.endTime,
         PaymentMethod: bookingData.paymentMethod || "Pending",
+        Note: bookingData.note || "",
       });
 
       const response = await axiosInstance.post(
@@ -101,6 +116,7 @@ const courtService = {
       throw error.response ? error.response.data : error.message;
     }
   },
+
   createCourt: async (formData) => {
     try {
       const response = await axiosInstance.post(

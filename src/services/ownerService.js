@@ -16,6 +16,23 @@ export const fetchOwnerStats = async (ownerId) => {
     throw error;
   }
 };
+// Lấy người chơi đặt sân nhiều nhất theo ownerId
+export const fetchTopUserByOwner = async (ownerId) => {
+  try {
+    const url = getApiUrl(`${ENDPOINTS.OWNER.TOP_USER}/${ownerId}`);
+    console.log("Calling Top User API: ", url);
+    const response = await axiosInstance.get(url);
+
+    if (response.data.isSuccessed) {
+      return response.data.resultObj; // object gồm fullName, email, bookingCount, ...
+    }
+
+    return null;
+  } catch (error) {
+    console.error("Lỗi khi lấy người chơi đặt nhiều nhất:", error);
+    throw error;
+  }
+};
 
 // Lấy danh sách slot đã đặt trong tuần cho courtId
 export const fetchWeeklyBookedSlots = async (courtId) => {

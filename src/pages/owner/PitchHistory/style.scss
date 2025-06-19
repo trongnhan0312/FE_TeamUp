@@ -212,5 +212,21 @@
         user-select: none;
       }
     }
+    .action-button.detail-btn {
+      background-color: #228be6;
+      color: #fff;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    
+      &:hover {
+        background-color: #1c7ed6;
+      }
+    }
+    
   }
   

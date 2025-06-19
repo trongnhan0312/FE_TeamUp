@@ -10,6 +10,7 @@ import VoucherSelector from "../../voucher/VoucherSelector";
 const BookingConfirmation = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [note, setNote] = useState(""); // phần ghi chú người dùng nhập
 
   const [courtData, setCourtData] = useState(null);
   const [coachData, setCoachData] = useState(null);
@@ -132,6 +133,7 @@ const BookingConfirmation = () => {
         totalHours: totalDuration,
         voucherId: selectedVoucher?.id || null,
         isMultiBooking,
+        note,
       };
 
       navigate("/booking-summary", {
@@ -139,6 +141,7 @@ const BookingConfirmation = () => {
           bookingDetails: bookingDetailsToSend,
           totalPriceFromConfirmation: finalTotalPrice, // TRUYỀN TỔNG TIỀN
           selectedVoucherFromConfirmation: selectedVoucher, // TRUYỀN VOUCHER ĐÃ CHỌN
+          noteFromConfirmation: note,
         },
       });
     } else {
@@ -155,13 +158,21 @@ const BookingConfirmation = () => {
         totalHours: totalDuration,
         voucherId: selectedVoucher?.id || null,
         isMultiBooking,
+        note,
       };
+      console.log("Dữ liệu gửi đi (multi):", {
+        bookingDetails: bookingDetailsToSend,
+        totalPrice: finalTotalPrice,
+        voucher: selectedVoucher,
+        note,
+      });
 
       navigate("/booking-summary", {
         state: {
           bookingDetails: bookingDetailsToSend,
           totalPriceFromConfirmation: finalTotalPrice, // TRUYỀN TỔNG TIỀN
           selectedVoucherFromConfirmation: selectedVoucher, // TRUYỀN VOUCHER ĐÃ CHỌN
+          noteFromConfirmation: note, // TRUYỀN GHI CHÚ
         },
       });
     }
@@ -398,6 +409,16 @@ const BookingConfirmation = () => {
                 </div>
               </div>
             </div>
+          </div>
+          <div className="note-section">
+            <h3>Ghi chú thêm</h3>
+            <textarea
+              className="note-input"
+              rows="3"
+              placeholder="Nhập ghi chú nếu có (VD: yêu cầu sân có mái che...)"
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+            />
           </div>
         </div>
       </div>

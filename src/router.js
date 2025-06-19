@@ -30,7 +30,7 @@ import CourtHistory from "./pages/users/courts/court_history/CourtHistory";
 import CourtSelector from "./pages/users/courts/booking_court/CourtSelector";
 import BookingConfirmation from "./pages/users/courts/booking_court/BookingConfirmation";
 import BookingSummary from "./pages/users/courts/booking_court/BookingSummary";
-
+import BookingDetail from "./pages/users/courts/court_history/booking_detail/BookingDetail";
 import CoachListing from "./pages/users/coach/CoachListing";
 import CoachProfile from "./pages/users/coach/CoachProfile";
 import CoachBookingHistory from "./pages/users/coach/CoachBookingHistory";
@@ -52,7 +52,6 @@ import PitchHistory from "./pages/owner/PitchHistory/PitchHistory";
 import BOOKINGMANAGEMENT from "./pages/owner/BookingManagement/BookingManagement";
 import ReviewOwner from "./pages/owner/ReviewOwner/ReviewOwner";
 import OwnerPackage from "./pages/owner/OwnerPackage/OwnerPackage";
-
 import SportsComplexes from "./pages/owner/SportsComplexes/SportsComplexes";
 import SportsComplexDetail from "./pages/owner/SportsComplexes/SportsComplexesDetail/SportsComplexesDetail";
 import CreateSportsComplexes from "./pages/owner/SportsComplexes/CreateSportsComplexes/CreateSportsComplexes";
@@ -133,6 +132,10 @@ const RouterCustom = () => {
         <Route path={ROUTER.USER.ABOUT_US} element={<AboutUs />} />
         <Route path={ROUTER.USER.SUPPORT_CENTER} element={<SupportCenter />} />
         <Route path={ROUTER.USER.PRIVACY_POLICY} element={<PrivacyPolicy />} />
+        <Route
+          path={ROUTER.OWNER.COURT_BOOKING_DETAIL}
+          element={<BookingDetail />}
+        />
       </Routes>
     </OwnerLayout>
   );
@@ -232,6 +235,10 @@ const RouterCustom = () => {
         />
         <Route path={ROUTER.USER.ROOM_CREATE} element={<CreateRoomForm />} />
         <Route path={ROUTER.USER.ROOM_DETAIL} element={<RoomDetail />} />
+        <Route
+          path={ROUTER.USER.COURT_BOOKING_DETAIL}
+          element={<BookingDetail />}
+        />
         {/* <Route path="*" element={<Navigate to="/home" replace />} /> */}
       </Routes>
     </MasterLayout>

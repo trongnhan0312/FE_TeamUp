@@ -3,30 +3,21 @@ import { ENDPOINTS } from "../config/apiConfig";
 import axiosInstance from "../config/axiosConfig";
 
 const coachBookingService = {
-  create: async (
-    coachId,
-    playerId,
-    courtId,
-    slots,
-    paymentMethod,
-    voucherId = null
-  ) => {
+  create: async (bookingRequest) => {
     try {
-      const requestBody = {
-        coachId,
-        playerId,
-        courtId,
-        slots,
-        paymentMethod,
-      };
-
-      if (voucherId != null) {
-        requestBody.voucherId = voucherId;
-      }
-
       const response = await axiosInstance.post(
         ENDPOINTS.COACH_BOOKING.CREATE_COACH_BOOKING,
-        requestBody
+        bookingRequest
+      );
+      return response.data;
+    } catch (error) {
+      throw error.response ? error.response.data : error.message;
+    }
+  },
+  getTopUsers: async (coachId) => {
+    try {
+      const response = await axiosInstance.get(
+        `${ENDPOINTS.COACH_BOOKING.GET_TOP_USER}/${coachId}`
       );
 
       return response.data;
@@ -34,7 +25,6 @@ const coachBookingService = {
       throw error.response ? error.response.data : error.message;
     }
   },
-
   getCoachTotalPriceStats: async (coachId) => {
     try {
       const response = await axiosInstance.get(

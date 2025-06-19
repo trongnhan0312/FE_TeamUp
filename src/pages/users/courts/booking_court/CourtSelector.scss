@@ -61,19 +61,38 @@
         margin-bottom: 0.75rem;
       }
 
-      .book-button {
-        background-color: #4f46e5;
-        color: white;
-        padding: 0.6rem;
-        border: none;
-        border-radius: 8px;
-        font-size: 0.9rem;
-        font-weight: 500;
-        cursor: pointer;
-        transition: background-color 0.2s ease;
+      .court-actions {
+        display: flex;
+        gap: 10px;
 
-        &:hover {
-          background-color: #4338ca;
+        .book-button,
+        .detail-button {
+          flex: 1;
+          padding: 0.6rem;
+          border: none;
+          border-radius: 8px;
+          font-size: 0.9rem;
+          font-weight: 500;
+          cursor: pointer;
+          transition: background-color 0.2s ease;
+        }
+
+        .book-button {
+          background-color: #8ad839;
+          color: white;
+
+          &:hover {
+            background-color: #bae255b1;
+          }
+        }
+
+        .detail-button {
+          background-color: #e5e7eb;
+          color: #374151;
+
+          &:hover {
+            background-color: #d1d5db;
+          }
         }
       }
     }

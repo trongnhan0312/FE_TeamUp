@@ -93,6 +93,7 @@ export const ENDPOINTS = {
     TOTAL_PRICE: "courtbooking/total-price/owner",
     CREATE_SPORTS_COMPLEX: "sportscomplex/create",
     CREATE_COURT: "court/create",
+    TOP_USER: "courtbooking/top-user",
   },
   PAYMENT: {
     CREATE_PAYMENT_VNPay: "payment/create-vnpay-url",
@@ -112,6 +113,8 @@ export const ENDPOINTS = {
     GET_TOTAL_PRICE: "/coachbooking/total-price/coach",
     UPDATE_STATUS: "/coachbooking/status",
     GET_LATEST_BOOKING_ID: "/coachbooking/latest-booking-id",
+    COUNT_VIEW: "/courtbooking/view",
+    GET_TOP_USER: "/coachbooking/top-user",
   },
 
   AI_WEBSITE: {
@@ -121,6 +124,8 @@ export const ENDPOINTS = {
     GET_ALL: "/courtbooking/all",
     UPDATE_STATUS: "/courtbooking/status",
     LATEST_BOOKING_ID: "/courtbooking/latest-booking-id",
+    COUNT_VIEW: "/courtbooking/view",
+    GET_BY_ID: "/courtbooking",
   },
 
   // Các endpoints khác

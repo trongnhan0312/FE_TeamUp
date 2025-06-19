@@ -466,6 +466,34 @@
         }
       }
     }
+    .note-section {
+      margin-top: 1.5rem;
+    
+      h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #374151;
+      }
+    
+      .note-input {
+        width: 100%;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        padding: 0.75rem;
+        font-size: 0.9rem;
+        resize: vertical;
+        min-height: 80px;
+        color: #111827;
+    
+        &:focus {
+          outline: none;
+          border-color: #6366f1;
+          box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+        }
+      }
+    }
+    
   }
   // Booking actions
   .booking-actions {

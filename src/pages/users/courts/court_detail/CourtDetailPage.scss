@@ -1,10 +1,11 @@
 @import '../../../../assets/styles/fonts';
 
+
 .court-detail-container {
   min-height: 100vh;
   background-color: #f8f9fa;
 }
-.court-detail-page {
+.court-detail-page-user {
   padding: 20px 0 50px;
   background-color: #f8f9fa;
   
@@ -27,10 +28,11 @@
   }
   
   .court-title {
-    @include heading-2;
+    font-size: 45px;
     margin: 0;
     margin-right: 15px;
     color: #333;
+   
   }
   
   .rating-container {
@@ -53,7 +55,7 @@
     display: flex;
     align-items: center;
     margin-bottom: 15px;
-    font-size: 16px;
+    font-size: 20px;
     color: #555;
     
     .icon-marker {
@@ -128,7 +130,7 @@
   gap: 10px;
     
     .main-image {
-    max-height: 564px;
+    max-height: 487px;
     width: 100%;
     flex: 0 0 60%; // Chiếm 60% chiều rộng
           overflow: hidden;
@@ -153,7 +155,7 @@
       }
       
       .gallery-item {
-        max-height: 277px;
+        max-height: 239px;
         overflow: hidden;
         border-radius: 8px;
         
@@ -228,7 +230,7 @@
         padding: 18px 56px;
         border: none;
         border-radius: 30px;
-        font-size: 16px;
+        font-size: 20px;
         font-weight: 600;
         cursor: pointer;
         transition: background-color 0.2s;
@@ -280,13 +282,13 @@
       
       ul {
         padding-left: 20px;
-        
+        list-style-type:none;
         li {
           margin-bottom: 8px;
           position: relative;
           
           &::before {
-            content: "•";
+            
             position: absolute;
             left: -15px;
             color: #a4d036;
