@@ -17,8 +17,9 @@ const BookingSummary = () => {
     bookingDetails,
     totalPriceFromConfirmation,
     selectedVoucherFromConfirmation,
+    noteFromConfirmation,
   } = location.state || {};
-
+  console.log("note", noteFromConfirmation);
   const [courtData, setCourtData] = useState(null);
   const [coachData, setCoachData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -230,6 +231,7 @@ const BookingSummary = () => {
           courtId: Number(courtId),
           slots: formattedSlots,
           paymentMethod: "Pending", // Sẽ được xử lý bởi VNPay sau
+          note: noteFromConfirmation || "",
         };
 
         if (voucherId && voucherId > 0) {
@@ -243,13 +245,9 @@ const BookingSummary = () => {
 
         // Gọi hàm service với các tham số riêng lẻ, không phải object
         const coachBookingResponse = await coachBookingService.create(
-          coachBookingRequest.coachId,
-          coachBookingRequest.playerId,
-          coachBookingRequest.courtId,
-          coachBookingRequest.slots,
-          coachBookingRequest.paymentMethod,
-          coachBookingRequest.voucherId // voucherId có thể là undefined/null nếu không có
+          coachBookingRequest
         );
+
 
         if (coachBookingResponse?.isSuccessed) {
           console.log("Coach booking successful, getting latest booking ID...");
@@ -271,11 +269,18 @@ const BookingSummary = () => {
           });
           console.log("VNPay URL created:", vnpayUrl);
           if (vnpayUrl) {
+            console.log("VNPay URL:", vnpayUrl);
+            console.log("Thông tin gửi đi (Coach):", {
+              coachBookingRequest,
+              latestCoachBookingId,
+              redirectUrl: vnpayUrl,
+            });
+
             Swal.fire({
               title: "Thành công!",
               text: "Đặt huấn luyện viên thành công. Chuyển đến trang thanh toán.",
               icon: "success",
-              timer: 2000,
+              timer: 2000000000,
               showConfirmButton: false,
             }).then(() => {
               window.location.href = vnpayUrl;
@@ -314,6 +319,7 @@ const BookingSummary = () => {
           startTime: formatDateForApi(startTime),
           endTime: formatDateForApi(endTime),
           paymentMethod: "Pending", // Sẽ được xử lý bởi VNPay sau
+          note: noteFromConfirmation || "",
         };
 
         if (voucherId && voucherId > 0) {
@@ -350,6 +356,13 @@ const BookingSummary = () => {
           });
 
           if (vnpayUrl) {
+            console.log("VNPay URL:", vnpayUrl);
+            console.log("Thông tin gửi đi (Court):", {
+              courtBookingRequest,
+              latestCourtBookingId,
+              redirectUrl: vnpayUrl,
+            });
+
             Swal.fire({
               title: "Thành công!",
               text: "Đặt sân thành công. Chuyển đến trang thanh toán.",

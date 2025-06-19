@@ -1,12 +1,12 @@
 import { memo, useState, useEffect } from "react";
 import "./CourtHistory.scss";
 import courtBookingService from "../../../../services/courtBookingService";
-import ratingService from "../../../../services/ratingService"; // Import rating service
+import ratingService from "../../../../services/ratingService";
 import { getUserInfo } from "../../../../utils/auth";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { statusColors } from "../../../../data";
-
+import { ROUTER } from "../../../../utils/router";
 const CourtHistory = () => {
   const [filter, setFilter] = useState("Mới nhất");
   const [searchTerm, setSearchTerm] = useState("");
@@ -14,7 +14,7 @@ const CourtHistory = () => {
   const [bookingHistory, setBookingHistory] = useState(null);
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [userRatings, setUserRatings] = useState({}); // Store user's ratings for courts
+  const [userRatings, setUserRatings] = useState({});
   const pageSize = 10;
 
   const navigate = useNavigate();
@@ -29,7 +29,6 @@ const CourtHistory = () => {
     setBookingHistory(result);
     setData(result.items);
 
-    // Fetch user's ratings for all courts in the booking history
     if (result?.items) {
       await fetchUserRatings(result.items);
     }
@@ -38,15 +37,19 @@ const CourtHistory = () => {
   const fetchUserRatings = async (bookingItems) => {
     const userId = getUserInfo().id;
     const ratings = {};
-    
-    // Get unique owner IDs from completed bookings
-    const ownerIds = [...new Set(
-      bookingItems
-        .filter(item => item.status === "Completed" && item.court?.sportsComplexModelView?.owner?.id)
-        .map(item => item.court.sportsComplexModelView.owner.id)
-    )];
 
-    // Fetch ratings for each owner
+    const ownerIds = [
+      ...new Set(
+        bookingItems
+          .filter(
+            (item) =>
+              item.status === "Completed" &&
+              item.court?.sportsComplexModelView?.owner?.id
+          )
+          .map((item) => item.court.sportsComplexModelView.owner.id)
+      ),
+    ];
+
     await Promise.all(
       ownerIds.map(async (ownerId) => {
         try {
@@ -56,13 +59,12 @@ const CourtHistory = () => {
             ratings[ownerId] = {
               ratingValue: rating.ratingValue,
               comment: rating.comment,
-              hasRated: rating.ratingValue > 0
+              hasRated: rating.ratingValue > 0,
             };
           } else {
             ratings[ownerId] = { hasRated: false };
           }
-        } catch (error) {
-          console.error(`Error fetching rating for owner ${ownerId}:`, error);
+        } catch {
           ratings[ownerId] = { hasRated: false };
         }
       })
@@ -73,30 +75,15 @@ const CourtHistory = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [currentPage]);
 
   const handleFilterChange = (e) => {
     setFilter(e.target.value);
   };
 
-  const filteredData = data
-    .filter((item) => {
-      if (filter === "Xác nhận") {
-        return ["Confirmed", "Completed"].includes(item.status);
-      }
-      return true;
-    })
-    .filter((item) => {
-      if (!searchTerm) return true;
-      const lowerSearch = searchTerm.toLowerCase();
-      return (
-        item.user?.fullName?.toLowerCase().includes(lowerSearch) ||
-        item.court?.name?.toLowerCase().includes(lowerSearch)
-      );
-    });    
-
   const formatDate = (datetimeStr) =>
     new Date(datetimeStr).toLocaleDateString("vi-VN");
+
   const formatTime = (start, end) => {
     const s = new Date(start).toLocaleTimeString("vi-VN", {
       hour: "2-digit",
@@ -109,21 +96,15 @@ const CourtHistory = () => {
     return `${s} - ${e}`;
   };
 
-  // Kiểm tra xem thời gian bắt đầu có lớn hơn thời gian hiện tại không
   const isStartTimeInFuture = (startTime) => {
     const now = new Date();
-    const bookingStartTime = new Date(startTime);
-    return bookingStartTime > now;
+    return new Date(startTime) > now;
   };
 
-  // Chưa handle cho nút tạo phòng
   const handleCreateRoom = (id, startTime) => {
     navigate("/room-create", {
-      state: {
-        courtId: id,
-        scheduledTime: startTime
-      }
-    })
+      state: { courtId: id, scheduledTime: startTime },
+    });
   };
 
   const handleComplete = async (id) => {
@@ -139,9 +120,9 @@ const CourtHistory = () => {
     if (result.isConfirmed) {
       try {
         await courtBookingService.updateStatus(id, "Completed");
-        Swal.fire("Thành công", "Đơn đã được đánh dấu hoàn thành", "success");
+        Swal.fire("Thành công", "Đơn đã hoàn thành", "success");
         await fetchData();
-      } catch (error) {
+      } catch {
         Swal.fire("Lỗi", "Không thể cập nhật trạng thái", "error");
       }
     }
@@ -162,112 +143,14 @@ const CourtHistory = () => {
         await courtBookingService.updateStatus(id, "CancelledByUser");
         Swal.fire("Đã hủy", "Đơn đặt sân đã được hủy", "success");
         await fetchData();
-      } catch (error) {
+      } catch {
         Swal.fire("Lỗi", "Không thể hủy đơn", "error");
       }
     }
   };
 
-  const handleRating = async (ownerId, ownerName) => {
-    const { value: formValues } = await Swal.fire({
-      title: `Đánh giá chủ sân ${ownerName}`,
-      html: `
-        <div style="text-align: left; margin-bottom: 15px;">
-          <label style="display: block; margin-bottom: 5px; font-weight: bold;">Đánh giá:</label>
-          <div style="display: flex; justify-content: center; margin-bottom: 15px;">
-            <div class="rating-stars">
-              ${[1, 2, 3, 4, 5].map(star => 
-                `<span class="star" data-rating="${star}" style="font-size: 24px; color: #ddd; cursor: pointer; margin: 0 2px;">★</span>`
-              ).join('')}
-            </div>
-          </div>
-          <input type="hidden" id="rating-value" value="0">
-        </div>
-        <div style="text-align: left;">
-          <label for="comment" style="display: block; margin-bottom: 5px; font-weight: bold;">Nhận xét:</label>
-          <textarea 
-            id="comment" 
-            placeholder="Chia sẻ trải nghiệm của bạn với chủ sân này..."
-            style="width: 100%; height: 100px; padding: 8px; border: 1px solid #ddd; border-radius: 4px; resize: vertical;"
-          ></textarea>
-        </div>
-      `,
-      showCancelButton: true,
-      confirmButtonText: "Gửi đánh giá",
-      cancelButtonText: "Hủy",
-      preConfirm: () => {
-        const rating = document.getElementById('rating-value').value;
-        const comment = document.getElementById('comment').value.trim();
-        
-        if (rating === "0") {
-          Swal.showValidationMessage('Vui lòng chọn số sao đánh giá');
-          return false;
-        }
-        
-        return {
-          rating: parseInt(rating),
-          comment: comment
-        };
-      },
-      didOpen: () => {
-        const stars = document.querySelectorAll('.star');
-        const ratingInput = document.getElementById('rating-value');
-        
-        stars.forEach((star, index) => {
-          star.addEventListener('click', () => {
-            const rating = index + 1;
-            ratingInput.value = rating;
-            
-            // Update star colors
-            stars.forEach((s, i) => {
-              if (i < rating) {
-                s.style.color = '#ffc107';
-              } else {
-                s.style.color = '#ddd';
-              }
-            });
-          });
-          
-          // Hover effect
-          star.addEventListener('mouseenter', () => {
-            stars.forEach((s, i) => {
-              if (i <= index) {
-                s.style.color = '#ffc107';
-              } else {
-                s.style.color = '#ddd';
-              }
-            });
-          });
-        });
-        
-        document.querySelector('.rating-stars').addEventListener('mouseleave', () => {
-          const currentRating = parseInt(ratingInput.value);
-          stars.forEach((s, i) => {
-            if (i < currentRating) {
-              s.style.color = '#ffc107';
-            } else {
-              s.style.color = '#ddd';
-            }
-          });
-        });
-      }
-    });
-
-    if (formValues) {
-      try {
-        await ratingService.create(getUserInfo().id, ownerId, formValues.rating, formValues.comment);
-        
-        Swal.fire({
-          title: "Cảm ơn!",
-          text: "Đánh giá của bạn đã được gửi thành công",
-          icon: "success"
-        });
-        
-        await fetchData(); // This will also refresh the ratings
-      } catch (error) {
-        Swal.fire("Lỗi", "Không thể gửi đánh giá", "error");
-      }
-    }
+  const handleViewDetail = (id) => {
+    navigate(ROUTER.USER.COURT_BOOKING_DETAIL.replace(":bookingId", id));
   };
 
   const renderRatingSection = (item) => {
@@ -275,50 +158,85 @@ const CourtHistory = () => {
     const ownerName = item.court?.sportsComplexModelView?.owner?.fullName;
     const userRating = userRatings[ownerId];
 
-    if (!ownerId) {
-      return null; // Không hiển thị gì nếu không có thông tin chủ sân
-    }
+    if (!ownerId) return null;
 
     if (userRating?.hasRated) {
-      // Show existing rating
       return (
-        <div className="existing-rating">
-          <div className="rating-display">
-            <span className="rating-stars">
-              {[1, 2, 3, 4, 5].map(star => (
-                <span 
-                  key={star}
-                  style={{ 
-                    color: star <= userRating.ratingValue ? '#ffc107' : '#ddd',
-                    fontSize: '16px'
-                  }}
-                >
-                  ★
-                </span>
-              ))}
-            </span>
-            <span className="rating-value">({userRating.ratingValue}/5)</span>
-          </div>
+        <div>
+          <span style={{ color: "#ffc107" }}>
+            {[1, 2, 3, 4, 5].map((star) => (
+              <span key={star}>
+                {star <= userRating.ratingValue ? "★" : "☆"}
+              </span>
+            ))}
+          </span>
           {userRating.comment && (
-            <div className="rating-comment" style={{ fontSize: '12px', color: '#666', marginTop: '4px' }}>
+            <div style={{ fontSize: "12px", color: "#666" }}>
               "{userRating.comment}"
             </div>
           )}
         </div>
       );
-    } else {
-      // Show rating button
-      return (
-        <button
-          className="action-button rating-btn"
-          onClick={() => handleRating(ownerId, ownerName)}
-          aria-label={`Đánh giá chủ sân ${ownerName}`}
-        >
-          Đánh giá chủ sân
-        </button>
-      );
+    }
+
+    return (
+      <button
+        className="action-button rating-btn"
+        onClick={() => handleRating(ownerId, ownerName)}
+      >
+        Đánh giá chủ sân
+      </button>
+    );
+  };
+
+  const handleRating = async (ownerId, ownerName) => {
+    const { value: formValues } = await Swal.fire({
+      title: `Đánh giá chủ sân ${ownerName}`,
+      html: `
+        <input type="range" min="1" max="5" value="3" id="rating"/>
+        <textarea id="comment" class="swal2-textarea" placeholder="Nhận xét..."></textarea>
+      `,
+      focusConfirm: false,
+      showCancelButton: true,
+      preConfirm: () => {
+        return {
+          rating: document.getElementById("rating").value,
+          comment: document.getElementById("comment").value,
+        };
+      },
+    });
+
+    if (formValues) {
+      try {
+        await ratingService.create(
+          getUserInfo().id,
+          ownerId,
+          formValues.rating,
+          formValues.comment
+        );
+        Swal.fire("Thành công", "Cảm ơn đánh giá của bạn!", "success");
+        fetchData();
+      } catch {
+        Swal.fire("Lỗi", "Không thể gửi đánh giá", "error");
+      }
     }
   };
+
+  const filteredData = data
+    .filter((item) => {
+      if (filter === "Xác nhận") {
+        return ["Confirmed", "Completed"].includes(item.status);
+      }
+      return true;
+    })
+    .filter((item) => {
+      if (!searchTerm) return true;
+      const lowerSearch = searchTerm.toLowerCase();
+      return (
+        item.user?.fullName?.toLowerCase().includes(lowerSearch) ||
+        item.court?.name?.toLowerCase().includes(lowerSearch)
+      );
+    });
 
   return (
     <div className="pitchHistory">
@@ -328,8 +246,8 @@ const CourtHistory = () => {
           <div className="filters">
             <input
               type="text"
-              placeholder="Tìm kiếm"
               className="searchInput"
+              placeholder="Tìm kiếm"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -390,26 +308,37 @@ const CourtHistory = () => {
                     </span>
                   </td>
                   <td>
+                    <button
+                      className="action-button detail-btn"
+                      onClick={() => handleViewDetail(item.id)}
+                    >
+                      Chi tiết
+                    </button>
+
                     {item.status === "Completed" ? (
                       renderRatingSection(item)
                     ) : (
                       <>
                         {(item.status === "Pending" ||
-                          item.status === "Confirmed") && 
+                          item.status === "Confirmed") &&
                           isStartTimeInFuture(item.startTime) && (
-                          <button
-                            className="action-button create-room"
-                            onClick={() => handleCreateRoom(item?.court.id, item?.startTime)}
-                            aria-label={`Tạo phòng chơi cho booking ${item.id}`}
-                          >
-                            Tạo phòng chơi
-                          </button>
-                        )}
+                            <button
+                              className="action-button create-room"
+                              onClick={() =>
+                                handleCreateRoom(
+                                  item?.court.id,
+                                  item?.startTime
+                                )
+                              }
+                            >
+                              Tạo phòng chơi
+                            </button>
+                          )}
+
                         {item.status === "Confirmed" && (
                           <button
                             className="action-button complete"
                             onClick={() => handleComplete(item.id)}
-                            aria-label={`Hoàn thành booking ${item.id}`}
                           >
                             Hoàn thành
                           </button>
@@ -418,7 +347,6 @@ const CourtHistory = () => {
                           <button
                             className="action-button cancel"
                             onClick={() => handleCancel(item.id)}
-                            aria-label={`Hủy booking ${item.id}`}
                           >
                             Hủy
                           </button>
@@ -432,14 +360,12 @@ const CourtHistory = () => {
           </table>
         </div>
 
-        {/* Pagination Controls */}
         {bookingHistory?.totalPages > 1 && (
           <div className="pagination">
             <button
               className="pagination-button"
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              disabled={bookingHistory?.hasPreviousPage === false}
-              aria-label="Trang trước"
+              disabled={!bookingHistory?.hasPreviousPage}
             >
               &#8592;
             </button>
@@ -453,8 +379,7 @@ const CourtHistory = () => {
                   bookingHistory?.hasNextPage ? prev + 1 : prev
                 )
               }
-              disabled={bookingHistory?.hasNextPage === false}
-              aria-label="Trang sau"
+              disabled={!bookingHistory?.hasNextPage}
             >
               &#8594;
             </button>

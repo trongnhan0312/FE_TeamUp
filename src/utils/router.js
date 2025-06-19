@@ -25,6 +25,7 @@ export const ROUTER = {
     PAYMENT_FAIL: "/payment-fail",
     ROOM_CREATE_HISTORY: "/room-create-history",
     SURVEY: "/survey",
+    COURT_BOOKING_DETAIL: "/court-booking-detail/:bookingId",
   },
   AUTH: {
     LOGIN: "/login",
@@ -51,6 +52,7 @@ export const ROUTER = {
     ABOUT_US: "/about-us",
     SUPPORT_CENTER: "/support-center",
     PRIVACY_POLICY: "/privacy-policy",
+    COURT_BOOKING_DETAIL: "/court-booking-detail/:bookingId",
   },
   COACH: {
     HOME: "/coach",

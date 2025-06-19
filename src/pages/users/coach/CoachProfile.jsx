@@ -64,6 +64,22 @@ const CoachProfile = () => {
       fetchCoachData();
     }
   }, [coachId]);
+  // 👇 Gọi tăng lượt xem khi vào trang
+  useEffect(() => {
+    const increaseViewCount = async () => {
+      try {
+        if (coachId) {
+          await coachService.countViews(coachId);
+          console.log("Đã tăng lượt xem cho coach:", coachId);
+        }
+      } catch (err) {
+        console.error("Lỗi khi tăng lượt xem cho coach:", err);
+      }
+    };
+
+    increaseViewCount();
+  }, [coachId]);
+
   useEffect(() => {
     const fetchRating = async () => {
       try {

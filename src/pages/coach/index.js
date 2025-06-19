@@ -1,3 +1,5 @@
+"use client";
+
 import { memo, useEffect, useState } from "react";
 import "./style.scss";
 import { getUserInfo } from "../../utils/auth";
@@ -123,6 +125,7 @@ const Coach = () => {
   const [weeklyBookedSlots, setWeeklyBookedSlots] = useState([]);
   const [coachBookingData, setCoachBookingData] = useState(null);
   const [revenueInMonth, setRevenueInMonth] = useState(0);
+  const [topUsersData, setTopUsersData] = useState([]);
   const [page, setPage] = useState(1);
   const pageSize = 10;
 
@@ -172,11 +175,31 @@ const Coach = () => {
       }
     };
 
+    const fetchTopUsers = async () => {
+      try {
+        const data = await coachBookingService.getTopUsers(coachId);
+        console.log("Top users data:", data); // Debug log
+
+        // Kiểm tra cấu trúc dữ liệu và đảm bảo là array
+        const usersArray = Array.isArray(data?.resultObj)
+          ? data.resultObj
+          : Array.isArray(data)
+          ? data
+          : [];
+
+        setTopUsersData(usersArray);
+      } catch (error) {
+        console.error("Lỗi khi lấy thông tin top users:", error);
+        setTopUsersData([]); // Đảm bảo luôn là array khi có lỗi
+      }
+    };
+
     fetchCoachTotalPriceStats();
     fetchPlayerList();
     fetchMonthlyTotal();
     fetchWeeklyBookedSlots();
     fetchTotalPriceInMonth();
+    fetchTopUsers();
   }, [coachId]);
 
   useEffect(() => {
@@ -231,6 +254,13 @@ const Coach = () => {
         <div className="stat-card">
           <div className="stat-title">Số giờ thuê</div>
           <div className="stat-value">{coachStatsData?.totalBookings}</div>
+          <div className="stat-progress">
+            <CircleProgress percentage={75} />
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-title">Lượt Truy Cập</div>
+          <div className="stat-value">{coachStatsData?.countForView}</div>
           <div className="stat-progress">
             <CircleProgress percentage={75} />
           </div>
@@ -311,6 +341,40 @@ const Coach = () => {
                   <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
                 </svg>
               ))}
+            </div>
+          </div>
+
+          {/* Top Users Section */}
+          <div className="top-users-section">
+            <div className="top-users-title">Top Người Dùng</div>
+            <div className="top-users-list">
+              {Array.isArray(topUsersData) && topUsersData.length > 0 ? (
+                topUsersData.slice(0, 5).map((user, idx) => (
+                  <div key={user.id || idx} className="top-user-item">
+                    <div className="user-rank">#{idx + 1}</div>
+                    <img
+                      src={
+                        user.avaterUrl ||
+                        user.avatarUrl ||
+                        "/placeholder.svg?height=40&width=40"
+                      }
+                      alt={user.fullName || "User"}
+                      className="user-avatar"
+                    />
+                    <div className="user-info">
+                      <div className="user-name">
+                        {user.fullName || "Unknown User"}
+                      </div>
+                      <div className="user-stats">
+                        {user.totalBookings || 0} đặt lịch •{" "}
+                        {formatPrice(user.totalSpent || 0, true)}
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="no-data-message">Chưa có dữ liệu top users</div>
+              )}
             </div>
           </div>
         </div>
@@ -484,7 +548,10 @@ const Coach = () => {
           </strong>
           {playerListData.map((student, idx) => (
             <div key={idx} className="student-item">
-              <img src={student.avaterUrl} alt={student.fullName} />
+              <img
+                src={student.avaterUrl || "/placeholder.svg"}
+                alt={student.fullName}
+              />
               <div className="student-name">{student.fullName}</div>
             </div>
           ))}

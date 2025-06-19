@@ -292,6 +292,43 @@
 }
 
 .complete {
+  background-color: #94d82d;
+  &:hover {
+    background-color: #6f9b1d;
+  }
+}
+
+.cancel {
+  background-color: #f44336;
+  &:hover {
+    background-color: #d32f2f;
+  }
+}
+
+// ✅ Thêm nút "Chi tiết"
+.detail-btn {
+  background-color: #6c757d; // màu xám
+  &:hover {
+    background-color: #495057;
+  }
+}
+
+
+.rating-btn {
+  background-color: purple;
+  &:hover {
+    background-color: rgb(96, 0, 96);
+  }
+}
+
+.create-room {
+  background-color: #2196f3;
+  &:hover {
+    background-color: #1976d2;
+  }
+}
+
+.complete {
   background-color: #94d82d; // xanh lá (Completed)
   &:hover {
     background-color: #6f9b1d;

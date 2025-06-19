@@ -1,639 +1,392 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
-
 .coach-container {
-  font-family: "Poppins", sans-serif;
-  background: #f9f9fb;
-  padding: 20px 24px;
-  color: #222;
-  max-width: 1400px;
-  margin: 0 auto;
+  padding: 20px;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
 
-  .stats-top {
+.stats-top {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: left;
+
+  .stat-info {
     display: flex;
-    gap: 12px;
-    margin-bottom: 20px;
+    flex-direction: column;
 
-    .stat-card {
-      background: #fff;
-      border-radius: 12px;
-      padding: 12px 18px;
-      flex: 1;
-      position: relative;
-      box-shadow: 0 3px 10px rgb(0 0 0 / 0.05);
-
-      &.no-progress {
-        flex: 1.2;
-      }
-
-      .stat-title {
-        font-weight: 600;
-        font-size: 12px;
-        color: #666;
-        margin-bottom: 4px;
-      }
-
-      .stat-value {
-        font-weight: 700;
-        font-size: 20px;
-        margin-bottom: 8px;
-      }
-
-      .stat-progress {
-        position: absolute;
-        top: 16px;
-        right: 16px;
-      }
-    }
-  }
-
-  .mid-section {
-    display: flex;
-    gap: 20px;
-    margin-bottom: 24px;
-
-    .left-panel {
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 3px 15px rgb(0 0 0 / 0.05);
-      padding: 30px 30px;
-      width: 280px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-
-      .total-week-container {
-        text-align: center;
-
-        .total-week-text {
-          font-weight: 600;
-          font-size: 15px;
-          color: #555;
-          margin-bottom: 18px;
-        }
-
-        .total-week-circle {
-          position: relative;
-          height: 110px;
-
-          svg.big-circle-svg {
-            transform: rotate(-90deg);
-          }
-
-          .total-week-number {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 44px;
-            font-weight: 700;
-            color: #8bc34a;
-            user-select: none;
-          }
-        }
-      }
-
-      .rating-box {
-        margin-top: 36px;
-        text-align: center;
-
-        .rating-label {
-          font-weight: 600;
-          font-size: 15px;
-          color: #555;
-          margin-bottom: 14px;
-        }
-
-        .stars {
-          display: flex;
-          justify-content: center;
-          gap: 4px;
-
-          svg {
-            width: 30px;
-            height: 30px;
-          }
-        }
-      }
-    }
-
-    .right-panel {
-      flex: 1;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 3px 15px rgb(0 0 0 / 0.05);
-      padding: 16px 20px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-
-      .schedule {
-        background-color: white;
-        .schedule-grid-wrapper {
-          overflow-x: auto;
-          border: none;
-          border-radius: 8px;
-          background-color: white;
-          padding: 8px;
-          -webkit-overflow-scrolling: touch;
-        }
-
-        .schedule-grid {
-          display: grid;
-          grid-template-columns: 120px repeat(7, 1fr);
-          grid-auto-rows: 50px;
-          min-width: 800px;
-          font-size: 14px;
-          gap: 6px;
-
-          .cell {
-            background-color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.25rem;
-            transition: background-color 0.2s, box-shadow 0.2s;
-            border-radius: 10px;
-
-            &.schedule-cell {
-              cursor: pointer;
-
-              &:hover {
-                background-color: #e8f5e9;
-                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.06);
-              }
-            }
-          }
-
-          .header,
-          .day-header,
-          .time-label,
-          .sticky-left {
-            background-color: white !important;
-            font-weight: 600;
-            z-index: 2;
-            border-radius: 10px;
-          }
-
-          .time-label,
-          .sticky-left {
-            position: sticky;
-            left: 0;
-            z-index: 1;
-          }
-
-          .active {
-            background-color: #a5d6a7;
-            color: #1b5e20;
-            font-weight: bold;
-            box-shadow: 0 0 6px #a5d6a766;
-
-            &:hover {
-              background-color: #81c784;
-            }
-          }
-        }
-      }
-    }
-  }
-
-  .payment-history {
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 3px 15px rgb(0 0 0 / 0.05);
-    padding: 22px 24px;
-    width: 75%;
-    .payment-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 14px;
-
-      .search-input {
-        flex-grow: 1;
-        max-width: 280px;
-        border-radius: 20px;
-        border: 1px solid #ddd;
-        padding: 8px 16px;
-        font-size: 14px;
-        outline: none;
-        color: #333;
-
-        &:focus {
-          border-color: #8bc34a;
-          box-shadow: 0 0 6px #8bc34a80;
-        }
-      }
-
-      .sort-button {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        padding: 8px 16px;
-        background-color: #e9f0db;
-        color: #7cba00;
-        border: none;
-        border-radius: 20px;
-        font-weight: 600;
-        font-size: 13px;
-        cursor: pointer;
-        user-select: none;
-
-        svg {
-          stroke-width: 2.5;
-          stroke-linejoin: round;
-          stroke-linecap: round;
-        }
-
-        &:hover {
-          background-color: #d2e391;
-        }
-      }
-    }
-
-    table.payment-table {
-      width: 100%;
-      border-collapse: collapse;
+    .stat-title {
       font-size: 14px;
-
-      thead {
-        tr {
-          border-bottom: 2px solid #eee;
-          color: #777;
-          font-weight: 600;
-
-          th {
-            padding: 14px 10px;
-            text-align: left;
-            user-select: none;
-          }
-        }
-      }
-
-      tbody {
-        tr {
-          border-bottom: 1px solid #f0f0f0;
-
-          td {
-            padding: 14px 10px;
-            color: #444;
-          }
-        }
-      }
+      color: #666;
+      margin-bottom: 6px;
     }
 
-    .status-label {
-      display: inline-block;
-      padding: 5px 14px;
-      border-radius: 16px;
-      color: white;
-      font-size: 13px;
-      font-weight: 600;
-      user-select: none;
-      text-align: center;
-      white-space: nowrap;
+    .stat-value {
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
     }
   }
-  .bottom-section {
+
+  .stat-progress {
     display: flex;
-    gap: 20px;
-
-    .payment-history {
-      flex: 3;
-      background: white;
-      border-radius: 10px;
-      padding: 20px;
-      box-shadow: 0 2px 6px rgb(0 0 0 / 0.1);
-
-      .header-search {
-        display: flex;
-        justify-content: flex-end;
-        margin-bottom: 10px;
-
-        input {
-          width: 200px;
-          padding: 6px 12px;
-          border: 1px solid #ddd;
-          border-radius: 4px 0 0 4px;
-          outline: none;
-          font-size: 14px;
-        }
-
-        button {
-          padding: 6px 12px;
-          background: #a7d40a;
-          border: none;
-          border-radius: 0 4px 4px 0;
-          color: white;
-          font-weight: 700;
-          cursor: pointer;
-          font-size: 14px;
-        }
-      }
-
-      .payment-table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 14px;
-
-        th,
-        td {
-          padding: 10px;
-          border-bottom: 1px solid #eee;
-          text-align: center;
-          white-space: nowrap;
-        }
-
-        .status {
-          padding: 6px 12px;
-          border-radius: 20px;
-          font-weight: 700;
-          color: white;
-          &.confirmed {
-            background: #79d70f;
-          }
-          &.pending {
-            background: #dfc416;
-          }
-          &.cancelled {
-            background: #d74b4b;
-          }
-        }
-      }
-    }
-  }
-  .payment-history-header {
-    gap: 23px;
-    display: flex;
-  }
-  .students-list {
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
-    padding: 22px 24px;
-    width: 25%;
-    .student-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-weight: 600;
-      font-size: 15px;
-      color: #222;
-      margin-top: 17px;
-      margin-bottom: 30px;
-      img {
-        width: 38px;
-        height: 38px;
-        border-radius: 50%;
-        object-fit: cover;
-      }
-    }
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    height: 60px;
+    margin-left: 12px;
   }
 }
 
-/* Enhanced Large Desktop */
-@media (min-width: 1400px) {
-  .coach-container {
-    padding: 24px 32px;
-    
-    .mid-section {
-      gap: 24px;
-      
-      .left-panel {
-        width: 300px;
-        padding: 35px;
-      }
-    }
-    
-    .bottom-section {
-      gap: 24px;
-    }
-  }
+
+.mid-section {
+  display: flex;
+  gap: 30px;
+  margin-bottom: 30px;
 }
 
-/* Improved Large Tablet */
-@media (max-width: 1200px) {
-  .coach-container {
-    .mid-section {
-      .left-panel {
-        width: 260px;
-        padding: 25px;
-      }
-      
-      .right-panel {
-        .schedule .schedule-grid {
-          min-width: 700px;
-        }
-      }
-    }
-  }
+.left-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-/* Enhanced Tablet */
-@media (max-width: 1024px) {
-  .coach-container {
-    padding: 16px;
-
-    .stats-top {
-      flex-wrap: wrap;
-      gap: 10px;
-      
-      .stat-card {
-        min-width: 200px;
-        
-        &.no-progress {
-          min-width: 240px;
-        }
-      }
-    }
-
-    .mid-section {
-      flex-direction: column;
-      gap: 16px;
-
-      .left-panel {
-        width: 100%;
-        max-width: 400px;
-        margin: 0 auto;
-        padding: 25px;
-
-        .total-week-container .total-week-number {
-          font-size: 40px;
-        }
-
-        .rating-box .stars svg {
-          width: 26px;
-          height: 26px;
-        }
-      }
-
-      .right-panel {
-        width: 100%;
-        padding: 16px;
-
-        .schedule .schedule-grid {
-          min-width: 600px;
-          grid-template-columns: 100px repeat(7, 1fr);
-        }
-      }
-    }
-
-    .bottom-section {
-      flex-direction: column;
-      gap: 16px;
-
-      .payment-history {
-        width: 100%;
-      }
-
-      .students-list {
-        width: 100%;
-      }
-    }
-  }
+.total-week-container {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
 }
 
-/* Medium Tablet */
+.total-week-text {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.total-week-circle {
+  position: relative;
+  display: inline-block;
+}
+
+.total-week-number {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
+
+.rating-box {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.rating-label {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+.stars {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+}
+
+.top-users-section {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.top-users-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.top-users-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.top-user-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+  transition: background-color 0.2s;
+}
+
+.top-user-item:hover {
+  background-color: #e9ecef;
+}
+
+.user-rank {
+  font-weight: bold;
+  color: #8bc34a;
+  font-size: 16px;
+  min-width: 30px;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-info {
+  flex: 1;
+}
+
+.user-name {
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.user-stats {
+  font-size: 12px;
+  color: #666;
+}
+
+.right-panel {
+  flex: 2;
+}
+
+.schedule {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  height: fit-content;
+}
+
+.schedule-grid-wrapper {
+  overflow-x: auto;
+}
+
+.schedule-grid {
+  display: grid;
+  grid-template-columns: 120px repeat(7, 1fr);
+  gap: 1px;
+  background-color: #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  min-width: 600px;
+}
+
+.cell {
+  background: white;
+  padding: 12px 8px;
+  text-align: center;
+  font-size: 12px;
+}
+
+.header {
+  background-color: #f5f5f5;
+  font-weight: bold;
+  color: #333;
+}
+
+.time-label {
+  background-color: #f5f5f5;
+  font-weight: 600;
+  font-size: 11px;
+  text-align: center;
+}
+
+.schedule-cell {
+  min-height: 40px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.schedule-cell:hover {
+  background-color: #f0f0f0;
+}
+
+.schedule-cell.active {
+  background-color: #8bc34a;
+  color: white;
+}
+
+.payment-history-header {
+  display: flex;
+  gap: 30px;
+}
+
+.payment-history {
+  flex: 2;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.payment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.search-input {
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  width: 250px;
+}
+
+.sort-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 15px;
+  background: none;
+  border: 1px solid #7CBA00;
+  border-radius: 8px;
+  color: #7CBA00;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.payment-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.payment-table th,
+.payment-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.payment-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #333;
+}
+
+.status-label {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  color: white;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+}
+
+.pagination button {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.students-list {
+  flex: 1;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  height: fit-content;
+}
+
+.payment-history-title {
+  display: block;
+  margin-bottom: 20px;
+  font-size: 18px;
+  color: #333;
+}
+
+.student-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.student-item:last-child {
+  border-bottom: none;
+}
+
+.student-item img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.student-name {
+  font-size: 14px;
+  color: #333;
+}
+
 @media (max-width: 768px) {
-  .coach-container {
-    .stats-top {
-      .stat-card {
-        min-width: 150px;
-        
-        &.no-progress {
-          min-width: 180px;
-        }
-      }
-    }
-    
-    .mid-section {
-      .right-panel {
-        .schedule .schedule-grid {
-          min-width: 550px;
-        }
-      }
-    }
-    
-    .bottom-section {
-      .payment-history {
-        .payment-header {
-          flex-wrap: wrap;
-          gap: 10px;
-          
-          .search-input {
-            min-width: 200px;
-          }
-        }
-      }
-    }
+  .stats-top {
+    flex-direction: column;
   }
-}
-
-/* ORIGINAL MOBILE STYLES - UNCHANGED */
-@media (max-width: 600px) {
-  .coach-container {
-    padding: 12px;
-
-    .stats-top {
-      gap: 22px;
-
-      .stat-card {
-        padding: 10px 14px;
-
-        .stat-title {
-          font-size: 11px;
-        }
-
-        .stat-value {
-          font-size: 18px;
-        }
-      }
-    }
-
-    .mid-section {
-      .left-panel {
-        padding: 16px;
-
-        .total-week-container .total-week-number {
-          font-size: 30px;
-        }
-
-        .rating-box .rating-label {
-          font-size: 14px;
-        }
-
-        .rating-box .stars svg {
-          width: 20px;
-          height: 20px;
-        }
-      }
-
-      .right-panel {
-        padding: 14px;
-
-        .schedule .schedule-grid {
-          font-size: 12px;
-          grid-auto-rows: 40px;
-        }
-      }
-    }
-
-    .payment-history {
-      padding: 16px;
-      width: auto;
-      .payment-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-
-        .search-input {
-          width: 100%;
-        }
-
-        .sort-button {
-          width: 100%;
-          justify-content: center;
-        }
-      }
-
-      table.payment-table {
-        font-size: 13px;
-
-        th, td {
-          padding: 10px 6px;
-        }
-      }
-    }
-    .payment-history-header {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 10px;
-    }
-    .students-list {
-      padding: 16px;
-      width: -webkit-fill-available;
-      .student-item {
-        font-size: 14px;
-        img {
-          width: 34px;
-          height: 34px;
-        }
-      }
-    }
-
-    .bottom-section .payment-history .header-search {
-      flex-direction: column;
-      align-items: stretch;
-
-      input {
-        width: 100%;
-        border-radius: 6px;
-        margin-bottom: 6px;
-      }
-
-      button {
-        width: 100%;
-        border-radius: 6px;
-      }
-    }
+  
+  .mid-section {
+    flex-direction: column;
+  }
+  
+  .payment-history-header {
+    flex-direction: column;
+  }
+  
+  .payment-header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+  }
+  
+  .search-input {
+    width: 100%;
   }
 }

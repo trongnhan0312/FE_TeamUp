@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { FaMapMarkerAlt, FaHeart, FaShare } from "react-icons/fa";
+import {
+  FaMapMarkerAlt,
+  FaHeart,
+  FaShare,
+  FaMoneyBillWave,
+  FaClock,
+} from "react-icons/fa";
 import "./CourtDetailPage.scss";
 import { memo } from "react";
 import AvailableCourts from "./AvailableCourts.jsx";
@@ -44,9 +50,24 @@ const CourtDetailPage = () => {
           throw new Error(data.message || "Không thể tải thông tin sân");
         }
 
-        setCourt(data.resultObj);
-        setSportId(data.resultObj.sportsComplexModelView?.id);
-        setOwnerId(data.resultObj.sportsComplexModelView?.owner?.id);
+        const courtInfo = data.resultObj;
+        const owner = courtInfo.sportsComplexModelView?.owner;
+
+        setCourt(courtInfo);
+        setSportId(courtInfo.sportsComplexModelView?.id);
+        setOwnerId(owner?.id); // Vẫn set để sử dụng sau này nếu cần
+
+        console.log("ownerID:", owner?.id);
+
+        // ✅ Gọi countViews trực tiếp với owner.id lấy từ dữ liệu vừa fetch
+        if (owner?.id) {
+          try {
+            await courtService.countViews(owner.id);
+            console.log("View count increased successfully!");
+          } catch (viewErr) {
+            console.error("Lỗi khi tăng lượt xem:", viewErr);
+          }
+        }
       } catch (err) {
         console.error("Error fetching court details:", err);
         setError(err.message || "Không thể lấy thông tin sân");
@@ -81,7 +102,7 @@ const CourtDetailPage = () => {
     };
 
   return (
-    <div className="court-detail-page">
+    <div className="court-detail-page-user">
       <div className="container">
         {/* Court title and rating section */}
         <div className="court-header">
@@ -117,7 +138,21 @@ const CourtDetailPage = () => {
             </button>
           </div>
         </div>
-
+        {/* Price section */}
+        <div className="price-section">
+          <div className="price">
+            <span className="amount" style={{ fontSize: "40px" }}>
+              {formatPrice(court.pricePerHour)}
+            </span>
+            <span className="unit">/giờ</span>
+          </div>
+          <div className="booking-actions">
+            <button className="btn-book" onClick={handleBookingClick}>
+              Đặt sân
+            </button>
+            {/* <button className="btn-create-room">Tạo phòng</button> */}
+          </div>
+        </div>
         {/* Court Images Gallery */}
         <div className="court-gallery">
           <div className="main-image">
@@ -141,30 +176,32 @@ const CourtDetailPage = () => {
           <button className="btn-view-more">Xem thêm</button>
         </div>
 
-        {/* Price section */}
-        <div className="price-section">
-          <div className="price">
-            <span className="amount">{formatPrice(court.pricePerHour)}</span>
-            <span className="unit">/giờ</span>
-          </div>
-          <div className="booking-actions">
-            <button className="btn-book" onClick={handleBookingClick}>
-              Đặt sân
-            </button>
-            {/* <button className="btn-create-room">Tạo phòng</button> */}
-          </div>
-        </div>
-
         {/* Court Description */}
         <div className="court-description">
           <h2>Mô tả</h2>
           <div className="description-content">
-            <p>{court.name}:</p>
-            <ul>
-              <li>Địa chỉ: {court.sportsComplexModelView.address}</li>
-              <li>Giá thuê: {formatPrice(court.pricePerHour)}/giờ.</li>
-              <li>Giờ hoạt động: 5h – 23h.</li>
-            </ul>
+            <strong style={{ fontSize: "20px" }}>
+              <p>{court.name}:</p>
+
+              <ul>
+                <li>
+                  <FaMapMarkerAlt
+                    style={{ color: "#4caf50", marginRight: "8px" }}
+                  />
+                  Địa chỉ: {court.sportsComplexModelView.address}
+                </li>
+                <li>
+                  <FaMoneyBillWave
+                    style={{ color: "#ff9800", marginRight: "8px" }}
+                  />
+                  Giá thuê: {formatPrice(court.pricePerHour)}/giờ.
+                </li>
+                <li>
+                  <FaClock style={{ color: "#2196f3", marginRight: "8px" }} />
+                  Giờ hoạt động: 5h – 23h.
+                </li>
+              </ul>
+            </strong>
           </div>
         </div>
 

@@ -1,3 +1,5 @@
+"use client";
+
 import { memo, useMemo, useState, useEffect } from "react";
 import { getUserInfo } from "../../utils/auth";
 import "./style.scss";
@@ -7,6 +9,7 @@ import {
   fetchOwnerCourtsWithBookings,
   fetchBookingHistory,
   fetchTotalPriceByOwner,
+  fetchTopUserByOwner,
 } from "../../services/ownerService";
 import {
   BarChart,
@@ -38,6 +41,7 @@ const Owner = () => {
   const [hourlyData, setHourlyData] = useState([]);
   const [todayRevenue, setTodayRevenue] = useState(0);
   const [totalPriceByOwner, setTotalPriceByOwner] = useState(0);
+  const [topUser, setTopUser] = useState(null);
 
   const storedOwnerId = getUserInfo();
   const ownerId = storedOwnerId?.id || storedOwnerId?.userId;
@@ -148,7 +152,7 @@ const Owner = () => {
     fetchOwnerStats(ownerId)
       .then((data) => {
         if (data) {
-          setUniquePlayerCount(data.uniquePlayerCount);
+          setUniquePlayerCount(data.countForView);
           setTotalCourtBookings(data.totalCourtBookings);
           setTotalRevenue(data.totalRevenue);
         }
@@ -157,6 +161,13 @@ const Owner = () => {
 
     fetchMostBookedCourtByOwner(ownerId)
       .then(setMostBookedCourt)
+      .catch(console.error);
+
+    // Gọi API để lấy top user
+    fetchTopUserByOwner(ownerId)
+      .then((topUserData) => {
+        setTopUser(topUserData);
+      })
       .catch(console.error);
   }, [ownerId]);
 
@@ -278,7 +289,7 @@ const Owner = () => {
     <div className="owner-page">
       <div className="stat-cards flex flex-wrap gap-6">
         <CircleStat
-          title="Số người tiếp cận"
+          title="Lượt Truy Cập"
           value={uniquePlayerCount}
           percentage={Math.min(playerPercentage, 100)}
         />
@@ -388,11 +399,30 @@ const Owner = () => {
         </div>
 
         <div className="bottom-section">
-          <div className="pie-chart-section">
-            <h4>Sân đặt nhiều nhất</h4>
-
+          {/* Top User Section */}
+          <div className="top-users-section">
+            <h4>Top User</h4>
+            <div className="top-users-list">
+              {topUser ? (
+                <div className="top-user-item">
+                  <div className="user-rank">#1</div>
+                  <div className="user-info">
+                    <div className="user-name">{topUser.fullName}</div>
+                    <div className="user-stats">
+                      <span className="user-email">{topUser.email}</span>
+                      <span className="booking-count">
+                        {topUser.bookingCount} đơn
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="no-data">Chưa có dữ liệu người dùng</div>
+              )}
+            </div>
+            <h4>Top Court</h4>
             {pieChartData.length > 0 && (
-              <>
+              <div className="top-court-wrapper">
                 <ResponsiveContainer width={140} height={140}>
                   <PieChart>
                     <Pie
@@ -426,7 +456,7 @@ const Owner = () => {
                     </div>
                   ))}
                 </div>
-              </>
+              </div>
             )}
           </div>
 

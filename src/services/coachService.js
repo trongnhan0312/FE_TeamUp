@@ -20,6 +20,17 @@ const coachService = {
     }
   },
 
+  countViews: async (coachId) => {
+    try {
+      // Sử dụng phương thức POST với endpoint đúng
+      const response = await axiosInstance.post(
+        `${ENDPOINTS.COACH_BOOKING.COUNT_VIEW}/${coachId}`
+      );
+      return response.data;
+    } catch (error) {
+      throw error.response ? error.response.data : error.message;
+    }
+  },
   // Phương thức lấy chi tiết huấn luyện viên
   getCoachProfile: async (coachId) => {
     try {

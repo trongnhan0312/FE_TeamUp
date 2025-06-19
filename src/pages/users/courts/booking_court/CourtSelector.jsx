@@ -44,6 +44,9 @@ const CourtSelector = () => {
       state: { isMultiBooking: true, coachId },
     });
   };
+  const handleViewDetail = (courtId) => {
+    navigate(`/courts/${courtId}`);
+  };
 
   return (
     <div className="court-list-page">
@@ -68,12 +71,20 @@ const CourtSelector = () => {
                     {court.pricePerHour.toLocaleString()}đ/giờ
                   </div>
                   <div className="court-description">{court.description}</div>
-                  <button
-                    className="book-button"
-                    onClick={() => handleBooking(court.id)}
-                  >
-                    Chọn sân
-                  </button>
+                  <div className="court-actions">
+                    <button
+                      className="book-button"
+                      onClick={() => handleBooking(court.id)}
+                    >
+                      Chọn sân
+                    </button>
+                    <button
+                      className="detail-button"
+                      onClick={() => handleViewDetail(court.id)}
+                    >
+                      Chi tiết
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}

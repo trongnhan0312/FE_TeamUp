@@ -8,12 +8,15 @@ import {
 import { toast } from "react-toastify";
 import { statusColors } from "../../../data";
 import { getUserInfo } from "../../../utils/auth";
+import { ROUTER } from "../../../utils/router";
+import { useNavigate } from "react-router-dom";
 const PitchHistory = () => {
   const [filter, setFilter] = useState("Mới nhất");
   const [searchTerm, setSearchTerm] = useState("");
   const [timeFilter, setTimeFilter] = useState("Tuần"); // Thêm state timeFilter
   const [rawData, setRawData] = useState([]);
   const [data, setData] = useState([]);
+  const navigate = useNavigate();
   const userInfo = getUserInfo();
   const ownerId = userInfo?.id;
   // Lấy dữ liệu từ API khi mount hoặc timeFilter thay đổi (nếu cần lọc server theo time)
@@ -121,6 +124,9 @@ const PitchHistory = () => {
       toast.error("Có lỗi xảy ra, vui lòng thử lại!");
     }
   };
+  const handleViewDetail = (id) => {
+    navigate(ROUTER.OWNER.COURT_BOOKING_DETAIL.replace(":bookingId", id));
+  };
   const completedPercentage = (completed / totalOrders) * 100;
   const cancelledPercentage = (cancelled / totalOrders) * 100;
   return (
@@ -190,6 +196,7 @@ const PitchHistory = () => {
                 <th>Sân</th>
                 <th>Thu nhập</th>
                 <th>Trạng thái</th>
+                <th>Thao tác</th>
               </tr>
             </thead>
             <tbody>
@@ -226,6 +233,14 @@ const PitchHistory = () => {
                       <option value="Completed">Completed</option>
                       <option value="CancelledByOwner">CancelledByOwner</option>
                     </select>
+                  </td>
+                  <td>
+                    <button
+                      className="action-button detail-btn"
+                      onClick={() => handleViewDetail(item.id)}
+                    >
+                      Chi tiết
+                    </button>
                   </td>
                 </tr>
               ))}
