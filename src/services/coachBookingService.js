@@ -14,6 +14,17 @@ const coachBookingService = {
       throw error.response ? error.response.data : error.message;
     }
   },
+  getById: async (bookingId) => {
+    try {
+      const response = await axiosInstance.get(
+        `${ENDPOINTS.COACH_BOOKING.GET_BY_ID}/${bookingId}`
+      );
+      return response.data;
+    } catch (error) {
+      throw error.response ? error.response.data : error.message;
+    }
+  },
+
   getTopUsers: async (coachId) => {
     try {
       const response = await axiosInstance.get(

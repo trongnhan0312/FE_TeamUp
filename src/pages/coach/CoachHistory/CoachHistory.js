@@ -1,30 +1,34 @@
 import { memo, useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom"; // 👉 thêm dòng này
 import "./style.scss";
 import CircleStat from "../../owner/CircleStat";
 import coachBookingService from "../../../services/coachBookingService";
 import { getUserInfo } from "../../../utils/auth";
 import { toast } from "react-toastify";
 import { statusColors } from "../../../data";
-
-
+import { ROUTER } from "../../../utils/router"; // nếu bạn dùng object ROUTER
 const CoachHistory = () => {
   const [filter, setFilter] = useState("Mới nhất");
   const [page, setPage] = useState(1);
   const pageSize = 10;
 
   const [coachBookingData, setCoachBookingData] = useState(null);
+  const navigate = useNavigate(); // 👉 sử dụng điều hướng
 
   const coachId = getUserInfo().id;
 
   const fetchCoachBooking = useCallback(async () => {
     try {
-      const data = await coachBookingService.getAllByCoachId(coachId, page, pageSize);
+      const data = await coachBookingService.getAllByCoachId(
+        coachId,
+        page,
+        pageSize
+      );
       setCoachBookingData(data.resultObj);
     } catch (error) {
       console.error("Lỗi khi lấy thông tin coach booking:", error);
     }
   }, [coachId, page, pageSize]);
-
 
   useEffect(() => {
     fetchCoachBooking();
@@ -38,16 +42,26 @@ const CoachHistory = () => {
 
   const handleStatusChange = async (bookingId, newStatus) => {
     try {
-      await coachBookingService.updateStatus(bookingId, newStatus).then(fetchCoachBooking);
+      await coachBookingService
+        .updateStatus(bookingId, newStatus)
+        .then(fetchCoachBooking);
       toast.success("Cập nhật trạng thái thành công!");
     } catch (error) {
       toast.error("Có lỗi xảy ra, vui lòng thử lại!");
     }
   };
 
+  const handleViewDetail = (bookingId) => {
+    navigate(
+      ROUTER.COACH.COACH_BOOKING_DETAIL.replace(":bookingId", bookingId)
+    );
+  };
+
   const formatSlotsByDate = (slots) => {
     const grouped = slots.reduce((acc, slot) => {
-      const date = new Date(slot.startTime.replace(" ", "T")).toLocaleDateString("vi-VN");
+      const date = new Date(
+        slot.startTime.replace(" ", "T")
+      ).toLocaleDateString("vi-VN");
       const start = new Date(slot.startTime.replace(" ", "T"));
       const end = new Date(slot.endTime.replace(" ", "T"));
 
@@ -77,8 +91,16 @@ const CoachHistory = () => {
         <div className="header">
           <h2>Tình Trạng Đơn</h2>
           <div className="filters">
-            <input type="text" placeholder="Tìm kiếm" className="search-input" />
-            <select value={filter} onChange={(e) => setFilter(e.target.value)} className="status-filter">
+            <input
+              type="text"
+              placeholder="Tìm kiếm"
+              className="search-input"
+            />
+            <select
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+              className="status-filter"
+            >
               <option>Mới nhất</option>
               <option>Cũ nhất</option>
               <option>Xác nhận</option>
@@ -96,6 +118,7 @@ const CoachHistory = () => {
                 <th>Sân</th>
                 <th>Thu nhập</th>
                 <th>Trạng thái</th>
+                <th>Thao tác</th> {/* 👉 thêm cột thao tác */}
               </tr>
             </thead>
             <tbody>
@@ -108,10 +131,13 @@ const CoachHistory = () => {
                   </td>
                   <td>{item.court.name}</td>
                   <td>
-                    {(item.totalPrice - item.discountAmount).toLocaleString("vi-VN", {
-                      style: "currency",
-                      currency: "VND",
-                    })}
+                    {(item.totalPrice - item.discountAmount).toLocaleString(
+                      "vi-VN",
+                      {
+                        style: "currency",
+                        currency: "VND",
+                      }
+                    )}
                   </td>
                   <td>
                     <select
@@ -131,8 +157,18 @@ const CoachHistory = () => {
                       <option value="Pending">Pending</option>
                       <option value="Confirmed">Confirmed</option>
                       <option value="Completed">Completed</option>
-                      <option value="CancelledByCoach">Cancelled By Coach</option>
+                      <option value="CancelledByCoach">
+                        Cancelled By Coach
+                      </option>
                     </select>
+                  </td>
+                  <td>
+                    <button
+                      className="action-button detail-btn"
+                      onClick={() => handleViewDetail(item.id)}
+                    >
+                      Chi tiết
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -140,7 +176,6 @@ const CoachHistory = () => {
           </table>
         </div>
 
-        {/* Pagination */}
         {coachBookingData?.totalPages > 1 && (
           <div className="pagination">
             <button
@@ -149,7 +184,9 @@ const CoachHistory = () => {
             >
               &laquo;
             </button>
-            <span>{page} / {coachBookingData.totalPages}</span>
+            <span>
+              {page} / {coachBookingData.totalPages}
+            </span>
             <button
               onClick={() => handlePageChange(page + 1)}
               disabled={!coachBookingData.hasNextPage}

@@ -27,6 +27,7 @@ import {
 } from "recharts";
 
 import CircleStat from "./CircleStat";
+import { useNavigate } from "react-router-dom";
 
 const Owner = () => {
   const [filter, setFilter] = useState("Mới nhất");
@@ -42,17 +43,33 @@ const Owner = () => {
   const [todayRevenue, setTodayRevenue] = useState(0);
   const [totalPriceByOwner, setTotalPriceByOwner] = useState(0);
   const [topUser, setTopUser] = useState(null);
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
 
   const storedOwnerId = getUserInfo();
   const ownerId = storedOwnerId?.id || storedOwnerId?.userId;
+  const navigate = useNavigate();
 
-  // Hàm lọc booking theo tháng hiện tại và tháng trước, tạo dữ liệu cho BarChart
-  const getMonthlyBookingData = (bookings) => {
+  // Hàm lọc booking theo tháng hiện tại và tháng trước của năm được chọn
+  const getMonthlyBookingData = (bookings, year) => {
     const now = new Date();
     const currentYear = now.getFullYear();
     const currentMonth = now.getMonth(); // 0-based
-    const lastMonth = currentMonth === 0 ? 11 : currentMonth - 1;
-    const lastMonthYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+
+    // Nếu năm được chọn là năm hiện tại, so sánh với tháng hiện tại
+    // Nếu không, so sánh tháng 12 với tháng 11 của năm đó
+    let compareMonth, compareYear, previousMonth, previousYear;
+
+    if (year === currentYear) {
+      compareMonth = currentMonth;
+      compareYear = currentYear;
+      previousMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+      previousYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+    } else {
+      compareMonth = 11; // Tháng 12 (0-based)
+      compareYear = year;
+      previousMonth = 10; // Tháng 11 (0-based)
+      previousYear = year;
+    }
 
     const monthlyData = Array.from({ length: 12 }, (_, i) => ({
       name: `T${i + 1}`,
@@ -62,21 +79,49 @@ const Owner = () => {
 
     bookings.forEach((booking) => {
       const date = new Date(booking.startTime);
-      if (
-        date.getFullYear() === currentYear &&
-        date.getMonth() === currentMonth
-      ) {
-        monthlyData[currentMonth].thisMonth += 1;
+      const bookingYear = date.getFullYear();
+      const bookingMonth = date.getMonth();
+
+      // Đếm booking cho tất cả các tháng trong năm được chọn
+      if (bookingYear === year) {
+        monthlyData[bookingMonth].thisMonth += 1;
       }
-      if (
-        date.getFullYear() === lastMonthYear &&
-        date.getMonth() === lastMonth
-      ) {
-        monthlyData[lastMonth].lastMonth += 1;
+
+      // Đếm booking cho năm trước đó để so sánh
+      if (bookingYear === year - 1) {
+        monthlyData[bookingMonth].lastMonth += 1;
       }
     });
 
     return monthlyData;
+  };
+
+  // Hàm lọc booking theo năm được chọn
+  const getBookingsByYear = (bookings, year) => {
+    return bookings.filter((booking) => {
+      const bookingYear = new Date(booking.startTime).getFullYear();
+      return bookingYear === year || bookingYear === year - 1; // Bao gồm cả năm trước để so sánh
+    });
+  };
+
+  // Tạo danh sách các năm có sẵn từ dữ liệu booking và thêm các năm trước
+  const getAvailableYears = (bookings) => {
+    const years = new Set();
+    const currentYear = new Date().getFullYear();
+    const startYear = 2020; // Năm bắt đầu có thể chọn
+
+    // Thêm tất cả các năm từ startYear đến năm hiện tại
+    for (let year = startYear; year <= currentYear; year++) {
+      years.add(year);
+    }
+
+    // Thêm các năm từ dữ liệu booking (có thể có năm ngoài khoảng startYear-currentYear)
+    bookings.forEach((booking) => {
+      const year = new Date(booking.startTime).getFullYear();
+      years.add(year);
+    });
+
+    return Array.from(years).sort((a, b) => b - a); // Sắp xếp giảm dần
   };
 
   // 1. useEffect chỉ gọi API 1 lần khi ownerId thay đổi
@@ -274,7 +319,16 @@ const Owner = () => {
     () => getMonthlyRevenue(bookingHistory),
     [bookingHistory]
   );
-  const monthlyData = getMonthlyBookingData(bookingHistory);
+
+  const monthlyData = useMemo(() => {
+    const filteredBookings = getBookingsByYear(bookingHistory, selectedYear);
+    return getMonthlyBookingData(filteredBookings, selectedYear);
+  }, [bookingHistory, selectedYear]);
+
+  const availableYears = useMemo(
+    () => getAvailableYears(bookingHistory),
+    [bookingHistory]
+  );
 
   const targetPlayerCount = 1000; // Mục tiêu số người tiếp cận
   const targetCourtBookings = 500; // Mục tiêu tổng đơn đặt
@@ -298,6 +352,7 @@ const Owner = () => {
           title="Tổng đơn đặt"
           value={totalCourtBookings}
           percentage={Math.min(courtBookingPercentage, 100)}
+          onClick={() => navigate("/owner/pitchhistory")}
         />
 
         <CircleStat
@@ -321,8 +376,13 @@ const Owner = () => {
               <XAxis dataKey="name" />
               <YAxis />
               <Tooltip />
-              <Bar dataKey="current" fill="#000" name="Tuần này" />
-              <Bar dataKey="previous" fill="#A3E635" name="Tuần trước" />
+              <Bar dataKey="current" fill="#000" name="Tuần này" barSize={20} />
+              <Bar
+                dataKey="previous"
+                fill="#A3E635"
+                name="Tuần trước"
+                barSize={16}
+              />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -360,6 +420,36 @@ const Owner = () => {
 
       <div className="month-chart-stats-container">
         <div className="monthly-bar-chart">
+          <div
+            className="chart-header"
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: "15px",
+            }}
+          >
+            <h3 style={{ margin: 0 }}></h3>
+            <select
+              value={selectedYear}
+              onChange={(e) => setSelectedYear(Number.parseInt(e.target.value))}
+              style={{
+                padding: "8px 12px",
+                border: "1px solid #ddd",
+                borderRadius: "4px",
+                fontSize: "14px",
+                backgroundColor: "#fff",
+                cursor: "pointer",
+                marginTop: "10px",
+              }}
+            >
+              {availableYears.map((year) => (
+                <option key={year} value={year}>
+                  Năm {year}
+                </option>
+              ))}
+            </select>
+          </div>
           <ResponsiveContainer width="100%" height={350}>
             <BarChart data={monthlyData} margin={{ top: 15 }}>
               <XAxis
@@ -376,8 +466,16 @@ const Owner = () => {
                 iconType="circle"
                 wrapperStyle={{ fontSize: 14 }}
                 payload={[
-                  { value: "Tháng trước", type: "circle", color: "#444" },
-                  { value: "Tháng này", type: "circle", color: "#A3E635" },
+                  {
+                    value: `Năm ${selectedYear - 1}`,
+                    type: "circle",
+                    color: "#444",
+                  },
+                  {
+                    value: `Năm ${selectedYear}`,
+                    type: "circle",
+                    color: "#A3E635",
+                  },
                 ]}
               />
               <Bar
@@ -385,14 +483,14 @@ const Owner = () => {
                 fill="#444"
                 barSize={15}
                 radius={[10, 10, 0, 0]}
-                name="Tháng trước"
+                name={`Năm ${selectedYear - 1}`}
               />
               <Bar
                 dataKey="thisMonth"
                 fill="#A3E635"
                 barSize={15}
                 radius={[10, 10, 0, 0]}
-                name="Tháng này"
+                name={`Năm ${selectedYear}`}
               />
             </BarChart>
           </ResponsiveContainer>
