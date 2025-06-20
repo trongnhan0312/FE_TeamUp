@@ -2,9 +2,13 @@ import React from "react";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 
-const CircleStat = ({ title, value, percentage }) => {
+const CircleStat = ({ title, value, percentage, onClick }) => {
   return (
-    <div className="card flex justify-between items-center gap-4">
+    <div
+      className="card flex justify-between items-center gap-4"
+      style={{ cursor: onClick ? "pointer" : "default" }}
+      onClick={onClick}
+    >
       <div>
         <h3 className="text-sm text-gray-500 mb-1">{title}</h3>
         <p className="text-2xl font-bold">{value}</p>

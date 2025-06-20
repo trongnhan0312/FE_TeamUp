@@ -115,6 +115,7 @@ export const ENDPOINTS = {
     GET_LATEST_BOOKING_ID: "/coachbooking/latest-booking-id",
     COUNT_VIEW: "/courtbooking/view",
     GET_TOP_USER: "/coachbooking/top-user",
+    GET_BY_ID: "/coachbooking",
   },
 
   AI_WEBSITE: {

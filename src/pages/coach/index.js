@@ -181,10 +181,11 @@ const Coach = () => {
         console.log("Top users data:", data); // Debug log
 
         // Kiểm tra cấu trúc dữ liệu và đảm bảo là array
-        const usersArray = Array.isArray(data?.resultObj)
-          ? data.resultObj
-          : Array.isArray(data)
-          ? data
+        const result = data?.resultObj;
+        const usersArray = Array.isArray(result)
+          ? result
+          : result
+          ? [result] // nếu là object đơn thì cho vào array
           : [];
 
         setTopUsersData(usersArray);
@@ -252,37 +253,53 @@ const Coach = () => {
       {/* Top Stats */}
       <div className="stats-top">
         <div className="stat-card">
-          <div className="stat-title">Số giờ thuê</div>
-          <div className="stat-value">{coachStatsData?.totalBookings}</div>
+          <div className="stat-info">
+            <div className="stat-title">Số giờ thuê</div>
+            <div className="stat-value">{coachStatsData?.totalBookings}</div>
+          </div>
           <div className="stat-progress">
             <CircleProgress percentage={75} />
           </div>
         </div>
+
         <div className="stat-card">
-          <div className="stat-title">Lượt Truy Cập</div>
-          <div className="stat-value">{coachStatsData?.countForView}</div>
+          <div className="stat-info">
+            <div className="stat-title">Lượt Truy Cập</div>
+            <div className="stat-value">{coachStatsData?.countForView}</div>
+          </div>
           <div className="stat-progress">
             <CircleProgress percentage={75} />
           </div>
         </div>
+
         <div className="stat-card">
-          <div className="stat-title">Số học viên</div>
-          <div className="stat-value">{coachStatsData?.uniqueStudents}</div>
+          <div className="stat-info">
+            <div className="stat-title">Số học viên</div>
+            <div className="stat-value">{coachStatsData?.uniqueStudents}</div>
+          </div>
           <div className="stat-progress">
             <CircleProgress percentage={75} />
           </div>
         </div>
+
         <div className="stat-card">
-          <div className="stat-title">Doanh thu trong tháng</div>
-          <div className="stat-value">{revenueInMonth}</div>
+          <div className="stat-info">
+            <div className="stat-title">Doanh thu trong tháng</div>
+            <div className="stat-value">
+              {revenueInMonth?.toLocaleString("vi-VN")} VNĐ
+            </div>
+          </div>
           <div className="stat-progress">
             <CircleProgress percentage={75} />
           </div>
         </div>
+
         <div className="stat-card no-progress">
-          <div className="stat-title">Tổng doanh thu</div>
-          <div className="stat-value">
-            {coachStatsData?.totalRevenue.toLocaleString("vi-VN")} VNĐ
+          <div className="stat-info">
+            <div className="stat-title">Tổng doanh thu</div>
+            <div className="stat-value">
+              {coachStatsData?.totalRevenue.toLocaleString("vi-VN")} VNĐ
+            </div>
           </div>
         </div>
       </div>
@@ -353,21 +370,19 @@ const Coach = () => {
                   <div key={user.id || idx} className="top-user-item">
                     <div className="user-rank">#{idx + 1}</div>
                     <img
-                      src={
-                        user.avaterUrl ||
-                        user.avatarUrl ||
-                        "/placeholder.svg?height=40&width=40"
-                      }
+                      src={user.avatarUrl || "/placeholder.svg"}
                       alt={user.fullName || "User"}
                       className="user-avatar"
+                      width={40}
+                      height={40}
                     />
                     <div className="user-info">
                       <div className="user-name">
-                        {user.fullName || "Unknown User"}
+                        {user.fullName || "Người dùng ẩn danh"}
                       </div>
                       <div className="user-stats">
-                        {user.totalBookings || 0} đặt lịch •{" "}
-                        {formatPrice(user.totalSpent || 0, true)}
+                        {user.bookingCount || 0} đặt lịch
+                        {/* {formatPrice(user.totalSpent || 0, true)} */}
                       </div>
                     </div>
                   </div>
@@ -507,7 +522,15 @@ const Coach = () => {
                   <tr key={i}>
                     <td>{item?.player.fullName}</td>
                     <td>{item.id}</td>
-                    <td>{formatPrice(item.totalPrice, true)}</td>
+                    <td>
+                      {(item.totalPrice - item.discountAmount).toLocaleString(
+                        "vi-VN",
+                        {
+                          style: "currency",
+                          currency: "VND",
+                        }
+                      )}
+                    </td>
                     <td>
                       <span
                         className="status-label"

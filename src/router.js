@@ -68,7 +68,7 @@ import ProfileByCoach from "./pages/coach/profileCoach";
 import ReviewCoach from "./pages/coach/ReviewCoach/ReviewCoach";
 import CoachHistory from "./pages/coach/CoachHistory/CoachHistory";
 import CoachPackage from "./pages/coach/CoachPackage/CoachPackage";
-
+import CoachBookingDetail from "./pages/coach/CoachHistory/CoachBookingDetail/CoachBookingDetail";
 // ======================= COACH - PAYMENT =======================
 import PaymentSuccessCoach from "./pages/coach/Payment/PaymentSucces/PaymentSuccess";
 import PaymentFailCoach from "./pages/coach/Payment/PaymentFail/PaymentFail";
@@ -165,6 +165,10 @@ const RouterCustom = () => {
         <Route path={ROUTER.USER.ABOUT_US} element={<AboutUs />} />
         <Route path={ROUTER.USER.SUPPORT_CENTER} element={<SupportCenter />} />
         <Route path={ROUTER.USER.PRIVACY_POLICY} element={<PrivacyPolicy />} />
+        <Route
+          path={ROUTER.COACH.COACH_BOOKING_DETAIL}
+          element={<CoachBookingDetail />}
+        />
         {/* <Route path="*" element={<Navigate to="/coach" replace />} /> */}
       </Routes>
     </CoachLayout>

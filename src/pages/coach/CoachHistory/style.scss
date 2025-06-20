@@ -309,4 +309,19 @@
       text-align: center;
     }
   }
+  .action-button.detail-btn {
+    background-color: #228be6;
+    color: #fff;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  
+    &:hover {
+      background-color: #1c7ed6;
+    }
+  }
+  
 }

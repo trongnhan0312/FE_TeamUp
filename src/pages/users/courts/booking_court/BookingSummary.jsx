@@ -248,7 +248,6 @@ const BookingSummary = () => {
           coachBookingRequest
         );
 
-
         if (coachBookingResponse?.isSuccessed) {
           console.log("Coach booking successful, getting latest booking ID...");
 
@@ -280,7 +279,7 @@ const BookingSummary = () => {
               title: "Thành công!",
               text: "Đặt huấn luyện viên thành công. Chuyển đến trang thanh toán.",
               icon: "success",
-              timer: 2000000000,
+              timer: 2000,
               showConfirmButton: false,
             }).then(() => {
               window.location.href = vnpayUrl;
