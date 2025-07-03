@@ -529,3 +529,28 @@ export const createVnPayUrl = async ({
     throw error;
   }
 };
+/**
+ * Lấy thông tin đặt sân + thống kê của 1 user theo ownerId
+ * @param {number|string} userId
+ * @param {number|string} ownerId
+ * @returns {Promise<Object>} resultObj hoặc null
+ */
+export const fetchOwnerUserBookingCRM = async (userId, ownerId) => {
+  try {
+    const url = getApiUrl(
+      `${ENDPOINTS.OWNER.BOOKING_CRM}?userId=${userId}&ownerId=${ownerId}`
+    );
+    console.log("Calling Owner-User Booking CRM API:", url);
+    const response = await axiosInstance.get(url);
+
+    if (response.data.isSuccessed) {
+      return response.data.resultObj;
+    }
+
+    console.warn("API trả về không thành công:", response.data.message);
+    return null;
+  } catch (error) {
+    console.error("Lỗi khi lấy thông tin owner-user booking CRM:", error);
+    throw error;
+  }
+};

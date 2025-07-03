@@ -57,7 +57,7 @@ import SportsComplexDetail from "./pages/owner/SportsComplexes/SportsComplexesDe
 import CreateSportsComplexes from "./pages/owner/SportsComplexes/CreateSportsComplexes/CreateSportsComplexes";
 import CreateCourt from "./pages/owner/SportsComplexes/SportsComplexesDetail/CreateCourt/CreateCourt";
 import CourtDetailOwner from "./pages/owner/SportsComplexes/SportsComplexesDetail/CourtDetailOwner/court_detail/CourtDetailPage";
-
+import Crm from "./pages/owner/Crm/Crm";
 // ======================= OWNER - PAYMENT =======================
 import PaymentSuccessOwner from "./pages/owner/Payment/PaymentSucces/PaymentSuccess";
 import PaymentFailOwner from "./pages/owner/Payment/PaymentFail/PaymentFail";
@@ -69,6 +69,7 @@ import ReviewCoach from "./pages/coach/ReviewCoach/ReviewCoach";
 import CoachHistory from "./pages/coach/CoachHistory/CoachHistory";
 import CoachPackage from "./pages/coach/CoachPackage/CoachPackage";
 import CoachBookingDetail from "./pages/coach/CoachHistory/CoachBookingDetail/CoachBookingDetail";
+import CrmCoach from "./pages/coach/CrmCoach/CrmCoach";
 // ======================= COACH - PAYMENT =======================
 import PaymentSuccessCoach from "./pages/coach/Payment/PaymentSucces/PaymentSuccess";
 import PaymentFailCoach from "./pages/coach/Payment/PaymentFail/PaymentFail";
@@ -136,6 +137,7 @@ const RouterCustom = () => {
           path={ROUTER.OWNER.COURT_BOOKING_DETAIL}
           element={<BookingDetail />}
         />
+        <Route path={ROUTER.OWNER.BOOKING_CRM} element={<Crm />} />
       </Routes>
     </OwnerLayout>
   );
@@ -169,6 +171,7 @@ const RouterCustom = () => {
           path={ROUTER.COACH.COACH_BOOKING_DETAIL}
           element={<CoachBookingDetail />}
         />
+        <Route path={ROUTER.COACH.COACH_BOOKING_CRM} element={<CrmCoach />} />
         {/* <Route path="*" element={<Navigate to="/coach" replace />} /> */}
       </Routes>
     </CoachLayout>

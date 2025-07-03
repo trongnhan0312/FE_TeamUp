@@ -1,4 +1,4 @@
-.pitchHistory {
+.CourtHistory {
   display: flex;
   gap: 30px;
   padding: 30px;
@@ -210,7 +210,7 @@
       user-select: none;
     }
   }
-}
+
 
 .pagination {
   display: flex;
@@ -461,4 +461,5 @@
     padding: 5px 10px;
     margin-bottom: 6px;
   }
+}
 }

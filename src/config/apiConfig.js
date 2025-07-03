@@ -94,6 +94,7 @@ export const ENDPOINTS = {
     CREATE_SPORTS_COMPLEX: "sportscomplex/create",
     CREATE_COURT: "court/create",
     TOP_USER: "courtbooking/top-user",
+    BOOKING_CRM: "courtbooking/owner-user-booking-crm",
   },
   PAYMENT: {
     CREATE_PAYMENT_VNPay: "payment/create-vnpay-url",
@@ -116,6 +117,7 @@ export const ENDPOINTS = {
     COUNT_VIEW: "/courtbooking/view",
     GET_TOP_USER: "/coachbooking/top-user",
     GET_BY_ID: "/coachbooking",
+    COACH_BOOKING_CRM: "/coachbooking/coach-player-booking-crm",
   },
 
   AI_WEBSITE: {

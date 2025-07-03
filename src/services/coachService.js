@@ -120,6 +120,25 @@ const coachService = {
       throw error.response ? error.response.data : error.message;
     }
   },
+
+  fetchCoachPlayerBookingCRM: async (playerId, coachId) => {
+    try {
+      const url = `${ENDPOINTS.COACH_BOOKING.COACH_BOOKING_CRM}?playerId=${playerId}&coachId=${coachId}`;
+      console.log("Calling Coach-Player Booking CRM API:", url);
+
+      const response = await axiosInstance.get(url);
+
+      if (response.data.isSuccessed) {
+        return response.data.resultObj;
+      }
+
+      console.warn("API trả về không thành công:", response.data.message);
+      return null;
+    } catch (error) {
+      console.error("Lỗi khi lấy thông tin coach-player booking CRM:", error);
+      throw error;
+    }
+  },
 };
 
 export default coachService;
