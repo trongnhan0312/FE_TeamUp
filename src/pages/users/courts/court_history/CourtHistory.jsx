@@ -239,7 +239,7 @@ const CourtHistory = () => {
     });
 
   return (
-    <div className="pitchHistory">
+    <div className="CourtHistory">
       <div className="historySection">
         <div className="header">
           <h2>Lịch sử đặt sân</h2>

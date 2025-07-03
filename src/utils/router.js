@@ -53,6 +53,7 @@ export const ROUTER = {
     SUPPORT_CENTER: "/support-center",
     PRIVACY_POLICY: "/privacy-policy",
     COURT_BOOKING_DETAIL: "/court-booking-detail/:bookingId",
+    BOOKING_CRM: "/owner/crm",
   },
   COACH: {
     HOME: "/coach",
@@ -67,5 +68,6 @@ export const ROUTER = {
     SUPPORT_CENTER: "/support-center",
     PRIVACY_POLICY: "/privacy-policy",
     COACH_BOOKING_DETAIL: "/coach-booking-detail/:bookingId",
+    COACH_BOOKING_CRM: "/coach/crm",
   },
 };

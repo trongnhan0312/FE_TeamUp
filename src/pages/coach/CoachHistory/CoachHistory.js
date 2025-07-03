@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"; // 👉 thêm dòng này
 import "./style.scss";
 import CircleStat from "../../owner/CircleStat";
 import coachBookingService from "../../../services/coachBookingService";
+import coachService from "../../../services/coachService";
 import { getUserInfo } from "../../../utils/auth";
 import { toast } from "react-toastify";
 import { statusColors } from "../../../data";
@@ -84,7 +85,24 @@ const CoachHistory = () => {
       .map(([date, times]) => `${date}: ${times.join(", ")}`)
       .join("\n");
   };
+  const handleDataAction = async (playerId) => {
+    try {
+      const res = await coachService.fetchCoachPlayerBookingCRM(
+        playerId,
+        coachId
+      );
+      console.log("📦 API CRM response:", res);
 
+      if (!res) {
+        toast.error("Không lấy được dữ liệu CRM.");
+        return;
+      }
+      // lưu data tạm thời vào state global / storage / query param
+      navigate("/coach/crm", { state: { crmData: res } });
+    } catch (err) {
+      toast.error("Có lỗi khi lấy dữ liệu CRM.");
+    }
+  };
   return (
     <div className="coach-history">
       <div className="history-section">
@@ -168,6 +186,13 @@ const CoachHistory = () => {
                       onClick={() => handleViewDetail(item.id)}
                     >
                       Chi tiết
+                    </button>
+
+                    <button
+                      className="action-button data-btn"
+                      onClick={() => handleDataAction(item.player.id)}
+                    >
+                      Dữ liệu
                     </button>
                   </td>
                 </tr>

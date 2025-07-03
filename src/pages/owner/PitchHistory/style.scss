@@ -173,7 +173,7 @@
               background: #f8f9fa;
               border-radius: 15px 15px 0 0;
               th {
-                text-align: left;
+                text-align: center;
                 padding: 12px 20px;
                 font-weight: 600;
                 font-size: 14px;
@@ -227,6 +227,23 @@
         background-color: #1c7ed6;
       }
     }
+    .action-button.data-btn {
+      background-color: #51cf66;
+      color: #fff;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-left: 8px;
+      transition: background-color 0.2s ease;
+    
+      &:hover {
+        background-color: #40c057;
+      }
+    }
+    
     
   }
   

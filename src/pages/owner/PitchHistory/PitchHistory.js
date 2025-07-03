@@ -4,6 +4,7 @@ import CircleStat from "../CircleStat";
 import {
   fetchBookingHistory,
   updateBooking,
+  fetchOwnerUserBookingCRM,
 } from "../../../services/ownerService";
 import { toast } from "react-toastify";
 import { statusColors } from "../../../data";
@@ -24,7 +25,8 @@ const PitchHistory = () => {
     fetchBookingHistory(ownerId, 1, 5)
       .then((items) => {
         const formatted = items.map((item) => ({
-          id: item.id,
+          id: item.id, // booking id
+          userId: item.user?.id, // 👈 thêm dòng này
           name: item.user?.fullName || "N/A",
           code: item.id,
           rawDate: item.startTime,
@@ -40,6 +42,7 @@ const PitchHistory = () => {
           price: item.totalPrice || 0,
           status: item.status || "Pending",
         }));
+
         setRawData([...formatted]);
       })
       .catch(console.error);
@@ -127,6 +130,23 @@ const PitchHistory = () => {
   const handleViewDetail = (id) => {
     navigate(ROUTER.OWNER.COURT_BOOKING_DETAIL.replace(":bookingId", id));
   };
+
+  const handleDataAction = async (userId) => {
+    try {
+      const res = await fetchOwnerUserBookingCRM(userId, ownerId);
+      console.log("📦 API CRM response:", res);
+      if (!res) {
+        toast.error("Không lấy được dữ liệu CRM.");
+        return;
+      }
+
+      // lưu data tạm thời vào state global / storage / query param
+      navigate("/owner/crm", { state: { crmData: res } });
+    } catch (err) {
+      toast.error("Có lỗi khi lấy dữ liệu CRM.");
+    }
+  };
+
   const completedPercentage = (completed / totalOrders) * 100;
   const cancelledPercentage = (cancelled / totalOrders) * 100;
   return (
@@ -240,6 +260,13 @@ const PitchHistory = () => {
                       onClick={() => handleViewDetail(item.id)}
                     >
                       Chi tiết
+                    </button>
+
+                    <button
+                      className="action-button data-btn"
+                      onClick={() => handleDataAction(item.userId)}
+                    >
+                      Dữ liệu
                     </button>
                   </td>
                 </tr>
