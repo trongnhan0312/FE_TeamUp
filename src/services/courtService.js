@@ -180,6 +180,38 @@ const courtService = {
       throw error.response ? error.response.data : error.message;
     }
   },
+  createPayOSUrl: async ({
+    userId,
+    courtBookingId,
+    coachBookingId = null,
+    packageId = null,
+  }) => {
+    try {
+      const response = await axiosInstance.post(
+        ENDPOINTS.PAYMENT.CREATE_PAYMENT_PayOS,
+        {
+          userId,
+          courtBookingId,
+          coachBookingId,
+          packageId,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.data.isSuccessed) {
+        return response.data.message; // Đây chính là URL VNPay
+      }
+
+      return null;
+    } catch (error) {
+      console.error("Lỗi khi tạo link thanh toán PayOS:", error);
+      throw error.response ? error.response.data : error.message;
+    }
+  },
 };
 
 export default courtService;

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
-import { createVnPayUrl } from "../../../services/ownerService";
+import { createPayOSUrl } from "../../../services/ownerService";
 import "./style.scss";
 import { getUserInfo } from "../../../utils/auth";
 
@@ -21,7 +21,7 @@ export default function Package() {
     }
     try {
       setLoading(true);
-      const paymentUrl = await createVnPayUrl({
+      const paymentUrl = await createPayOSUrl({
         userId,
         courtBookingId: null,
         coachBookingId: null,

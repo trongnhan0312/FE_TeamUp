@@ -49,7 +49,7 @@ const CoachBookingHistory = () => {
     );
     const result = response.resultObj;
     setBookingHistory(result);
-    
+
     // Fetch user's ratings for all coaches in the booking history
     if (result?.items) {
       await fetchUserRatings(result.items);
@@ -59,13 +59,15 @@ const CoachBookingHistory = () => {
   const fetchUserRatings = async (bookingItems) => {
     const userId = getUserInfo().id;
     const ratings = {};
-    
+
     // Get unique coach IDs from completed bookings
-    const coachIds = [...new Set(
-      bookingItems
-        .filter(item => item.status === "Completed" && item.coach?.id)
-        .map(item => item.coach.id)
-    )];
+    const coachIds = [
+      ...new Set(
+        bookingItems
+          .filter((item) => item.status === "Completed" && item.coach?.id)
+          .map((item) => item.coach.id)
+      ),
+    ];
 
     // Fetch ratings for each coach
     await Promise.all(
@@ -77,7 +79,7 @@ const CoachBookingHistory = () => {
             ratings[coachId] = {
               ratingValue: rating.ratingValue,
               comment: rating.comment,
-              hasRated: rating.ratingValue > 0
+              hasRated: rating.ratingValue > 0,
             };
           } else {
             ratings[coachId] = { hasRated: false };
@@ -166,9 +168,12 @@ const CoachBookingHistory = () => {
           <label style="display: block; margin-bottom: 5px; font-weight: bold;">Đánh giá:</label>
           <div style="display: flex; justify-content: center; margin-bottom: 15px;">
             <div class="rating-stars">
-              ${[1, 2, 3, 4, 5].map(star => 
-                `<span class="star" data-rating="${star}" style="font-size: 24px; color: #ddd; cursor: pointer; margin: 0 2px;">★</span>`
-              ).join('')}
+              ${[1, 2, 3, 4, 5]
+                .map(
+                  (star) =>
+                    `<span class="star" data-rating="${star}" style="font-size: 24px; color: #ddd; cursor: pointer; margin: 0 2px;">★</span>`
+                )
+                .join("")}
             </div>
           </div>
           <input type="hidden" id="rating-value" value="0">
@@ -186,73 +191,80 @@ const CoachBookingHistory = () => {
       confirmButtonText: "Gửi đánh giá",
       cancelButtonText: "Hủy",
       preConfirm: () => {
-        const rating = document.getElementById('rating-value').value;
-        const comment = document.getElementById('comment').value.trim();
-        
+        const rating = document.getElementById("rating-value").value;
+        const comment = document.getElementById("comment").value.trim();
+
         if (rating === "0") {
-          Swal.showValidationMessage('Vui lòng chọn số sao đánh giá');
+          Swal.showValidationMessage("Vui lòng chọn số sao đánh giá");
           return false;
         }
-        
+
         return {
           rating: parseInt(rating),
-          comment: comment
+          comment: comment,
         };
       },
       didOpen: () => {
-        const stars = document.querySelectorAll('.star');
-        const ratingInput = document.getElementById('rating-value');
-        
+        const stars = document.querySelectorAll(".star");
+        const ratingInput = document.getElementById("rating-value");
+
         stars.forEach((star, index) => {
-          star.addEventListener('click', () => {
+          star.addEventListener("click", () => {
             const rating = index + 1;
             ratingInput.value = rating;
-            
+
             // Update star colors
             stars.forEach((s, i) => {
               if (i < rating) {
-                s.style.color = '#ffc107';
+                s.style.color = "#ffc107";
               } else {
-                s.style.color = '#ddd';
+                s.style.color = "#ddd";
               }
             });
           });
-          
+
           // Hover effect
-          star.addEventListener('mouseenter', () => {
+          star.addEventListener("mouseenter", () => {
             stars.forEach((s, i) => {
               if (i <= index) {
-                s.style.color = '#ffc107';
+                s.style.color = "#ffc107";
               } else {
-                s.style.color = '#ddd';
+                s.style.color = "#ddd";
               }
             });
           });
         });
-        
-        document.querySelector('.rating-stars').addEventListener('mouseleave', () => {
-          const currentRating = parseInt(ratingInput.value);
-          stars.forEach((s, i) => {
-            if (i < currentRating) {
-              s.style.color = '#ffc107';
-            } else {
-              s.style.color = '#ddd';
-            }
+
+        document
+          .querySelector(".rating-stars")
+          .addEventListener("mouseleave", () => {
+            const currentRating = parseInt(ratingInput.value);
+            stars.forEach((s, i) => {
+              if (i < currentRating) {
+                s.style.color = "#ffc107";
+              } else {
+                s.style.color = "#ddd";
+              }
+            });
           });
-        });
-      }
+      },
     });
 
     if (formValues) {
       try {
-        await ratingService.create(getUserInfo().id, coachId, formValues.rating, formValues.comment);
-        
+        await ratingService.create(
+          getUserInfo().id,
+          coachId,
+          formValues.rating,
+          formValues.comment
+        );
+
         Swal.fire({
           title: "Cảm ơn!",
           text: "Đánh giá của bạn đã được gửi thành công",
-          icon: "success"
+          icon: "success",
         });
-        
+
         await fetchData(); // This will also refresh the ratings
       } catch (error) {
         Swal.fire("Lỗi", "Không thể gửi đánh giá", "error");
@@ -271,12 +283,12 @@ const CoachBookingHistory = () => {
         <div className="existing-rating">
           <div className="rating-display">
             <span className="rating-stars">
-              {[1, 2, 3, 4, 5].map(star => (
-                <span 
+              {[1, 2, 3, 4, 5].map((star) => (
+                <span
                   key={star}
-                  style={{ 
-                    color: star <= userRating.ratingValue ? '#ffc107' : '#ddd',
-                    fontSize: '16px'
+                  style={{
+                    color: star <= userRating.ratingValue ? "#ffc107" : "#ddd",
+                    fontSize: "16px",
                   }}
                 >
                   ★
@@ -286,7 +298,10 @@ const CoachBookingHistory = () => {
             <span className="rating-value">({userRating.ratingValue}/5)</span>
           </div>
           {userRating.comment && (
-            <div className="rating-comment" style={{ fontSize: '12px', color: '#666', marginTop: '4px' }}>
+            <div
+              className="rating-comment"
+              style={{ fontSize: "12px", color: "#666", marginTop: "4px" }}
+            >
               "{userRating.comment}"
             </div>
           )}
@@ -406,6 +421,17 @@ const CoachBookingHistory = () => {
                               className="action-button cancel"
                               onClick={() => handleCancel(item.id)}
                               aria-label={`Hủy booking ${item.id}`}
+                              style={{
+                                backgroundColor: "#f44336",
+                                color: "#fff",
+                                padding: "6px 12px",
+                                border: "none",
+                                borderRadius: "4px",
+                                fontWeight: "600",
+                                cursor: "pointer",
+                                fontSize: "0.875rem",
+                                marginRight: "8px",
+                              }}
                             >
                               Hủy
                             </button>

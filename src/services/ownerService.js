@@ -339,7 +339,7 @@ export const fetchCourtsBySportsComplexId = async (
 /**
  * Lấy tổng giá tiền booking theo courtId, phương thức thanh toán, tháng và năm
  * @param {number|string} courtId - ID sân
- * @param {string} VNPay - phương thức thanh toán (VD: "VNPay")
+ * @param {string} Pending - phương thức thanh toán (VD: "VNPay")
  * @param {number|string} month - tháng (VD: 5)
  * @param {number|string} year - năm (VD: 2025)
  * @returns {Promise<number|null>} totalPrice hoặc null nếu lỗi
@@ -526,6 +526,35 @@ export const createVnPayUrl = async ({
     }
   } catch (error) {
     console.error("Lỗi khi gọi createVnPayUrl:", error);
+    throw error;
+  }
+};
+export const createPayOSUrl = async ({
+  userId,
+  courtBookingId = null,
+  coachBookingId = null,
+  packageId,
+}) => {
+  try {
+    const url = getApiUrl(ENDPOINTS.PAYMENT.CREATE_PAYMENT_PayOS);
+
+    const payload = { userId, courtBookingId, coachBookingId, packageId };
+
+    const response = await axiosInstance.post(url, payload, {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+
+    if (response.status === 200 && response.data.isSuccessed) {
+      // Lấy link từ response.data.message
+      return response.data.message;
+    } else {
+      throw new Error("Lỗi khi tạo URL thanh toán");
+    }
+  } catch (error) {
+    console.error("Lỗi khi gọi createPayOSUrl:", error);
     throw error;
   }
 };

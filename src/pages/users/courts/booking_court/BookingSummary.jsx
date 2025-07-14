@@ -230,7 +230,7 @@ const BookingSummary = () => {
           playerId: Number(currentUserId),
           courtId: Number(courtId),
           slots: formattedSlots,
-          paymentMethod: "Pending", // Sẽ được xử lý bởi VNPay sau
+          paymentMethod: "PayOS", // Sẽ được xử lý bởi VNPay sau
           note: noteFromConfirmation || "",
         };
 
@@ -260,19 +260,19 @@ const BookingSummary = () => {
 
           console.log("Creating VNPay URL for coach booking...");
 
-          const vnpayUrl = await coachBookingService.createVnpayUrl({
+          const payOsUrl = await coachBookingService.createPayOsUrl({
             userId: Number(currentUserId),
             coachBookingId: Number(latestCoachBookingId),
             courtBookingId: null,
             packageId: null,
           });
-          console.log("VNPay URL created:", vnpayUrl);
-          if (vnpayUrl) {
-            console.log("VNPay URL:", vnpayUrl);
+          console.log("VNPay URL created:", payOsUrl);
+          if (payOsUrl) {
+            console.log("VNPay URL:", payOsUrl);
             console.log("Thông tin gửi đi (Coach):", {
               coachBookingRequest,
               latestCoachBookingId,
-              redirectUrl: vnpayUrl,
+              redirectUrl: payOsUrl,
             });
 
             Swal.fire({
@@ -282,7 +282,7 @@ const BookingSummary = () => {
               timer: 2000,
               showConfirmButton: false,
             }).then(() => {
-              window.location.href = vnpayUrl;
+              window.location.href = payOsUrl;
             });
           } else {
             throw new Error("Không thể tạo link thanh toán");
@@ -347,19 +347,19 @@ const BookingSummary = () => {
             userId
           );
           console.log("Latest Court Booking ID:", latestCourtBookingId);
-          const vnpayUrl = await courtService.createVnpayUrl({
+          const payOsUrl = await courtService.createPayOSUrl({
             userId: Number(currentUserId),
             courtBookingId: Number(latestCourtBookingId),
             coachBookingId: null,
             packageId: null,
           });
 
-          if (vnpayUrl) {
-            console.log("VNPay URL:", vnpayUrl);
+          if (payOsUrl) {
+            console.log("VNPay URL:", payOsUrl);
             console.log("Thông tin gửi đi (Court):", {
               courtBookingRequest,
               latestCourtBookingId,
-              redirectUrl: vnpayUrl,
+              redirectUrl: payOsUrl,
             });
 
             Swal.fire({
@@ -369,7 +369,7 @@ const BookingSummary = () => {
               timer: 2000,
               showConfirmButton: false,
             }).then(() => {
-              window.location.href = vnpayUrl;
+              window.location.href = payOsUrl;
             });
           } else {
             throw new Error("Không thể tạo link thanh toán");
@@ -539,10 +539,10 @@ const BookingSummary = () => {
 
       <div className="payment-options">
         <h3>Phương thức thanh toán</h3>
-        <div className="payment-method">Thanh toán qua VNPay</div>
+        <div className="payment-method">Thanh toán qua PayOS</div>
         <p className="note">
           Sau khi xác nhận đặt lịch, bạn sẽ được chuyển hướng đến trang thanh
-          toán của VNPay.
+          toán của PayOS.
         </p>
       </div>
 
