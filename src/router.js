@@ -8,7 +8,7 @@ import { ROUTER } from "./utils/router";
 import MasterLayout from "./component/common/theme/masterLayout";
 import OwnerLayout from "./component/common/theme/OwnerLayout";
 import CoachLayout from "./component/common/theme/CoachLayout";
-
+import AdminLayout from "./component/common/theme/AdminLayout";
 // ======================= AUTH =======================
 import LoginPage from "./pages/auth/LoginPage";
 import SignupPage from "./pages/auth/SignUpComponent/SignupPage";
@@ -43,7 +43,8 @@ import RoomDetail from "./pages/users/roomList/RoomDetail";
 // ======================= USER - PAYMENT =======================
 import PaymentSuccess from "./pages/users/Payment/PaymentSucces/PaymentSuccess";
 import PaymentFail from "./pages/users/Payment/PaymentFail/PaymentFail";
-
+// ======================= ADMIN =======================
+import AdminDashboard from "./pages/admin/AdminDashboard";
 // ======================= OWNER =======================
 import Owner from "./pages/owner";
 import ProfileOwner from "./pages/owner/profileOwner";
@@ -89,7 +90,7 @@ const RouterCustom = () => {
   const isLoggedIn = isAuthenticated();
   const isOwner = roles.includes("Owner");
   const isCoach = roles.includes("Coach");
-
+  const isAdmin = roles.includes("Admin");
   // Routes cho Owner
   const ownerRoutes = (
     <OwnerLayout>
@@ -250,6 +251,13 @@ const RouterCustom = () => {
       </Routes>
     </MasterLayout>
   );
+  const adminRoutes = (
+    <AdminLayout>
+      <Routes>
+        <Route path="/admin" element={<AdminDashboard />} />
+      </Routes>
+    </AdminLayout>
+  );
 
   return (
     <Routes>
@@ -257,7 +265,9 @@ const RouterCustom = () => {
         path="/"
         element={
           isLoggedIn ? (
-            isOwner ? (
+            isAdmin ? (
+              <Navigate to="/admin" replace />
+            ) : isOwner ? (
               <Navigate to="/owner" replace />
             ) : isCoach ? (
               <Navigate to="/coach" replace />
@@ -342,7 +352,9 @@ const RouterCustom = () => {
         path="/*"
         element={
           isLoggedIn ? (
-            isOwner ? (
+            isAdmin ? (
+              adminRoutes
+            ) : isOwner ? (
               ownerRoutes
             ) : isCoach ? (
               coachRoutes

@@ -58,7 +58,7 @@ export const ENDPOINTS = {
   },
   EMPLOYEE: {
     GET_COACHES_PAGINATION: "/employee/get-coaches-pagination",
-    GET_COACH_PROFILE: "/employee",
+    GET_COACH_PROFILE: "employee",
     UPDATE_COACH_PROFILE: "/employee/update-coach-profile",
   },
   CHAT: {

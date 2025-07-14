@@ -48,7 +48,8 @@ const Owner = () => {
   const storedOwnerId = getUserInfo();
   const ownerId = storedOwnerId?.id || storedOwnerId?.userId;
   const navigate = useNavigate();
-
+  const currentMonth = new Date().getMonth() + 1;
+  console.log("month", currentMonth);
   // Hàm lọc booking theo tháng hiện tại và tháng trước của năm được chọn
   const getMonthlyBookingData = (bookings, year) => {
     const now = new Date();
@@ -184,14 +185,14 @@ const Owner = () => {
       })
       .catch(console.error);
 
-    fetchTotalPriceByOwner(ownerId, "VNPay", 5, 2025)
+    fetchTotalPriceByOwner(ownerId, "PayOS", currentMonth, 2025)
       .then((total) => {
         if (total !== null && total !== undefined) {
           setTotalPriceByOwner(total);
         }
       })
       .catch(console.error);
-
+    console.log("tien", totalPriceByOwner);
     fetchOwnerCourtsWithBookings(ownerId).then(setCourts).catch(console.error);
 
     fetchOwnerStats(ownerId)

@@ -204,6 +204,38 @@ const coachBookingService = {
       throw error.response ? error.response.data : error.message;
     }
   },
+  createPayOsUrl: async ({
+    userId,
+    courtBookingId = null,
+    coachBookingId,
+    packageId = null,
+  }) => {
+    try {
+      const response = await axiosInstance.post(
+        ENDPOINTS.PAYMENT.CREATE_PAYMENT_PayOS,
+        {
+          userId,
+          courtBookingId,
+          coachBookingId,
+          packageId,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.data.isSuccessed) {
+        return response.data.message; // Đây chính là URL VNPay
+      }
+
+      return null;
+    } catch (error) {
+      console.error("Lỗi khi tạo link thanh toán VNPay:", error);
+      throw error.response ? error.response.data : error.message;
+    }
+  },
   // SỬA ĐỔI QUAN TRỌNG TẠI ĐÂY
   getCoachById: async (coachId) => {
     try {

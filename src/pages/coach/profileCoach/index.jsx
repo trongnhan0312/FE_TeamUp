@@ -349,18 +349,38 @@ const ProfileCoachPage = () => {
             />
           </div>
           <div className="form-group">
-            <input
+            <select
               name="Type"
               value={formData.Type || ""}
               onChange={handleChange}
-              placeholder="Loại"
-            />
-            <input
+              style={{
+                padding: "8px",
+                borderRadius: "4px",
+                border: "1px solid #ccc",
+                minWidth: "150px",
+              }}
+            >
+              <option value="">-- Chọn môn thể thao --</option>
+              <option value="Cầu lông">Cầu lông</option>
+              <option value="Pickleball">Pickleball</option>
+              <option value="Bóng đá">Bóng đá</option>
+            </select>
+            <select
               name="Specialty"
               value={formData.Specialty || ""}
               onChange={handleChange}
-              placeholder="Chuyên môn"
-            />
+              style={{
+                padding: "8px",
+                borderRadius: "4px",
+                border: "1px solid #ccc",
+                minWidth: "150px",
+              }}
+            >
+              <option value="">-- Chọn chuyên môn thể thao --</option>
+              <option value="Cầu lông">Cầu lông</option>
+              <option value="Pickleball">Pickleball</option>
+              <option value="Bóng đá">Bóng đá</option>
+            </select>
           </div>
           <div className="form-group">
             <input
