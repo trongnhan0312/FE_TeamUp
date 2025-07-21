@@ -396,25 +396,21 @@ const ProfileCoachPage = () => {
         <section className="form-section">
           <h3>HỒ SƠ VÀ CHỨNG CHỈ</h3>
 
-          {(formData.Certificate || coach?.certificate) && (
-            <>
-              {coach?.certificate && !formData.Certificate && (
-                <div style={{ marginBottom: "8px", fontStyle: "italic" }}>
-                  Chứng chỉ hiện tại: {coach.certificate}
-                </div>
-              )}
-
-              <div className="form-group">
-                <label>Chứng chỉ</label>
-                <input
-                  name="Certificate"
-                  value={formData.Certificate || ""}
-                  onChange={handleChange}
-                  placeholder="Chứng Chỉ"
-                />
-              </div>
-            </>
+          {coach?.certificate && !formData.Certificate && (
+            <div style={{ marginBottom: "8px", fontStyle: "italic" }}>
+              Chứng chỉ hiện tại: {coach.certificate}
+            </div>
           )}
+
+          <div className="form-group">
+            <label>Chứng chỉ</label>
+            <input
+              name="Certificate"
+              value={formData.Certificate || ""}
+              onChange={handleChange}
+              placeholder="Chứng Chỉ"
+            />
+          </div>
         </section>
 
         <div className="buttons">

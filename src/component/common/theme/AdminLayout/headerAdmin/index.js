@@ -4,6 +4,7 @@ import { logout, getUserInfo } from "../../../../../utils/auth";
 import userService from "../../../../../services/userService";
 import { fetchEmployeeById } from "../../../../../services/ownerService";
 import "./style.scss";
+import { toast } from "react-toastify";
 import {
   BsGraphUpArrow,
   BsFileEarmark,
@@ -95,7 +96,7 @@ const HeaderAdmin = () => {
                     listStyle: "none",
                   }}
                 >
-                  <li>
+                  {/* <li>
                     <Link to="/owner" className="icon-link">
                       <div className="tooltip-text">Thống Kê Tăng Trưởng</div>
                       <BsGraphUpArrow />
@@ -107,24 +108,13 @@ const HeaderAdmin = () => {
                       <BsFileEarmark />
                     </Link>
                   </li>
-                  {/* <li>
-                    <Link to="/owner/humanhabits" className="icon-link">
-                      <BsClipboardData />
-                      <div className="tooltip-text">Thói Quen Người Dùng</div>
-                    </Link>
-                  </li> */}
+                 
                   <li>
                     <Link to="/owner/bookingmanagement" className="icon-link">
                       <BsCoin />
                       <div className="tooltip-text">Quản Lí Đặt Sân</div>
                     </Link>
                   </li>
-                  {/* <li>
-                    <Link to="/owner/createyard" className="icon-link">
-                      <BsHouseAdd />
-                      <div className="tooltip-text">Tạo Sân Thể Thao</div>
-                    </Link>
-                  </li> */}
                   <li>
                     <Link to="/owner/ReviewOwner" className="icon-link">
                       <BsChatHeart />
@@ -136,17 +126,17 @@ const HeaderAdmin = () => {
                       <BsHouses />
                       <div className="tooltip-text">Quản Lí Khu Thể Thao</div>
                     </Link>
-                  </li>
+                  </li>*/}
                 </ul>
-                {/* Dấu gạch đứng */}
-                <div
+
+                {/* <div
                   style={{
                     width: "1px",
                     height: "30px",
                     backgroundColor: "#ccc",
                     margin: "0 15px",
                   }}
-                ></div>
+                ></div> */}
                 <ul
                   className="icons"
                   style={{
@@ -169,7 +159,7 @@ const HeaderAdmin = () => {
                 {/* Avatar và tên user */}
                 <div
                   className="user"
-                  onClick={() => navigate("/ownerProfile")}
+                  onClick={() => toast.info("Chức năng hồ sơ chưa khả dụng")}
                   style={{
                     display: "flex",
                     alignItems: "center",
