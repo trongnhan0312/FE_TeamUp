@@ -47,7 +47,7 @@ export default function Package() {
         <div className="package basic">
           <h3 className="package-title">Basic</h3>
           <div className="price">
-            199,000 VND x 1 months
+            159,000 VND x 1 months
             <br />
             <span className="free-text">(Free 15 days)</span>
           </div>
