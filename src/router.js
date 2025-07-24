@@ -45,6 +45,7 @@ import PaymentSuccess from "./pages/users/Payment/PaymentSucces/PaymentSuccess";
 import PaymentFail from "./pages/users/Payment/PaymentFail/PaymentFail";
 // ======================= ADMIN =======================
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import UserDetail from "./pages/admin/userDetail";
 // ======================= OWNER =======================
 import Owner from "./pages/owner";
 import ProfileOwner from "./pages/owner/profileOwner";
@@ -255,6 +256,7 @@ const RouterCustom = () => {
     <AdminLayout>
       <Routes>
         <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/userDetail/:userId" element={<UserDetail />} />
       </Routes>
     </AdminLayout>
   );

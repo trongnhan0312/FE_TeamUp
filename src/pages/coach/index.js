@@ -6,7 +6,7 @@ import { getUserInfo } from "../../utils/auth";
 import coachBookingService from "../../services/coachBookingService";
 import { formatPrice } from "../../utils/formatUtils";
 import { statusColors } from "../../data";
-
+import { Link } from "react-router-dom";
 const paymentHistory = [
   {
     user: "Elena Winston",
@@ -261,7 +261,6 @@ const Coach = () => {
             <CircleProgress percentage={75} />
           </div>
         </div>
-
         <div className="stat-card">
           <div className="stat-info">
             <div className="stat-title">Lượt Truy Cập</div>
@@ -271,7 +270,6 @@ const Coach = () => {
             <CircleProgress percentage={75} />
           </div>
         </div>
-
         <div className="stat-card">
           <div className="stat-info">
             <div className="stat-title">Số học viên</div>
@@ -281,18 +279,22 @@ const Coach = () => {
             <CircleProgress percentage={75} />
           </div>
         </div>
-
-        <div className="stat-card">
-          <div className="stat-info">
-            <div className="stat-title">Doanh thu trong tháng</div>
-            <div className="stat-value">
-              {revenueInMonth?.toLocaleString("vi-VN")} VNĐ
+        <Link
+          to="/coach/CoachHistory"
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
+          <div className="stat-card">
+            <div className="stat-info">
+              <div className="stat-title">Doanh thu trong tháng</div>
+              <div className="stat-value">
+                {revenueInMonth?.toLocaleString("vi-VN")} VNĐ
+              </div>
+            </div>
+            <div className="stat-progress">
+              <CircleProgress percentage={75} />
             </div>
           </div>
-          <div className="stat-progress">
-            <CircleProgress percentage={75} />
-          </div>
-        </div>
+        </Link>
 
         <div className="stat-card no-progress">
           <div className="stat-info">
