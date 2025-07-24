@@ -60,6 +60,8 @@ export const ENDPOINTS = {
     GET_COACHES_PAGINATION: "/employee/get-coaches-pagination",
     GET_COACH_PROFILE: "employee",
     UPDATE_COACH_PROFILE: "/employee/update-coach-profile",
+    GET_ALL_COACHES: "/employee/get-all-coaches",
+    GET_EMPLOYEE_BY_ID: "/employee",
   },
   CHAT: {
     GET_MESSAGE: "/chat/get-message",

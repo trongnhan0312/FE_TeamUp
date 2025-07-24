@@ -1,0 +1,269 @@
+.coach-detail-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1a2f1a 0%, #0d1f0d 100%);
+    padding: 32px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif;
+    position: relative;
+  
+    &::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background:
+        radial-gradient(circle at 20% 80%, rgba(176, 223, 33, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(176, 223, 33, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(176, 223, 33, 0.03) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+  
+    > * {
+      position: relative;
+      z-index: 1;
+    }
+  
+    .coach-detail-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+  
+    .detail-header {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+  
+      .back-button {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        color: #b0df21;
+        border: 2px solid rgba(176, 223, 33, 0.3);
+        padding: 12px 20px;
+        border-radius: 12px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+  
+        &:hover {
+          background: rgba(176, 223, 33, 0.1);
+          border-color: #b0df21;
+          transform: translateY(-2px);
+          box-shadow: 0 8px 30px rgba(176, 223, 33, 0.2);
+        }
+      }
+  
+      h1 {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: #b0df21;
+        margin: 0;
+        text-shadow: 0 2px 8px rgba(176, 223, 33, 0.3);
+      }
+    }
+  
+    .profile-card {
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(176, 223, 33, 0.1);
+  
+      .profile-header {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+  
+        .coach-avatar {
+          width: 90px;
+          height: 90px;
+          border-radius: 20px;
+          background: linear-gradient(135deg, #1a2f1a, #0d1f0d);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1.8rem;
+          font-weight: 700;
+          color: #b0df21;
+          box-shadow: 0 8px 32px rgba(176, 223, 33, 0.3);
+  
+          .avatar-image {
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+            object-fit: cover;
+          }
+        }
+  
+        .coach-basic-info {
+            text-align: left;
+          h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1a2f1a;
+           margin: 0;
+            
+          }
+  
+          p {
+            font-size: 1.1rem;
+            color: #6b7280;
+            margin: 0 0 12px 0;
+          }
+        }
+      }
+      .coach-status {
+        .status-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 8px 16px;
+          border-radius: 20px;
+          font-size: 0.9rem;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+
+          .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+          }
+
+          &.active {
+            background: linear-gradient(135deg, rgba(176, 223, 33, 0.2), rgba(176, 223, 33, 0.3));
+            color: #1a2f1a;
+            border: 1px solid #b0df21;
+
+            .status-dot {
+              background: #b0df21;
+            }
+          }
+
+          &.inactive {
+            background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+            color: #374151;
+            border: 1px solid #d1d5db;
+
+            .status-dot {
+              background: #9ca3af;
+            }
+          }
+        }
+      }
+    }
+    
+  
+    .details-card {
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(176, 223, 33, 0.1);
+      overflow: hidden;
+  
+      h3 {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #1a2f1a;
+        padding: 32px;
+        margin: 0;
+        background: linear-gradient(135deg, rgba(176, 223, 33, 0.05), rgba(176, 223, 33, 0.08));
+        border-bottom: 1px solid rgba(176, 223, 33, 0.1);
+      }
+  
+      .details-grid {
+        padding: 32px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 24px;
+  
+        .detail-item {
+          padding: 20px;
+          border: 2px solid #f3f4f6;
+          border-radius: 12px;
+          transition: all 0.3s ease;
+          background: white;
+  
+          &:hover {
+            border-color: rgba(176, 223, 33, 0.3);
+            box-shadow: 0 4px 20px rgba(176, 223, 33, 0.1);
+          }
+  
+          .detail-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #b0df21;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+          }
+  
+          .detail-value {
+            font-size: 1rem;
+            color: #1a2f1a;
+            font-weight: 500;
+            word-break: break-word;
+          }
+        }
+      }
+    }
+  
+    @media (max-width: 768px) {
+      padding: 20px;
+  
+      .detail-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+  
+        h1 {
+          font-size: 1.8rem;
+        }
+      }
+  
+      .profile-card .profile-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+  
+        .coach-avatar {
+          width: 64px;
+          height: 64px;
+          font-size: 1.4rem;
+        }
+      }
+  
+      .details-grid {
+        grid-template-columns: 1fr !important;
+        padding: 24px !important;
+      }
+    }
+  
+    @media (max-width: 480px) {
+      padding: 16px;
+  
+      .detail-header h1 {
+        font-size: 1.5rem;
+      }
+  
+      .profile-card {
+        padding: 24px;
+      }
+  
+      .details-grid {
+        gap: 16px;
+      }
+  
+      .detail-item {
+        padding: 16px;
+      }
+    }
+  }
+  
