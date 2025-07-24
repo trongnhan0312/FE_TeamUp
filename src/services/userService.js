@@ -76,16 +76,17 @@ const userService = {
   },
   getUserByRole: async (userId, role) => {
     try {
-      const endpoint = role === "User" ? ENDPOINTS.USER.GET_USER_BY_ID : ENDPOINTS.EMPLOYEE.GET_COACH_PROFILE;
-      
-      const response = await axiosInstance.get(
-        `${endpoint}/${userId}`
-      );
+      const endpoint =
+        role === "User"
+          ? ENDPOINTS.USER.GET_USER_BY_ID
+          : ENDPOINTS.EMPLOYEE.GET_COACH_PROFILE;
+
+      const response = await axiosInstance.get(`${endpoint}/${userId}`);
       return response.data;
     } catch (error) {
       throw error.response ? error.response.data : error.message;
     }
-  }
+  },
 };
 
 export default userService;
