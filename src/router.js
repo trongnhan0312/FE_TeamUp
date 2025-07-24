@@ -46,6 +46,7 @@ import PaymentFail from "./pages/users/Payment/PaymentFail/PaymentFail";
 // ======================= ADMIN =======================
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import UserDetail from "./pages/admin/userDetail";
+import CoachDetail from "./pages/admin/CoachDetail";
 // ======================= OWNER =======================
 import Owner from "./pages/owner";
 import ProfileOwner from "./pages/owner/profileOwner";
@@ -257,6 +258,7 @@ const RouterCustom = () => {
       <Routes>
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/userDetail/:userId" element={<UserDetail />} />
+        <Route path="/coachDetail/:coachId" element={<CoachDetail />} />
       </Routes>
     </AdminLayout>
   );

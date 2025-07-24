@@ -19,7 +19,26 @@ const coachService = {
       throw error.response ? error.response.data : error.message;
     }
   },
-
+  getCoachById: async (coachId) => {
+    try {
+      const response = await axiosInstance.get(
+        `${ENDPOINTS.EMPLOYEE.GET_EMPLOYEE_BY_ID}/${coachId}`
+      );
+      return response.data;
+    } catch (error) {
+      throw error.response ? error.response.data : error.message;
+    }
+  },
+  getAllCoaches: async () => {
+    try {
+      const response = await axiosInstance.get(
+        ENDPOINTS.EMPLOYEE.GET_ALL_COACHES
+      );
+      return response.data;
+    } catch (error) {
+      throw error.response ? error.response.data : error.message;
+    }
+  },
   countViews: async (coachId) => {
     try {
       // Sử dụng phương thức POST với endpoint đúng

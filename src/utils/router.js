@@ -77,6 +77,7 @@ export const ROUTER = {
     OWNER_MANAGEMENT: "/admin/owner-management",
     USER_MANAGEMENT: "/admin/user-management",
     USER_DETAIL: "/admin/user-detail/:userId",
+    COACH_DETAIL: "/admin/coach-detail/:coachId",
     REPORTS: "/admin/reports",
     ADMIN_PROFILE: "/admin/profile",
     ADMIN_PACKAGE: "/admin/package",
