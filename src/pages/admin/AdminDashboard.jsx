@@ -2,64 +2,78 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import userService from "../../services/userService";
-import employeeService from "../../services/coachService"; // Import service chứa getAllCoaches
+import employeeService from "../../services/coachService";
+import {
+  fetchAllOwners,
+  fetchSportsComplexesByOwner,
+} from "../../services/ownerService"; // Import both functions
 import "./AdminDashboard.scss";
+import { toast } from "react-toastify";
 
 const AdminDashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState("overview");
   const [users, setUsers] = useState([]);
-  const [coaches, setCoaches] = useState([]); // State cho coaches
+  const [coaches, setCoaches] = useState([]);
+  const [owners, setOwners] = useState([]);
+  const [ownerSportsMap, setOwnerSportsMap] = useState({}); // Map of ownerId -> sports complexes
   const [loading, setLoading] = useState(true);
-  const [coachesLoading, setCoachesLoading] = useState(true); // Loading state riêng cho coaches
+  const [coachesLoading, setCoachesLoading] = useState(true);
+  const [ownersLoading, setOwnersLoading] = useState(true);
+  const [sportsLoading, setSportsLoading] = useState(true);
   const navigate = useNavigate();
 
-  const mockFieldOwners = [
-    {
-      id: 1,
-      name: "Nguyễn Văn Hùng",
-      email: "hung.nguyen@fieldowner.com",
-      phone: "0901234567",
-      fieldName: "Sân bóng Hùng Vương",
-      address: "123 Đường ABC, Quận 1, TP.HCM",
-      fieldCount: 5,
-      status: "active",
-      joinDate: "2023-01-15",
-    },
-    {
-      id: 2,
-      name: "Trần Thị Mai",
-      email: "mai.tran@fieldowner.com",
-      phone: "0912345678",
-      fieldName: "Sân bóng Thành Công",
-      address: "456 Đường XYZ, Quận 3, TP.HCM",
-      fieldCount: 3,
-      status: "active",
-      joinDate: "2023-03-20",
-    },
-    {
-      id: 3,
-      name: "Lê Minh Đức",
-      email: "duc.le@fieldowner.com",
-      phone: "0923456789",
-      fieldName: "Sân bóng Minh Đức",
-      address: "789 Đường DEF, Quận 7, TP.HCM",
-      fieldCount: 7,
-      status: "active",
-      joinDate: "2023-02-10",
-    },
-    {
-      id: 4,
-      name: "Phạm Văn Tài",
-      email: "tai.pham@fieldowner.com",
-      phone: "0934567890",
-      fieldName: "Sân bóng Tài Lộc",
-      address: "321 Đường GHI, Quận 10, TP.HCM",
-      fieldCount: 4,
-      status: "inactive",
-      joinDate: "2022-12-05",
-    },
-  ];
+  // Function to get sports count for a specific owner
+  const getSportsCountByOwner = (ownerId) => {
+    return ownerSportsMap[ownerId]?.length || 0;
+  };
+
+  // Function to fetch sports complexes for all owners
+  const fetchAllOwnersSportsComplexes = async (ownersList) => {
+    setSportsLoading(true);
+    const sportsMap = {};
+
+    try {
+      // Fetch sports complexes for each owner in parallel
+      const sportsPromises = ownersList.map(async (owner) => {
+        try {
+          const sportsComplexes = await fetchSportsComplexesByOwner(
+            owner.id,
+            1,
+            100
+          ); // Fetch first 100 complexes
+          return { ownerId: owner.id, complexes: sportsComplexes };
+        } catch (error) {
+          console.error(
+            `Lỗi khi lấy khu thể thao cho owner ${owner.id}:`,
+            error
+          );
+          return { ownerId: owner.id, complexes: [] };
+        }
+      });
+
+      const results = await Promise.all(sportsPromises);
+
+      // Build the sports map
+      results.forEach(({ ownerId, complexes }) => {
+        sportsMap[ownerId] = complexes;
+      });
+
+      setOwnerSportsMap(sportsMap);
+
+      // Log total count
+      const totalComplexes = Object.values(sportsMap).reduce(
+        (total, complexes) => total + complexes.length,
+        0
+      );
+      console.log(`Tổng số khu thể thao: ${totalComplexes}`);
+    } catch (error) {
+      console.error("Lỗi khi lấy danh sách khu thể thao:", error);
+      toast.error("Không thể tải danh sách khu thể thao");
+    } finally {
+      setSportsLoading(false);
+    }
+  };
 
   // Fetch users data
   useEffect(() => {
@@ -70,6 +84,7 @@ const AdminDashboard = () => {
         setUsers(response.resultObj || []);
       } catch (error) {
         console.error("Lỗi khi lấy danh sách người dùng:", error);
+        toast.error("Không thể tải danh sách người dùng");
       } finally {
         setLoading(false);
       }
@@ -83,14 +98,40 @@ const AdminDashboard = () => {
       setCoachesLoading(true);
       try {
         const response = await employeeService.getAllCoaches();
-        setCoaches(response.resultObj || response || []); // Tùy thuộc vào cấu trúc response
+        setCoaches(response.resultObj || response || []);
       } catch (error) {
         console.error("Lỗi khi lấy danh sách huấn luyện viên:", error);
+        toast.error("Không thể tải danh sách huấn luyện viên");
       } finally {
         setCoachesLoading(false);
       }
     };
     fetchCoaches();
+  }, []);
+
+  // Fetch owners data and then fetch their sports complexes
+  useEffect(() => {
+    const fetchOwners = async () => {
+      setOwnersLoading(true);
+      try {
+        const ownersData = await fetchAllOwners();
+        setOwners(ownersData || []);
+
+        // After getting owners, fetch their sports complexes
+        if (ownersData && ownersData.length > 0) {
+          await fetchAllOwnersSportsComplexes(ownersData);
+        } else {
+          setSportsLoading(false);
+        }
+      } catch (error) {
+        console.error("Lỗi khi lấy danh sách chủ sân:", error);
+        toast.error("Không thể tải danh sách chủ sân");
+        setSportsLoading(false);
+      } finally {
+        setOwnersLoading(false);
+      }
+    };
+    fetchOwners();
   }, []);
 
   const filteredUsers = users.filter(
@@ -99,14 +140,21 @@ const AdminDashboard = () => {
       (user.email?.toLowerCase() || "").includes(searchTerm.toLowerCase())
   );
 
-  const filteredFieldOwners = mockFieldOwners.filter(
+  const filteredFieldOwners = owners.filter(
     (owner) =>
-      owner.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      owner.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      owner.fieldName.toLowerCase().includes(searchTerm.toLowerCase())
+      (
+        owner.fullName?.toLowerCase() ||
+        owner.name?.toLowerCase() ||
+        ""
+      ).includes(searchTerm.toLowerCase()) ||
+      (owner.email?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
+      (
+        owner.fieldName?.toLowerCase() ||
+        owner.businessName?.toLowerCase() ||
+        ""
+      ).includes(searchTerm.toLowerCase())
   );
 
-  // Filter coaches với dữ liệu thực
   const filteredCoaches = coaches.filter(
     (coach) =>
       (
@@ -130,6 +178,12 @@ const AdminDashboard = () => {
       .join("")
       .toUpperCase();
   };
+
+  // Calculate total sports complexes count
+  const totalSportsCount = Object.values(ownerSportsMap).reduce(
+    (total, complexes) => total + complexes.length,
+    0
+  );
 
   return (
     <div className="admin-dashboard">
@@ -209,13 +263,19 @@ const AdminDashboard = () => {
               </svg>
             </div>
           </div>
-          <p className="stat-description">+12% từ tháng trước</p>
+          <p className="stat-description">
+            {users.filter((user) => user.status === "Active").length} người dùng
+            đang hoạt động
+          </p>
         </div>
+
         <div className="stat-card employees-card">
           <div className="stat-header">
             <div className="stat-info">
               <span className="stat-title">Chủ sân</span>
-              <div className="stat-number">{mockFieldOwners.length}</div>
+              <div className="stat-number">
+                {ownersLoading ? "..." : owners.length}
+              </div>
             </div>
             <div className="stat-icon">
               <svg
@@ -242,13 +302,25 @@ const AdminDashboard = () => {
               </svg>
             </div>
           </div>
-          <p className="stat-description">+1 chủ sân mới</p>
+          <p className="stat-description">
+            {ownersLoading
+              ? "Đang tải..."
+              : `${
+                  owners.filter(
+                    (owner) =>
+                      owner.status === "Active" || owner.status === "active"
+                  ).length
+                } đang hoạt động`}
+          </p>
         </div>
+
         <div className="stat-card bookings-card">
           <div className="stat-header">
             <div className="stat-info">
               <span className="stat-title">Huấn luyện viên</span>
-              <div className="stat-number">{coaches.length}</div>
+              <div className="stat-number">
+                {coaches.filter((coach) => coach.status === "Active").length}
+              </div>
             </div>
             <div className="stat-icon">
               <svg
@@ -320,7 +392,7 @@ const AdminDashboard = () => {
                 strokeLinejoin="round"
               />
             </svg>
-            Tổng quan
+            Chủ Sân
           </button>
           <button
             className={`tab-trigger ${activeTab === "users" ? "active" : ""}`}
@@ -443,133 +515,182 @@ const AdminDashboard = () => {
                       className="search-input"
                     />
                   </div>
-                  <div className="field-owners-list">
-                    {filteredFieldOwners.slice(0, 3).map((owner) => (
-                      <div key={owner.id} className="field-owner-item">
-                        <div className="field-owner-info">
-                          <div className="field-owner-avatar">
-                            {getInitials(owner.name)}
-                          </div>
-                          <div className="field-owner-details">
-                            <h4 className="field-owner-name">{owner.name}</h4>
-                            <p className="field-name">{owner.fieldName}</p>
-                            <div className="field-owner-contact">
-                              <span className="contact-item">
-                                <svg
-                                  width="16"
-                                  height="16"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <path
-                                    d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
+
+                  {ownersLoading || sportsLoading ? (
+                    <div className="loading-container">
+                      <div className="loading-spinner"></div>
+                      <p>
+                        {ownersLoading && sportsLoading
+                          ? "Đang tải danh sách chủ sân và khu thể thao..."
+                          : ownersLoading
+                          ? "Đang tải danh sách chủ sân..."
+                          : "Đang tải danh sách khu thể thao..."}
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="field-owners-list">
+                      {filteredFieldOwners.slice(0, 3).map((owner) => {
+                        const sportsCount = getSportsCountByOwner(owner.id);
+                        const ownerSports = ownerSportsMap[owner.id] || [];
+
+                        return (
+                          <div
+                            key={owner.id}
+                            className="field-owner-item"
+                            onClick={() => navigate(`/ownerDetail/${owner.id}`)}
+                            style={{ cursor: "pointer" }}
+                          >
+                            <div className="field-owner-info">
+                              <div className="field-owner-avatar">
+                                {owner.avatarUrl ? (
+                                  <img
+                                    src={owner.avatarUrl || "/placeholder.svg"}
+                                    alt={owner.fullName || owner.name}
+                                    className="avatar-image"
                                   />
-                                  <polyline
-                                    points="22,6 12,13 2,6"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                  />
-                                </svg>
-                                {owner.email}
-                              </span>
-                              <span className="contact-item">
-                                <svg
-                                  width="16"
-                                  height="16"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <path
-                                    d="M21 10C21 17 12 23 12 23S3 17 3 10C3 7.61305 3.94821 5.32387 5.63604 3.63604C7.32387 1.94821 9.61305 1 12 1C14.3869 1 16.6761 1.94821 18.3639 3.63604C20.0518 5.32387 21 7.61305 21 10Z"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                  />
-                                  <circle
-                                    cx="12"
-                                    cy="10"
-                                    r="3"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                  />
-                                </svg>
-                                {owner.address}
-                              </span>
+                                ) : (
+                                  getInitials(owner.fullName || owner.name)
+                                )}
+                              </div>
+                              <div className="field-owner-details">
+                                <h4 className="field-owner-name">
+                                  {owner.fullName || owner.name}
+                                </h4>
+                                <p className="field-name">
+                                  {owner.fieldName ||
+                                    owner.businessName ||
+                                    "Chưa có tên sân"}
+                                </p>
+                                <div className="field-owner-contact">
+                                  <span className="contact-item">
+                                    <svg
+                                      width="16"
+                                      height="16"
+                                      viewBox="0 0 24 24"
+                                      fill="none"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                      />
+                                      <polyline
+                                        points="22,6 12,13 2,6"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                      />
+                                    </svg>
+                                    {owner.email}
+                                  </span>
+                                  <span className="contact-item">
+                                    <svg
+                                      width="16"
+                                      height="16"
+                                      viewBox="0 0 24 24"
+                                      fill="none"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        d="M21 10C21 17 12 23 12 23S3 17 3 10C3 7.61305 3.94821 5.32387 5.63604 3.63604C7.32387 1.94821 9.61305 1 12 1C14.3869 1 16.6761 1.94821 18.3639 3.63604C20.0518 5.32387 21 7.61305 21 10Z"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                      />
+                                      <circle
+                                        cx="12"
+                                        cy="10"
+                                        r="3"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                      />
+                                    </svg>
+                                    {owner.address || "Chưa có địa chỉ"}
+                                  </span>
+                                </div>
+                                <div className="field-owner-meta">
+                                  <span
+                                    className={`status-badge ${
+                                      owner.status === "Active" ||
+                                      owner.status === "active"
+                                        ? "active"
+                                        : "inactive"
+                                    }`}
+                                  >
+                                    {owner.status === "Active" ||
+                                    owner.status === "active"
+                                      ? "Hoạt động"
+                                      : "Không hoạt động"}
+                                  </span>
+                                  <span className="field-count-badge">
+                                    {sportsCount} khu thể thao
+                                  </span>
+                                  {/* Show sports complex names if available */}
+                                  {ownerSports.length > 0 && (
+                                    <div
+                                      className="sports-list"
+                                      style={{
+                                        fontSize: "12px",
+                                        color: "#666",
+                                        marginTop: "4px",
+                                      }}
+                                    >
+                                      {ownerSports
+                                        .slice(0, 2)
+                                        .map((sport, index) => (
+                                          <span
+                                            key={index}
+                                            style={{ marginRight: "8px" }}
+                                          >
+                                            •{" "}
+                                            {sport.name ||
+                                              sport.title ||
+                                              `Khu ${index + 1}`}
+                                          </span>
+                                        ))}
+                                      {ownerSports.length > 2 && (
+                                        <span>
+                                          và {ownerSports.length - 2} khu
+                                          khác...
+                                        </span>
+                                      )}
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
                             </div>
-                            <div className="field-owner-meta">
-                              <span className={`status-badge ${owner.status}`}>
-                                {owner.status === "active"
-                                  ? "Hoạt động"
-                                  : "Không hoạt động"}
-                              </span>
-                              <span className="field-count-badge">
-                                {owner.fieldCount} sân
-                              </span>
+                            <div className="user-actions">
+                              <svg
+                                width="20"
+                                height="20"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M9 18L15 12L9 6"
+                                  stroke="currentColor"
+                                  strokeWidth="2"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                              </svg>
                             </div>
                           </div>
+                        );
+                      })}
+                      {filteredFieldOwners.length === 0 && !ownersLoading && (
+                        <div className="empty-state">
+                          <p>Không tìm thấy chủ sân nào.</p>
                         </div>
-                        <div className="field-owner-actions">
-                          <button className="action-btn edit-btn">
-                            <svg
-                              width="16"
-                              height="16"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              />
-                              <path
-                                d="M18.5 2.50023C18.8978 2.1024 19.4374 1.87891 20 1.87891C20.5626 1.87891 21.1022 2.1024 21.5 2.50023C21.8978 2.89805 22.1213 3.43762 22.1213 4.00023C22.1213 4.56284 21.8978 5.1024 21.5 5.50023L12 15.0002L8 16.0002L9 12.0002L18.5 2.50023Z"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              />
-                            </svg>
-                          </button>
-                          <button className="action-btn delete-btn">
-                            <svg
-                              width="16"
-                              height="16"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <polyline
-                                points="3,6 5,6 21,6"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              />
-                              <path
-                                d="M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              />
-                            </svg>
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -634,7 +755,15 @@ const AdminDashboard = () => {
                       >
                         <div className="user-info">
                           <div className="user-avatar">
-                            {getInitials(user.fullName)}
+                            {user.avatarUrl ? (
+                              <img
+                                src={user.avatarUrl || "/placeholder.svg"}
+                                alt="avatar"
+                                className="avatar-image"
+                              />
+                            ) : (
+                              getInitials(user.fullName)
+                            )}
                           </div>
                           <div className="user-details">
                             <h4 className="user-name">{user.fullName}</h4>
@@ -724,7 +853,7 @@ const AdminDashboard = () => {
           </div>
         )}
 
-        {/* Coaches Tab - Sử dụng dữ liệu thực từ API */}
+        {/* Coaches Tab */}
         {activeTab === "coaches" && (
           <div className="tab-content">
             <div className="management-card">
@@ -785,7 +914,7 @@ const AdminDashboard = () => {
                           <div className="trainer-avatar">
                             {coach.avatarUrl ? (
                               <img
-                                src={coach.avatarUrl}
+                                src={coach.avatarUrl || "/placeholder.svg"}
                                 alt={coach.fullName || coach.name}
                                 className="avatar-image"
                               />
@@ -793,7 +922,6 @@ const AdminDashboard = () => {
                               getInitials(coach.fullName || coach.name)
                             )}
                           </div>
-
                           <div className="trainer-details">
                             <h4 className="trainer-name">
                               {coach.fullName || coach.name}
@@ -877,55 +1005,22 @@ const AdminDashboard = () => {
                             </div>
                           </div>
                         </div>
-                        <div className="trainer-actions">
-                          <button className="action-btn edit-btn">
-                            <svg
-                              width="16"
-                              height="16"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              />
-                              <path
-                                d="M18.5 2.50023C18.8978 2.1024 19.4374 1.87891 20 1.87891C20.5626 1.87891 21.1022 2.1024 21.5 2.50023C21.8978 2.89805 22.1213 3.43762 22.1213 4.00023C22.1213 4.56284 21.8978 5.1024 21.5 5.50023L12 15.0002L8 16.0002L9 12.0002L18.5 2.50023Z"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              />
-                            </svg>
-                          </button>
-                          <button className="action-btn delete-btn">
-                            <svg
-                              width="16"
-                              height="16"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <polyline
-                                points="3,6 5,6 21,6"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              />
-                              <path
-                                d="M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              />
-                            </svg>
-                          </button>
+                        <div className="user-actions">
+                          <svg
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M9 18L15 12L9 6"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
                         </div>
                       </div>
                     ))}

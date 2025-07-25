@@ -234,9 +234,9 @@ const CoachListing = () => {
                 >
                   <div className="coach-avatar-container">
                     <div className="coach-avatar" style={getAvatarStyle()}>
-                      {coach.avatar ? (
+                      {coach.avatarUrl ? (
                         <img
-                          src={coach.avatar}
+                          src={coach.avatarUrl}
                           alt={coach.fullName}
                           onError={(e) => {
                             e.target.onerror = null;

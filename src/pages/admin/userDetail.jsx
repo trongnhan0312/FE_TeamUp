@@ -201,7 +201,18 @@ const UserDetail = () => {
         {/* User Profile Card */}
         <div className="profile-card">
           <div className="profile-header">
-            <div className="user-avatar">{getInitials(user.fullName)}</div>
+            <div className="user-avatar">
+              {user.avatarUrl ? (
+                <img
+                  src={user.avatarUrl}
+                  alt="avatar"
+                  className="avatar-image"
+                />
+              ) : (
+                getInitials(user.fullName)
+              )}
+            </div>
+
             <div className="user-basic-info">
               <h2>{user.fullName || "Chưa có tên"}</h2>
               <p className="user-email">{user.email}</p>
