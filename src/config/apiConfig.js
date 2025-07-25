@@ -61,6 +61,7 @@ export const ENDPOINTS = {
     GET_COACH_PROFILE: "employee",
     UPDATE_COACH_PROFILE: "/employee/update-coach-profile",
     GET_ALL_COACHES: "/employee/get-all-coaches",
+    GET_ALL_OWNERS: "employee/get-all-owners",
     GET_EMPLOYEE_BY_ID: "/employee",
   },
   CHAT: {

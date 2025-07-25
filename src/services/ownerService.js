@@ -559,6 +559,25 @@ export const createPayOSUrl = async ({
   }
 };
 /**
+ * Lấy danh sách tất cả các owner
+ * @returns {Promise<Array>} Mảng các owner hoặc [] nếu lỗi
+ */
+export const fetchAllOwners = async () => {
+  try {
+    const url = getApiUrl(ENDPOINTS.EMPLOYEE.GET_ALL_OWNERS);
+    console.log("Calling Get All Owners API:", url);
+
+    const response = await axiosInstance.get(url);
+    if (response.data?.isSuccessed) {
+      return response.data.resultObj || [];
+    }
+    return [];
+  } catch (error) {
+    console.error("Lỗi khi lấy danh sách tất cả chủ sân:", error);
+    throw error;
+  }
+};
+/**
  * Lấy thông tin đặt sân + thống kê của 1 user theo ownerId
  * @param {number|string} userId
  * @param {number|string} ownerId
