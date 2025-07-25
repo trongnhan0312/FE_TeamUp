@@ -136,8 +136,8 @@ const CoachProfile = () => {
         {/* Left side - Avatar and basic info */}
         <div className="coach-profile-left">
           <div className="coach-avatar-container">
-            {coach.avatar ? (
-              <img src={coach.avatar} alt={coach.fullName} />
+            {coach.avatarUrl ? (
+              <img src={coach.avatarUrl} alt={coach.fullName} />
             ) : (
               <div className="avatar-circle">
                 <span className="avatar-text">{coach.fullName.charAt(0)}</span>
