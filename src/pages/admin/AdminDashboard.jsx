@@ -3,10 +3,11 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import userService from "../../services/userService";
 import employeeService from "../../services/coachService";
+import paymentService from "../../services/paymentService"; // Add this import
 import {
   fetchAllOwners,
   fetchSportsComplexesByOwner,
-} from "../../services/ownerService"; // Import both functions
+} from "../../services/ownerService";
 import "./AdminDashboard.scss";
 import { toast } from "react-toastify";
 
@@ -16,12 +17,14 @@ const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
   const [coaches, setCoaches] = useState([]);
   const [owners, setOwners] = useState([]);
-  const [ownerSportsMap, setOwnerSportsMap] = useState({}); // Map of ownerId -> sports complexes
+  const [ownerSportsMap, setOwnerSportsMap] = useState({});
   const [loading, setLoading] = useState(true);
   const [coachesLoading, setCoachesLoading] = useState(true);
   const [ownersLoading, setOwnersLoading] = useState(true);
   const [sportsLoading, setSportsLoading] = useState(true);
   const navigate = useNavigate();
+  const [payments, setPayments] = useState([]);
+  const [paymentsLoading, setPaymentsLoading] = useState(true);
 
   // Function to get sports count for a specific owner
   const getSportsCountByOwner = (ownerId) => {
@@ -32,16 +35,14 @@ const AdminDashboard = () => {
   const fetchAllOwnersSportsComplexes = async (ownersList) => {
     setSportsLoading(true);
     const sportsMap = {};
-
     try {
-      // Fetch sports complexes for each owner in parallel
       const sportsPromises = ownersList.map(async (owner) => {
         try {
           const sportsComplexes = await fetchSportsComplexesByOwner(
             owner.id,
             1,
             100
-          ); // Fetch first 100 complexes
+          );
           return { ownerId: owner.id, complexes: sportsComplexes };
         } catch (error) {
           console.error(
@@ -53,15 +54,11 @@ const AdminDashboard = () => {
       });
 
       const results = await Promise.all(sportsPromises);
-
-      // Build the sports map
       results.forEach(({ ownerId, complexes }) => {
         sportsMap[ownerId] = complexes;
       });
-
       setOwnerSportsMap(sportsMap);
 
-      // Log total count
       const totalComplexes = Object.values(sportsMap).reduce(
         (total, complexes) => total + complexes.length,
         0
@@ -116,8 +113,6 @@ const AdminDashboard = () => {
       try {
         const ownersData = await fetchAllOwners();
         setOwners(ownersData || []);
-
-        // After getting owners, fetch their sports complexes
         if (ownersData && ownersData.length > 0) {
           await fetchAllOwnersSportsComplexes(ownersData);
         } else {
@@ -132,6 +127,40 @@ const AdminDashboard = () => {
       }
     };
     fetchOwners();
+  }, []);
+
+  // Fetch payments data - Updated to use real API
+  useEffect(() => {
+    const fetchPayments = async () => {
+      setPaymentsLoading(true);
+      try {
+        const response = await paymentService.getAllPayments({
+          userId: "", // thay bằng biến userId thực tế
+          pageNumber: 1,
+          pageSize: 5,
+        });
+
+        // Kiểm tra phản hồi đúng cấu trúc mong muốn
+        if (
+          response?.isSuccessed &&
+          response?.resultObj &&
+          Array.isArray(response.resultObj.items)
+        ) {
+          setPayments(response.resultObj.items);
+        } else {
+          setPayments([]);
+          console.warn("Không tìm thấy dữ liệu thanh toán trong response");
+        }
+      } catch (error) {
+        console.error("Lỗi khi lấy danh sách thanh toán:", error);
+        toast.error("Không thể tải danh sách thanh toán");
+        setPayments([]);
+      } finally {
+        setPaymentsLoading(false);
+      }
+    };
+
+    fetchPayments();
   }, []);
 
   const filteredUsers = users.filter(
@@ -170,6 +199,24 @@ const AdminDashboard = () => {
       ).includes(searchTerm.toLowerCase())
   );
 
+  // Updated filter for payments to match API structure
+  const filteredPayments = payments.filter(
+    (payment) =>
+      (payment.user?.fullName?.toLowerCase() || "").includes(
+        searchTerm.toLowerCase()
+      ) ||
+      (payment.user?.email?.toLowerCase() || "").includes(
+        searchTerm.toLowerCase()
+      ) ||
+      (payment.id?.toString() || "").includes(searchTerm.toLowerCase()) ||
+      (payment.method?.toLowerCase() || "").includes(
+        searchTerm.toLowerCase()
+      ) ||
+      (payment.package?.name?.toLowerCase() || "").includes(
+        searchTerm.toLowerCase()
+      )
+  );
+
   const getInitials = (name) => {
     if (!name) return "";
     return name
@@ -177,6 +224,45 @@ const AdminDashboard = () => {
       .map((n) => n[0])
       .join("")
       .toUpperCase();
+  };
+
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(amount);
+  };
+
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString("vi-VN", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
+  // Helper function to get payment type display text
+  const getPaymentTypeDisplay = (payment) => {
+    if (payment.courtBooking) return "Đặt sân";
+    if (payment.coachBooking) return "Đặt HLV";
+    if (payment.package) return "Gói dịch vụ";
+    return "Khác";
+  };
+
+  // Helper function to get payment description
+  const getPaymentDescription = (payment) => {
+    if (payment.package) {
+      return `Thanh toán gói ${payment.package.name} - ${payment.package.description}`;
+    }
+    if (payment.courtBooking) {
+      return "Thanh toán đặt sân thể thao";
+    }
+    if (payment.coachBooking) {
+      return "Thanh toán buổi tập với huấn luyện viên";
+    }
+    return "Thanh toán dịch vụ";
   };
 
   // Calculate total sports complexes count
@@ -359,6 +445,53 @@ const AdminDashboard = () => {
                 } đang hoạt động`}
           </p>
         </div>
+
+        <div className="stat-card sports-card">
+          <div className="stat-header">
+            <div className="stat-info">
+              <span className="stat-title">Khu thể thao</span>
+              <div className="stat-number">
+                {sportsLoading ? "..." : totalSportsCount}
+              </div>
+            </div>
+            <div className="stat-icon">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M21 16V8C21 6.89543 20.1046 6 19 6H5C3.89543 6 3 6.89543 3 8V16C3 17.1046 3.89543 18 5 18H19C20.1046 18 21 17.1046 21 16Z"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M7 10L17 10"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M7 14L17 14"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </div>
+          </div>
+          <p className="stat-description">
+            {sportsLoading
+              ? "Đang tải..."
+              : "Tổng số khu thể thao trong hệ thống"}
+          </p>
+        </div>
       </div>
 
       {/* Tabs */}
@@ -468,13 +601,46 @@ const AdminDashboard = () => {
             </svg>
             Danh sách huấn luyện viên
           </button>
+          <button
+            className={`tab-trigger ${
+              activeTab === "payments" ? "active" : ""
+            }`}
+            onClick={() => setActiveTab("payments")}
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                x="1"
+                y="4"
+                width="22"
+                height="16"
+                rx="2"
+                ry="2"
+                stroke="currentColor"
+                strokeWidth="2"
+              />
+              <line
+                x1="1"
+                y1="10"
+                x2="23"
+                y2="10"
+                stroke="currentColor"
+                strokeWidth="2"
+              />
+            </svg>
+            Quản lý thanh toán
+          </button>
         </div>
 
         {/* Overview Tab */}
         {activeTab === "overview" && (
           <div className="tab-content">
             <div className="overview-grid">
-              {/* Field Owners Section */}
               <div className="management-card">
                 <div className="management-header">
                   <div className="header-info">
@@ -515,7 +681,6 @@ const AdminDashboard = () => {
                       className="search-input"
                     />
                   </div>
-
                   {ownersLoading || sportsLoading ? (
                     <div className="loading-container">
                       <div className="loading-spinner"></div>
@@ -532,7 +697,6 @@ const AdminDashboard = () => {
                       {filteredFieldOwners.slice(0, 3).map((owner) => {
                         const sportsCount = getSportsCountByOwner(owner.id);
                         const ownerSports = ownerSportsMap[owner.id] || [];
-
                         return (
                           <div
                             key={owner.id}
@@ -630,7 +794,6 @@ const AdminDashboard = () => {
                                   <span className="field-count-badge">
                                     {sportsCount} khu thể thao
                                   </span>
-                                  {/* Show sports complex names if available */}
                                   {ownerSports.length > 0 && (
                                     <div
                                       className="sports-list"
@@ -1027,6 +1190,192 @@ const AdminDashboard = () => {
                     {filteredCoaches.length === 0 && !coachesLoading && (
                       <div className="empty-state">
                         <p>Không tìm thấy huấn luyện viên nào.</p>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Payments Tab - Updated to use real API data */}
+        {activeTab === "payments" && (
+          <div className="tab-content">
+            <div className="management-card">
+              <div className="management-header">
+                <div className="header-info">
+                  <h3>Danh sách thanh toán</h3>
+                  <p>Quản lý tất cả giao dịch thanh toán trong hệ thống</p>
+                </div>
+              </div>
+              <div className="management-content">
+                <div className="search-container">
+                  <svg
+                    className="search-icon"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <circle
+                      cx="11"
+                      cy="11"
+                      r="8"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    />
+                    <path
+                      d="M21 21L16.65 16.65"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  <input
+                    type="text"
+                    placeholder="Tìm kiếm thanh toán..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="search-input"
+                  />
+                </div>
+                {paymentsLoading ? (
+                  <div className="loading-container">
+                    <div className="loading-spinner"></div>
+                    <p>Đang tải dữ liệu thanh toán...</p>
+                  </div>
+                ) : (
+                  <div className="payments-list">
+                    {filteredPayments.map((payment) => (
+                      <div key={payment.id} className="payment-item">
+                        <div className="payment-info">
+                          <div className="payment-avatar">
+                            {payment.user?.avatarUrl ? (
+                              <img
+                                src={
+                                  payment.user.avatarUrl || "/placeholder.svg"
+                                }
+                                alt={payment.user.fullName}
+                                className="avatar-image"
+                              />
+                            ) : (
+                              <div className="avatar-placeholder">
+                                {getInitials(payment.user?.fullName || "U")}
+                              </div>
+                            )}
+                          </div>
+                          <div className="payment-details">
+                            <h4 className="payment-user">
+                              {payment.user?.fullName || "Người dùng"}
+                            </h4>
+                            <p className="payment-description">
+                              {getPaymentDescription(payment)}
+                            </p>
+                            <div className="payment-contact">
+                              <span className="contact-item">
+                                <svg
+                                  width="16"
+                                  height="16"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                  />
+                                  <polyline
+                                    points="22,6 12,13 2,6"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                  />
+                                </svg>
+                                {payment.user?.email || "Chưa có email"}
+                              </span>
+                              <span className="contact-item">
+                                <svg
+                                  width="16"
+                                  height="16"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <circle
+                                    cx="12"
+                                    cy="12"
+                                    r="10"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                  />
+                                  <polyline
+                                    points="12,6 12,12 16,14"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                  />
+                                </svg>
+                                {formatDate(payment.paymentDate)}
+                              </span>
+                              <span className="contact-item">
+                                <svg
+                                  width="16"
+                                  height="16"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M22 16.92V19.92C22.0011 20.1985 21.9441 20.4742 21.8325 20.7293C21.7209 20.9845 21.5573 21.2136 21.3521 21.4019C21.1468 21.5901 20.9046 21.7335 20.6407 21.8227C20.3769 21.9119 20.0974 21.9451 19.82 21.92C16.7428 21.5856 13.787 20.5341 11.19 18.85C8.77382 17.3147 6.72533 15.2662 5.18999 12.85C3.49997 10.2412 2.44824 7.27099 2.11999 4.18C2.095 3.90347 2.12787 3.62476 2.21649 3.36162C2.30512 3.09849 2.44756 2.85669 2.63476 2.65162C2.82196 2.44655 3.0498 2.28271 3.30379 2.17052C3.55777 2.05833 3.83233 2.00026 4.10999 2H7.10999C7.59344 1.99522 8.06544 2.16708 8.43945 2.48353C8.81346 2.79999 9.06681 3.23945 9.15999 3.72C9.33657 4.68007 9.63248 5.61273 10.04 6.5C10.2 6.89 10.24 7.33 10.16 7.75L8.89999 9.01C10.3357 11.4135 12.4864 13.5642 14.89 15L16.15 13.74C16.57 13.66 17.01 13.7 17.4 13.86C18.2873 14.2675 19.2199 14.5634 20.18 14.74C20.6657 14.8336 21.1093 15.0904 21.4271 15.4706C21.7449 15.8507 21.9156 16.3288 21.91 16.82L22 16.92Z"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                  />
+                                </svg>
+                                {payment.user?.phoneNumber || "Chưa có SĐT"}
+                              </span>
+                            </div>
+                            <div className="payment-meta">
+                              <span
+                                className={`status-badge ${payment.status.toLowerCase()}`}
+                              >
+                                {payment.status === "Success"
+                                  ? "Thành công"
+                                  : payment.status === "Pending"
+                                  ? "Đang xử lý"
+                                  : "Thất bại"}
+                              </span>
+                              <span className="method-badge">
+                                {payment.method}
+                              </span>
+                              <span className="type-badge">
+                                {getPaymentTypeDisplay(payment)}
+                              </span>
+                              <span className="transaction-id">
+                                #{payment.id}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="payment-amount">
+                          <span
+                            className={`amount ${payment.status.toLowerCase()}`}
+                          >
+                            {formatCurrency(payment.amount)}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                    {filteredPayments.length === 0 && !paymentsLoading && (
+                      <div className="empty-state">
+                        <p>Không tìm thấy giao dịch thanh toán nào.</p>
                       </div>
                     )}
                   </div>

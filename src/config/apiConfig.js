@@ -102,6 +102,7 @@ export const ENDPOINTS = {
   PAYMENT: {
     CREATE_PAYMENT_VNPay: "payment/create-vnpay-url",
     CREATE_PAYMENT_PayOS: "payment/create-payos-url",
+    GET_ALL: "/payment/all",
   },
   VOUCHER: {
     GET_ALL: "/voucher/all",
