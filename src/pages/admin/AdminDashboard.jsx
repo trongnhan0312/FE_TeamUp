@@ -137,7 +137,7 @@ const AdminDashboard = () => {
         const response = await paymentService.getAllPayments({
           userId: "", // thay bằng biến userId thực tế
           pageNumber: 1,
-          pageSize: 5,
+          pageSize: 10000000,
         });
 
         // Kiểm tra phản hồi đúng cấu trúc mong muốn
